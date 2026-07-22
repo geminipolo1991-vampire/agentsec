@@ -15,7 +15,7 @@ import re
 import subprocess
 import threading
 import time
-from datetime import datetime, timezone
+from datetime import datetime, timedelta, timezone
 from http import HTTPStatus
 from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
 from typing import Any, Callable, Dict, List, Mapping, Optional, Sequence, Tuple, Type
@@ -29,6 +29,7 @@ DEFAULT_INSTANCE_ID = "i-082370aa89a20ff93"
 DEFAULT_PORT = 8765
 MAX_BODY_BYTES = 4096
 ALLOWED_ORIGINS = {"http://localhost:3000", "http://127.0.0.1:3000"}
+DISPLAY_TIMEZONE = timezone(timedelta(hours=9), name="JST")
 
 
 ALERT_CATALOG: Dict[str, Dict[str, Any]] = {
@@ -382,7 +383,7 @@ def normalize_decision(value: object) -> str:
 def normalize_time(value: object) -> str:
     try:
         parsed = datetime.fromisoformat(str(value).replace("Z", "+00:00"))
-        return parsed.astimezone().strftime("%H:%M:%S")
+        return parsed.astimezone(DISPLAY_TIMEZONE).strftime("%H:%M:%S")
     except ValueError:
         return "--:--:--"
 
