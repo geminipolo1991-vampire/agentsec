@@ -16,6 +16,7 @@ jobs:
         with:
           python-version: "3.12"
           cache: pip
-      - run: python -m pip install --upgrade pip
+      - name: Install packaging toolchain
+        run: python -m pip install --upgrade pip "setuptools>=58"
       - run: python -m pip install -e .
       - run: make verify
