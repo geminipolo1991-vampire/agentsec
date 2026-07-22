@@ -1,0 +1,137 @@
+{
+  "$defs": {
+    "ToolManifestEntry": {
+      "additionalProperties": false,
+      "properties": {
+        "allowed_destinations": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Allowed Destinations",
+          "type": "array",
+          "uniqueItems": true
+        },
+        "operation": {
+          "title": "Operation",
+          "type": "string"
+        },
+        "schema_digest": {
+          "title": "Schema Digest",
+          "type": "string"
+        },
+        "tool_name": {
+          "title": "Tool Name",
+          "type": "string"
+        }
+      },
+      "required": [
+        "tool_name",
+        "operation",
+        "schema_digest"
+      ],
+      "title": "ToolManifestEntry",
+      "type": "object"
+    }
+  },
+  "additionalProperties": false,
+  "properties": {
+    "agent_id": {
+      "title": "Agent Id",
+      "type": "string"
+    },
+    "allowed_data_classes": {
+      "items": {
+        "type": "string"
+      },
+      "title": "Allowed Data Classes",
+      "type": "array",
+      "uniqueItems": true
+    },
+    "allowed_destinations": {
+      "items": {
+        "type": "string"
+      },
+      "title": "Allowed Destinations",
+      "type": "array",
+      "uniqueItems": true
+    },
+    "build_digest": {
+      "title": "Build Digest",
+      "type": "string"
+    },
+    "created_at": {
+      "format": "date-time",
+      "title": "Created At",
+      "type": "string"
+    },
+    "evidence_source": {
+      "default": "declared",
+      "title": "Evidence Source",
+      "type": "string"
+    },
+    "manifest_id": {
+      "title": "Manifest Id",
+      "type": "string"
+    },
+    "model_profile_ids": {
+      "items": {
+        "type": "string"
+      },
+      "title": "Model Profile Ids",
+      "type": "array",
+      "uniqueItems": true
+    },
+    "owner_id": {
+      "title": "Owner Id",
+      "type": "string"
+    },
+    "policy_bundle_digest": {
+      "title": "Policy Bundle Digest",
+      "type": "string"
+    },
+    "schema_version": {
+      "default": "1.0.0",
+      "title": "Schema Version",
+      "type": "string"
+    },
+    "signature": {
+      "default": "",
+      "title": "Signature",
+      "type": "string"
+    },
+    "signature_algorithm": {
+      "default": "hmac-sha256-poc",
+      "title": "Signature Algorithm",
+      "type": "string"
+    },
+    "system_instruction_digest": {
+      "title": "System Instruction Digest",
+      "type": "string"
+    },
+    "tenant_id": {
+      "title": "Tenant Id",
+      "type": "string"
+    },
+    "tools": {
+      "items": {
+        "$ref": "#/$defs/ToolManifestEntry"
+      },
+      "title": "Tools",
+      "type": "array"
+    }
+  },
+  "required": [
+    "tenant_id",
+    "agent_id",
+    "owner_id",
+    "build_digest",
+    "system_instruction_digest",
+    "model_profile_ids",
+    "tools",
+    "allowed_data_classes",
+    "allowed_destinations",
+    "policy_bundle_digest"
+  ],
+  "title": "AbomManifest",
+  "type": "object"
+}

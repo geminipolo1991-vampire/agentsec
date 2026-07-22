@@ -1,0 +1,6 @@
+# Exact research-PoC runtime dependency set. Regenerate only after evaluation.
+annotated-types==0.7.0
+pydantic==2.12.5
+pydantic-core==2.41.5
+typing-extensions==4.15.0
+typing-inspection==0.4.2

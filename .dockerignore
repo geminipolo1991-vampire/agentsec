@@ -1,0 +1,14 @@
+.git
+.venv
+__pycache__
+*.pyc
+.pytest_cache
+.mypy_cache
+.ruff_cache
+reports
+tests
+docs
+deploy
+schemas
+agent-security-detailed-implementation-plan.md
+

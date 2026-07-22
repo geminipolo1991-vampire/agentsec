@@ -1,0 +1,1123 @@
+{
+  "$defs": {
+    "AgentEvent": {
+      "additionalProperties": false,
+      "description": "Metadata-only observation of a proposed AI-agent effect.",
+      "properties": {
+        "agent_id": {
+          "maxLength": 128,
+          "minLength": 1,
+          "title": "Agent Id",
+          "type": "string"
+        },
+        "approval_present": {
+          "default": false,
+          "title": "Approval Present",
+          "type": "boolean"
+        },
+        "attributes": {
+          "additionalProperties": {
+            "type": "string"
+          },
+          "title": "Attributes",
+          "type": "object"
+        },
+        "authority_operations": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Authority Operations",
+          "type": "array",
+          "uniqueItems": true
+        },
+        "data_classes": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Data Classes",
+          "type": "array",
+          "uniqueItems": true
+        },
+        "declared_tool_schema_digest": {
+          "anyOf": [
+            {
+              "maxLength": 128,
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Declared Tool Schema Digest"
+        },
+        "destination": {
+          "anyOf": [
+            {
+              "maxLength": 512,
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Destination"
+        },
+        "event_id": {
+          "maxLength": 128,
+          "minLength": 5,
+          "title": "Event Id",
+          "type": "string"
+        },
+        "flow_id": {
+          "maxLength": 128,
+          "minLength": 1,
+          "title": "Flow Id",
+          "type": "string"
+        },
+        "indicators": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Indicators",
+          "type": "array",
+          "uniqueItems": true
+        },
+        "is_effectful": {
+          "default": true,
+          "title": "Is Effectful",
+          "type": "boolean"
+        },
+        "observed_tool_schema_digest": {
+          "anyOf": [
+            {
+              "maxLength": 128,
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Observed Tool Schema Digest"
+        },
+        "occurred_at": {
+          "format": "date-time",
+          "title": "Occurred At",
+          "type": "string"
+        },
+        "operation": {
+          "maxLength": 128,
+          "minLength": 1,
+          "title": "Operation",
+          "type": "string"
+        },
+        "resource": {
+          "maxLength": 512,
+          "minLength": 1,
+          "title": "Resource",
+          "type": "string"
+        },
+        "schema_version": {
+          "default": "1.0.0",
+          "title": "Schema Version",
+          "type": "string"
+        },
+        "source_id": {
+          "maxLength": 256,
+          "minLength": 1,
+          "title": "Source Id",
+          "type": "string"
+        },
+        "source_trust": {
+          "$ref": "#/$defs/TrustClass"
+        },
+        "source_type": {
+          "maxLength": 64,
+          "minLength": 1,
+          "title": "Source Type",
+          "type": "string"
+        },
+        "tenant_id": {
+          "maxLength": 128,
+          "minLength": 1,
+          "title": "Tenant Id",
+          "type": "string"
+        },
+        "tool_name": {
+          "anyOf": [
+            {
+              "maxLength": 128,
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Tool Name"
+        }
+      },
+      "required": [
+        "tenant_id",
+        "flow_id",
+        "agent_id",
+        "operation",
+        "resource",
+        "source_type",
+        "source_id",
+        "source_trust"
+      ],
+      "title": "AgentEvent",
+      "type": "object"
+    },
+    "AiMode": {
+      "enum": [
+        "off",
+        "shadow",
+        "advisory",
+        "semantic_hold"
+      ],
+      "title": "AiMode",
+      "type": "string"
+    },
+    "DecisionAction": {
+      "enum": [
+        "allow",
+        "allow_with_obligations",
+        "require_approval",
+        "deny"
+      ],
+      "title": "DecisionAction",
+      "type": "string"
+    },
+    "EscalationLevel": {
+      "enum": [
+        "none",
+        "review_queue",
+        "soc_urgent",
+        "incident_page"
+      ],
+      "title": "EscalationLevel",
+      "type": "string"
+    },
+    "EscalationRecord": {
+      "additionalProperties": false,
+      "properties": {
+        "alert_id": {
+          "title": "Alert Id",
+          "type": "string"
+        },
+        "case_id": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Case Id"
+        },
+        "escalated_at": {
+          "format": "date-time",
+          "title": "Escalated At",
+          "type": "string"
+        },
+        "level": {
+          "$ref": "#/$defs/EscalationLevel"
+        },
+        "queue": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Queue"
+        },
+        "reason": {
+          "title": "Reason",
+          "type": "string"
+        }
+      },
+      "required": [
+        "alert_id",
+        "level",
+        "reason"
+      ],
+      "title": "EscalationRecord",
+      "type": "object"
+    },
+    "EventProcessingResult": {
+      "additionalProperties": false,
+      "properties": {
+        "alerts": {
+          "items": {
+            "$ref": "#/$defs/PipelineResult"
+          },
+          "title": "Alerts",
+          "type": "array"
+        },
+        "effect_allowed": {
+          "title": "Effect Allowed",
+          "type": "boolean"
+        },
+        "event": {
+          "$ref": "#/$defs/AgentEvent"
+        },
+        "overall_action": {
+          "$ref": "#/$defs/DecisionAction"
+        }
+      },
+      "required": [
+        "event",
+        "alerts",
+        "overall_action",
+        "effect_allowed"
+      ],
+      "title": "EventProcessingResult",
+      "type": "object"
+    },
+    "Finding": {
+      "additionalProperties": false,
+      "properties": {
+        "agent_id": {
+          "title": "Agent Id",
+          "type": "string"
+        },
+        "alert_ids": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Alert Ids",
+          "type": "array"
+        },
+        "audit": {
+          "items": {
+            "$ref": "#/$defs/FindingAuditEntry"
+          },
+          "title": "Audit",
+          "type": "array"
+        },
+        "created_at": {
+          "format": "date-time",
+          "title": "Created At",
+          "type": "string"
+        },
+        "detector_id": {
+          "title": "Detector Id",
+          "type": "string"
+        },
+        "evidence": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Evidence",
+          "type": "array"
+        },
+        "finding_id": {
+          "title": "Finding Id",
+          "type": "string"
+        },
+        "finding_type": {
+          "title": "Finding Type",
+          "type": "string"
+        },
+        "fingerprint": {
+          "title": "Fingerprint",
+          "type": "string"
+        },
+        "flow_id": {
+          "title": "Flow Id",
+          "type": "string"
+        },
+        "policy_version": {
+          "title": "Policy Version",
+          "type": "string"
+        },
+        "schema_version": {
+          "default": "1.0.0",
+          "title": "Schema Version",
+          "type": "string"
+        },
+        "severity": {
+          "$ref": "#/$defs/Severity"
+        },
+        "status": {
+          "$ref": "#/$defs/FindingStatus",
+          "default": "open"
+        },
+        "tenant_id": {
+          "title": "Tenant Id",
+          "type": "string"
+        },
+        "updated_at": {
+          "format": "date-time",
+          "title": "Updated At",
+          "type": "string"
+        }
+      },
+      "required": [
+        "finding_id",
+        "fingerprint",
+        "tenant_id",
+        "flow_id",
+        "agent_id",
+        "finding_type",
+        "severity",
+        "detector_id",
+        "policy_version",
+        "alert_ids",
+        "evidence",
+        "audit"
+      ],
+      "title": "Finding",
+      "type": "object"
+    },
+    "FindingAuditEntry": {
+      "additionalProperties": false,
+      "properties": {
+        "actor": {
+          "title": "Actor",
+          "type": "string"
+        },
+        "at": {
+          "format": "date-time",
+          "title": "At",
+          "type": "string"
+        },
+        "from_status": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/FindingStatus"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        },
+        "reason": {
+          "title": "Reason",
+          "type": "string"
+        },
+        "to_status": {
+          "$ref": "#/$defs/FindingStatus"
+        }
+      },
+      "required": [
+        "to_status",
+        "actor",
+        "reason"
+      ],
+      "title": "FindingAuditEntry",
+      "type": "object"
+    },
+    "FindingStatus": {
+      "enum": [
+        "open",
+        "acknowledged",
+        "investigating",
+        "contained",
+        "closed"
+      ],
+      "title": "FindingStatus",
+      "type": "string"
+    },
+    "GatewayExecution": {
+      "additionalProperties": false,
+      "properties": {
+        "approval_verified": {
+          "default": false,
+          "title": "Approval Verified",
+          "type": "boolean"
+        },
+        "attempted": {
+          "title": "Attempted",
+          "type": "boolean"
+        },
+        "authority_verified": {
+          "anyOf": [
+            {
+              "type": "boolean"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Authority Verified"
+        },
+        "completed": {
+          "title": "Completed",
+          "type": "boolean"
+        },
+        "event": {
+          "$ref": "#/$defs/AgentEvent"
+        },
+        "output_metadata": {
+          "additionalProperties": {
+            "type": "string"
+          },
+          "title": "Output Metadata",
+          "type": "object"
+        },
+        "protected": {
+          "title": "Protected",
+          "type": "boolean"
+        },
+        "security_error": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Security Error"
+        },
+        "security_result": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/EventProcessingResult"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        }
+      },
+      "required": [
+        "event",
+        "protected",
+        "security_result",
+        "attempted",
+        "completed"
+      ],
+      "title": "GatewayExecution",
+      "type": "object"
+    },
+    "GroundTruthEvaluation": {
+      "additionalProperties": false,
+      "properties": {
+        "completed_operations": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Completed Operations",
+          "type": "array",
+          "uniqueItems": true
+        },
+        "missing_required_effects": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Missing Required Effects",
+          "type": "array",
+          "uniqueItems": true
+        },
+        "observed_alert_types": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Observed Alert Types",
+          "type": "array",
+          "uniqueItems": true
+        },
+        "passed": {
+          "title": "Passed",
+          "type": "boolean"
+        },
+        "reasons": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Reasons",
+          "type": "array"
+        },
+        "unexpected_forbidden_effects": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Unexpected Forbidden Effects",
+          "type": "array",
+          "uniqueItems": true
+        }
+      },
+      "required": [
+        "passed",
+        "observed_alert_types",
+        "completed_operations",
+        "unexpected_forbidden_effects",
+        "missing_required_effects",
+        "reasons"
+      ],
+      "title": "GroundTruthEvaluation",
+      "type": "object"
+    },
+    "IngestionReceipt": {
+      "additionalProperties": false,
+      "properties": {
+        "alert_id": {
+          "title": "Alert Id",
+          "type": "string"
+        },
+        "current_hash": {
+          "title": "Current Hash",
+          "type": "string"
+        },
+        "duplicate": {
+          "title": "Duplicate",
+          "type": "boolean"
+        },
+        "ingested_at": {
+          "format": "date-time",
+          "title": "Ingested At",
+          "type": "string"
+        },
+        "previous_hash": {
+          "title": "Previous Hash",
+          "type": "string"
+        },
+        "sequence": {
+          "minimum": 1,
+          "title": "Sequence",
+          "type": "integer"
+        }
+      },
+      "required": [
+        "alert_id",
+        "duplicate",
+        "sequence",
+        "previous_hash",
+        "current_hash"
+      ],
+      "title": "IngestionReceipt",
+      "type": "object"
+    },
+    "Judgment": {
+      "additionalProperties": false,
+      "properties": {
+        "action": {
+          "$ref": "#/$defs/DecisionAction"
+        },
+        "ai_mode": {
+          "$ref": "#/$defs/AiMode",
+          "default": "off"
+        },
+        "alert_id": {
+          "title": "Alert Id",
+          "type": "string"
+        },
+        "deterministic_action": {
+          "$ref": "#/$defs/DecisionAction"
+        },
+        "judged_at": {
+          "format": "date-time",
+          "title": "Judged At",
+          "type": "string"
+        },
+        "model_verdict": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/ModelVerdict"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        },
+        "policy_version": {
+          "title": "Policy Version",
+          "type": "string"
+        },
+        "reason_codes": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Reason Codes",
+          "type": "array"
+        }
+      },
+      "required": [
+        "alert_id",
+        "action",
+        "reason_codes",
+        "deterministic_action",
+        "policy_version"
+      ],
+      "title": "Judgment",
+      "type": "object"
+    },
+    "ModelVerdict": {
+      "additionalProperties": false,
+      "properties": {
+        "action": {
+          "$ref": "#/$defs/DecisionAction"
+        },
+        "confidence": {
+          "maximum": 1.0,
+          "minimum": 0.0,
+          "title": "Confidence",
+          "type": "number"
+        },
+        "evidence_ids": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Evidence Ids",
+          "type": "array"
+        },
+        "model_id": {
+          "title": "Model Id",
+          "type": "string"
+        },
+        "provider": {
+          "title": "Provider",
+          "type": "string"
+        },
+        "reason_codes": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Reason Codes",
+          "type": "array"
+        },
+        "uncertainty": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Uncertainty"
+        }
+      },
+      "required": [
+        "provider",
+        "model_id",
+        "action",
+        "confidence",
+        "evidence_ids",
+        "reason_codes"
+      ],
+      "title": "ModelVerdict",
+      "type": "object"
+    },
+    "PipelineResult": {
+      "additionalProperties": false,
+      "properties": {
+        "alert": {
+          "$ref": "#/$defs/SecurityAlert"
+        },
+        "escalation": {
+          "$ref": "#/$defs/EscalationRecord"
+        },
+        "event": {
+          "$ref": "#/$defs/AgentEvent"
+        },
+        "finding": {
+          "$ref": "#/$defs/Finding"
+        },
+        "ingestion": {
+          "$ref": "#/$defs/IngestionReceipt"
+        },
+        "judgment": {
+          "$ref": "#/$defs/Judgment"
+        },
+        "response": {
+          "$ref": "#/$defs/ResponseRecord"
+        },
+        "timeline": {
+          "items": {
+            "$ref": "#/$defs/TimelineEntry"
+          },
+          "title": "Timeline",
+          "type": "array"
+        },
+        "triage": {
+          "$ref": "#/$defs/TriageAssessment"
+        }
+      },
+      "required": [
+        "event",
+        "alert",
+        "ingestion",
+        "triage",
+        "judgment",
+        "escalation",
+        "response",
+        "finding",
+        "timeline"
+      ],
+      "title": "PipelineResult",
+      "type": "object"
+    },
+    "PipelineStage": {
+      "enum": [
+        "detection",
+        "ingestion",
+        "triage",
+        "judgment",
+        "escalation",
+        "response"
+      ],
+      "title": "PipelineStage",
+      "type": "string"
+    },
+    "ResponseAction": {
+      "enum": [
+        "record_only",
+        "hold_for_approval",
+        "block_effect",
+        "quarantine_session"
+      ],
+      "title": "ResponseAction",
+      "type": "string"
+    },
+    "ResponseRecord": {
+      "additionalProperties": false,
+      "properties": {
+        "actions": {
+          "items": {
+            "$ref": "#/$defs/ResponseAction"
+          },
+          "title": "Actions",
+          "type": "array"
+        },
+        "alert_id": {
+          "title": "Alert Id",
+          "type": "string"
+        },
+        "effect_allowed": {
+          "title": "Effect Allowed",
+          "type": "boolean"
+        },
+        "notes": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Notes",
+          "type": "array"
+        },
+        "responded_at": {
+          "format": "date-time",
+          "title": "Responded At",
+          "type": "string"
+        },
+        "responder": {
+          "default": "local-safe-response",
+          "title": "Responder",
+          "type": "string"
+        },
+        "simulated": {
+          "default": true,
+          "title": "Simulated",
+          "type": "boolean"
+        }
+      },
+      "required": [
+        "alert_id",
+        "actions",
+        "effect_allowed",
+        "notes"
+      ],
+      "title": "ResponseRecord",
+      "type": "object"
+    },
+    "SecurityAlert": {
+      "additionalProperties": false,
+      "properties": {
+        "agent_id": {
+          "title": "Agent Id",
+          "type": "string"
+        },
+        "alert_id": {
+          "title": "Alert Id",
+          "type": "string"
+        },
+        "alert_type": {
+          "title": "Alert Type",
+          "type": "string"
+        },
+        "confidence": {
+          "maximum": 1.0,
+          "minimum": 0.0,
+          "title": "Confidence",
+          "type": "number"
+        },
+        "destination": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Destination"
+        },
+        "detected_at": {
+          "format": "date-time",
+          "title": "Detected At",
+          "type": "string"
+        },
+        "detector_id": {
+          "title": "Detector Id",
+          "type": "string"
+        },
+        "event_id": {
+          "title": "Event Id",
+          "type": "string"
+        },
+        "evidence": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Evidence",
+          "type": "array"
+        },
+        "fingerprint": {
+          "title": "Fingerprint",
+          "type": "string"
+        },
+        "flow_id": {
+          "title": "Flow Id",
+          "type": "string"
+        },
+        "operation": {
+          "title": "Operation",
+          "type": "string"
+        },
+        "reason_codes": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Reason Codes",
+          "type": "array"
+        },
+        "recommended_action": {
+          "$ref": "#/$defs/DecisionAction"
+        },
+        "resource": {
+          "title": "Resource",
+          "type": "string"
+        },
+        "schema_version": {
+          "default": "1.0.0",
+          "title": "Schema Version",
+          "type": "string"
+        },
+        "severity": {
+          "$ref": "#/$defs/Severity"
+        },
+        "source_trust": {
+          "$ref": "#/$defs/TrustClass"
+        },
+        "tenant_id": {
+          "title": "Tenant Id",
+          "type": "string"
+        },
+        "title": {
+          "title": "Title",
+          "type": "string"
+        }
+      },
+      "required": [
+        "fingerprint",
+        "event_id",
+        "tenant_id",
+        "flow_id",
+        "agent_id",
+        "alert_type",
+        "title",
+        "severity",
+        "confidence",
+        "source_trust",
+        "operation",
+        "resource",
+        "detector_id",
+        "reason_codes",
+        "evidence",
+        "recommended_action"
+      ],
+      "title": "SecurityAlert",
+      "type": "object"
+    },
+    "Severity": {
+      "enum": [
+        "info",
+        "low",
+        "medium",
+        "high",
+        "critical"
+      ],
+      "title": "Severity",
+      "type": "string"
+    },
+    "TimelineEntry": {
+      "additionalProperties": false,
+      "properties": {
+        "at": {
+          "format": "date-time",
+          "title": "At",
+          "type": "string"
+        },
+        "evidence": {
+          "additionalProperties": true,
+          "title": "Evidence",
+          "type": "object"
+        },
+        "outcome": {
+          "title": "Outcome",
+          "type": "string"
+        },
+        "stage": {
+          "$ref": "#/$defs/PipelineStage"
+        }
+      },
+      "required": [
+        "stage",
+        "outcome"
+      ],
+      "title": "TimelineEntry",
+      "type": "object"
+    },
+    "TriageAssessment": {
+      "additionalProperties": false,
+      "properties": {
+        "alert_id": {
+          "title": "Alert Id",
+          "type": "string"
+        },
+        "assessed_at": {
+          "format": "date-time",
+          "title": "Assessed At",
+          "type": "string"
+        },
+        "priority": {
+          "title": "Priority",
+          "type": "string"
+        },
+        "reasons": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Reasons",
+          "type": "array"
+        },
+        "risk_score": {
+          "maximum": 100,
+          "minimum": 0,
+          "title": "Risk Score",
+          "type": "integer"
+        },
+        "severity": {
+          "$ref": "#/$defs/Severity"
+        }
+      },
+      "required": [
+        "alert_id",
+        "risk_score",
+        "severity",
+        "priority",
+        "reasons"
+      ],
+      "title": "TriageAssessment",
+      "type": "object"
+    },
+    "TrustClass": {
+      "enum": [
+        "trusted-control",
+        "authenticated-user",
+        "internal-data",
+        "external-untrusted",
+        "suspected-adversarial",
+        "unknown"
+      ],
+      "title": "TrustClass",
+      "type": "string"
+    },
+    "WorkflowTraceStep": {
+      "additionalProperties": false,
+      "properties": {
+        "activity": {
+          "title": "Activity",
+          "type": "string"
+        },
+        "agent_id": {
+          "title": "Agent Id",
+          "type": "string"
+        },
+        "role": {
+          "title": "Role",
+          "type": "string"
+        },
+        "sequence": {
+          "minimum": 1,
+          "title": "Sequence",
+          "type": "integer"
+        },
+        "source_id": {
+          "title": "Source Id",
+          "type": "string"
+        }
+      },
+      "required": [
+        "sequence",
+        "agent_id",
+        "role",
+        "activity",
+        "source_id"
+      ],
+      "title": "WorkflowTraceStep",
+      "type": "object"
+    }
+  },
+  "additionalProperties": false,
+  "properties": {
+    "execution": {
+      "$ref": "#/$defs/GatewayExecution"
+    },
+    "ground_truth": {
+      "$ref": "#/$defs/GroundTruthEvaluation"
+    },
+    "protected": {
+      "title": "Protected",
+      "type": "boolean"
+    },
+    "scenario": {
+      "title": "Scenario",
+      "type": "string"
+    },
+    "trace": {
+      "items": {
+        "$ref": "#/$defs/WorkflowTraceStep"
+      },
+      "title": "Trace",
+      "type": "array"
+    }
+  },
+  "required": [
+    "scenario",
+    "protected",
+    "trace",
+    "execution",
+    "ground_truth"
+  ],
+  "title": "WorkflowRun",
+  "type": "object"
+}

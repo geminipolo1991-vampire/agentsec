@@ -1,0 +1,48 @@
+{
+  "additionalProperties": false,
+  "properties": {
+    "event_id": {
+      "title": "Event Id",
+      "type": "string"
+    },
+    "finding_type": {
+      "title": "Finding Type",
+      "type": "string"
+    },
+    "gateway_phases": {
+      "items": {
+        "type": "string"
+      },
+      "title": "Gateway Phases",
+      "type": "array",
+      "uniqueItems": true
+    },
+    "reason_codes": {
+      "items": {
+        "type": "string"
+      },
+      "title": "Reason Codes",
+      "type": "array"
+    },
+    "sdk_phases": {
+      "items": {
+        "type": "string"
+      },
+      "title": "Sdk Phases",
+      "type": "array",
+      "uniqueItems": true
+    },
+    "severity": {
+      "title": "Severity",
+      "type": "string"
+    }
+  },
+  "required": [
+    "finding_type",
+    "severity",
+    "event_id",
+    "reason_codes"
+  ],
+  "title": "ObservationFinding",
+  "type": "object"
+}

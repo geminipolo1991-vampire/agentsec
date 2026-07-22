@@ -1,0 +1,10 @@
+# Replace @security-owners with the repository's real review team before hosting.
+schemas/ @security-owners
+configs/ @security-owners
+prompts/ @security-owners
+src/agentsec/authority.py @security-owners
+src/agentsec/approval.py @security-owners
+src/agentsec/ingestion.py @security-owners
+src/agentsec/providers.py @security-owners
+deploy/ @security-owners
+

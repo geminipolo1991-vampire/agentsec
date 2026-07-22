@@ -1,0 +1,45 @@
+{
+  "additionalProperties": false,
+  "properties": {
+    "edge_ids": {
+      "items": {
+        "type": "string"
+      },
+      "title": "Edge Ids",
+      "type": "array"
+    },
+    "flow_id": {
+      "title": "Flow Id",
+      "type": "string"
+    },
+    "node_ids": {
+      "items": {
+        "type": "string"
+      },
+      "title": "Node Ids",
+      "type": "array"
+    },
+    "sink_node_id": {
+      "title": "Sink Node Id",
+      "type": "string"
+    },
+    "source_node_id": {
+      "title": "Source Node Id",
+      "type": "string"
+    },
+    "tenant_id": {
+      "title": "Tenant Id",
+      "type": "string"
+    }
+  },
+  "required": [
+    "tenant_id",
+    "flow_id",
+    "source_node_id",
+    "sink_node_id",
+    "node_ids",
+    "edge_ids"
+  ],
+  "title": "CausalPath",
+  "type": "object"
+}

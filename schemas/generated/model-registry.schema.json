@@ -1,0 +1,118 @@
+{
+  "$defs": {
+    "AiMode": {
+      "enum": [
+        "off",
+        "shadow",
+        "advisory",
+        "semantic_hold"
+      ],
+      "title": "AiMode",
+      "type": "string"
+    },
+    "ModelProfile": {
+      "additionalProperties": false,
+      "properties": {
+        "allowed_modes": {
+          "items": {
+            "$ref": "#/$defs/AiMode"
+          },
+          "title": "Allowed Modes",
+          "type": "array"
+        },
+        "api_key_env": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Api Key Env"
+        },
+        "enabled": {
+          "default": false,
+          "title": "Enabled",
+          "type": "boolean"
+        },
+        "endpoint": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Endpoint"
+        },
+        "fallback_profile_id": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Fallback Profile Id"
+        },
+        "model_id_env": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Model Id Env"
+        },
+        "profile_id": {
+          "title": "Profile Id",
+          "type": "string"
+        },
+        "prompt_version": {
+          "default": "semantic-detector-v1",
+          "title": "Prompt Version",
+          "type": "string"
+        },
+        "provider": {
+          "title": "Provider",
+          "type": "string"
+        }
+      },
+      "required": [
+        "profile_id",
+        "provider"
+      ],
+      "title": "ModelProfile",
+      "type": "object"
+    }
+  },
+  "additionalProperties": false,
+  "properties": {
+    "profiles": {
+      "items": {
+        "$ref": "#/$defs/ModelProfile"
+      },
+      "title": "Profiles",
+      "type": "array"
+    },
+    "schema_version": {
+      "default": "1.0.0",
+      "title": "Schema Version",
+      "type": "string"
+    }
+  },
+  "required": [
+    "profiles"
+  ],
+  "title": "ModelRegistry",
+  "type": "object"
+}

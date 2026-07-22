@@ -1,0 +1,195 @@
+{
+  "AWSTemplateFormatVersion": "2010-09-09",
+  "Description": "Isolated AgentSec research-demo network and image repository in the selected AWS Region",
+  "Parameters": {
+    "EnvironmentName": {
+      "Type": "String",
+      "Default": "agentsec-demo",
+      "AllowedPattern": "[a-z0-9-]+",
+      "Description": "Prefix used only for newly created AgentSec resources"
+    },
+    "VpcCidr": {
+      "Type": "String",
+      "Default": "10.42.0.0/16"
+    },
+    "PublicSubnetCidr": {
+      "Type": "String",
+      "Default": "10.42.0.0/24"
+    },
+    "PrivateSubnetCidr": {
+      "Type": "String",
+      "Default": "10.42.1.0/24"
+    }
+  },
+  "Resources": {
+    "Vpc": {
+      "Type": "AWS::EC2::VPC",
+      "Properties": {
+        "CidrBlock": {"Ref": "VpcCidr"},
+        "EnableDnsHostnames": true,
+        "EnableDnsSupport": true,
+        "InstanceTenancy": "default",
+        "Tags": [
+          {"Key": "Name", "Value": {"Fn::Sub": "${EnvironmentName}-vpc"}},
+          {"Key": "Project", "Value": "ai-agent-security"},
+          {"Key": "ManagedBy", "Value": "cloudformation"}
+        ]
+      }
+    },
+    "InternetGateway": {
+      "Type": "AWS::EC2::InternetGateway",
+      "Properties": {
+        "Tags": [
+          {"Key": "Name", "Value": {"Fn::Sub": "${EnvironmentName}-igw"}},
+          {"Key": "Project", "Value": "ai-agent-security"},
+          {"Key": "ManagedBy", "Value": "cloudformation"}
+        ]
+      }
+    },
+    "InternetGatewayAttachment": {
+      "Type": "AWS::EC2::VPCGatewayAttachment",
+      "Properties": {
+        "InternetGatewayId": {"Ref": "InternetGateway"},
+        "VpcId": {"Ref": "Vpc"}
+      }
+    },
+    "PublicSubnet": {
+      "Type": "AWS::EC2::Subnet",
+      "Properties": {
+        "AvailabilityZone": {"Fn::Select": [0, {"Fn::GetAZs": ""}]},
+        "CidrBlock": {"Ref": "PublicSubnetCidr"},
+        "MapPublicIpOnLaunch": true,
+        "VpcId": {"Ref": "Vpc"},
+        "Tags": [
+          {"Key": "Name", "Value": {"Fn::Sub": "${EnvironmentName}-public-nat"}},
+          {"Key": "Project", "Value": "ai-agent-security"},
+          {"Key": "ManagedBy", "Value": "cloudformation"}
+        ]
+      }
+    },
+    "PrivateSubnet": {
+      "Type": "AWS::EC2::Subnet",
+      "Properties": {
+        "AvailabilityZone": {"Fn::Select": [0, {"Fn::GetAZs": ""}]},
+        "CidrBlock": {"Ref": "PrivateSubnetCidr"},
+        "MapPublicIpOnLaunch": false,
+        "VpcId": {"Ref": "Vpc"},
+        "Tags": [
+          {"Key": "Name", "Value": {"Fn::Sub": "${EnvironmentName}-private-app"}},
+          {"Key": "Project", "Value": "ai-agent-security"},
+          {"Key": "ManagedBy", "Value": "cloudformation"}
+        ]
+      }
+    },
+    "PublicRouteTable": {
+      "Type": "AWS::EC2::RouteTable",
+      "Properties": {
+        "VpcId": {"Ref": "Vpc"},
+        "Tags": [
+          {"Key": "Name", "Value": {"Fn::Sub": "${EnvironmentName}-public-rt"}},
+          {"Key": "Project", "Value": "ai-agent-security"},
+          {"Key": "ManagedBy", "Value": "cloudformation"}
+        ]
+      }
+    },
+    "PublicDefaultRoute": {
+      "Type": "AWS::EC2::Route",
+      "DependsOn": "InternetGatewayAttachment",
+      "Properties": {
+        "DestinationCidrBlock": "0.0.0.0/0",
+        "GatewayId": {"Ref": "InternetGateway"},
+        "RouteTableId": {"Ref": "PublicRouteTable"}
+      }
+    },
+    "PublicRouteTableAssociation": {
+      "Type": "AWS::EC2::SubnetRouteTableAssociation",
+      "Properties": {
+        "RouteTableId": {"Ref": "PublicRouteTable"},
+        "SubnetId": {"Ref": "PublicSubnet"}
+      }
+    },
+    "NatEip": {
+      "Type": "AWS::EC2::EIP",
+      "DependsOn": "InternetGatewayAttachment",
+      "Properties": {
+        "Domain": "vpc",
+        "Tags": [
+          {"Key": "Name", "Value": {"Fn::Sub": "${EnvironmentName}-nat-eip"}},
+          {"Key": "Project", "Value": "ai-agent-security"},
+          {"Key": "ManagedBy", "Value": "cloudformation"}
+        ]
+      }
+    },
+    "NatGateway": {
+      "Type": "AWS::EC2::NatGateway",
+      "DependsOn": "PublicDefaultRoute",
+      "Properties": {
+        "AllocationId": {"Fn::GetAtt": ["NatEip", "AllocationId"]},
+        "ConnectivityType": "public",
+        "SubnetId": {"Ref": "PublicSubnet"},
+        "Tags": [
+          {"Key": "Name", "Value": {"Fn::Sub": "${EnvironmentName}-nat"}},
+          {"Key": "Project", "Value": "ai-agent-security"},
+          {"Key": "ManagedBy", "Value": "cloudformation"}
+        ]
+      }
+    },
+    "PrivateRouteTable": {
+      "Type": "AWS::EC2::RouteTable",
+      "Properties": {
+        "VpcId": {"Ref": "Vpc"},
+        "Tags": [
+          {"Key": "Name", "Value": {"Fn::Sub": "${EnvironmentName}-private-rt"}},
+          {"Key": "Project", "Value": "ai-agent-security"},
+          {"Key": "ManagedBy", "Value": "cloudformation"}
+        ]
+      }
+    },
+    "PrivateDefaultRoute": {
+      "Type": "AWS::EC2::Route",
+      "Properties": {
+        "DestinationCidrBlock": "0.0.0.0/0",
+        "NatGatewayId": {"Ref": "NatGateway"},
+        "RouteTableId": {"Ref": "PrivateRouteTable"}
+      }
+    },
+    "PrivateRouteTableAssociation": {
+      "Type": "AWS::EC2::SubnetRouteTableAssociation",
+      "Properties": {
+        "RouteTableId": {"Ref": "PrivateRouteTable"},
+        "SubnetId": {"Ref": "PrivateSubnet"}
+      }
+    },
+    "ContainerRepository": {
+      "Type": "AWS::ECR::Repository",
+      "Properties": {
+        "EmptyOnDelete": false,
+        "EncryptionConfiguration": {"EncryptionType": "AES256"},
+        "ImageScanningConfiguration": {"ScanOnPush": true},
+        "ImageTagMutability": "IMMUTABLE",
+        "RepositoryName": {"Fn::Sub": "${EnvironmentName}-backend"},
+        "Tags": [
+          {"Key": "Project", "Value": "ai-agent-security"},
+          {"Key": "ManagedBy", "Value": "cloudformation"}
+        ]
+      }
+    }
+  },
+  "Outputs": {
+    "VpcId": {
+      "Value": {"Ref": "Vpc"}
+    },
+    "PublicSubnetId": {
+      "Value": {"Ref": "PublicSubnet"}
+    },
+    "PrivateSubnetId": {
+      "Value": {"Ref": "PrivateSubnet"}
+    },
+    "ContainerRepositoryArn": {
+      "Value": {"Fn::GetAtt": ["ContainerRepository", "Arn"]}
+    },
+    "ContainerRepositoryUri": {
+      "Value": {"Fn::GetAtt": ["ContainerRepository", "RepositoryUri"]}
+    }
+  }
+}

@@ -1,0 +1,76 @@
+{
+  "additionalProperties": false,
+  "properties": {
+    "agent_id": {
+      "title": "Agent Id",
+      "type": "string"
+    },
+    "changed_tool_schemas": {
+      "items": {
+        "type": "string"
+      },
+      "title": "Changed Tool Schemas",
+      "type": "array",
+      "uniqueItems": true
+    },
+    "manifest_id": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "title": "Manifest Id"
+    },
+    "new_data_classes": {
+      "items": {
+        "type": "string"
+      },
+      "title": "New Data Classes",
+      "type": "array",
+      "uniqueItems": true
+    },
+    "new_destinations": {
+      "items": {
+        "type": "string"
+      },
+      "title": "New Destinations",
+      "type": "array",
+      "uniqueItems": true
+    },
+    "new_operations": {
+      "items": {
+        "type": "string"
+      },
+      "title": "New Operations",
+      "type": "array",
+      "uniqueItems": true
+    },
+    "tenant_id": {
+      "title": "Tenant Id",
+      "type": "string"
+    },
+    "unknown_agent": {
+      "default": false,
+      "title": "Unknown Agent",
+      "type": "boolean"
+    },
+    "unknown_tools": {
+      "items": {
+        "type": "string"
+      },
+      "title": "Unknown Tools",
+      "type": "array",
+      "uniqueItems": true
+    }
+  },
+  "required": [
+    "tenant_id",
+    "agent_id",
+    "manifest_id"
+  ],
+  "title": "AbomDiff",
+  "type": "object"
+}

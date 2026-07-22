@@ -1,0 +1,93 @@
+{
+  "schema_version": "1.0.0",
+  "recorded_at": "2026-07-22T10:09:42Z",
+  "region": "ap-northeast-1",
+  "environment": "agentsec-demo",
+  "deployment": {
+    "foundation_stack": {
+      "name": "agentsec-demo-foundation",
+      "status": "CREATE_COMPLETE",
+      "vpc_id": "vpc-0cf0c071cde23c4bb",
+      "public_subnet_id": "subnet-084ef6d5c82731dd5",
+      "private_subnet_id": "subnet-06878bd3396b7797d"
+    },
+    "service_stack": {
+      "name": "agentsec-demo-service",
+      "status": "CREATE_COMPLETE",
+      "instance_id": "i-082370aa89a20ff93",
+      "instance_type": "t3.small",
+      "ami_id": "ami-0527789ef9019ea69",
+      "security_group_id": "sg-099940602533383e3"
+    },
+    "existing_resources_modified": false
+  },
+  "image": {
+    "repository": "agentsec-demo-backend",
+    "tag": "release-20260722-004",
+    "digest": "sha256:06d001ec4453854ee2ccbc5e315efa0d849f5ff58c42597b48d8e91dd9fae8dd",
+    "manifest_media_type": "application/vnd.docker.distribution.manifest.v2+json",
+    "scan_status": "COMPLETE",
+    "scan_finding_counts": {}
+  },
+  "runtime_controls": {
+    "ssm_ping_status": "Online",
+    "ssm_agent_version": "3.3.4624.0",
+    "public_ip_assigned": false,
+    "security_group_ingress_rules": 0,
+    "security_group_egress": "tcp/443 only",
+    "imdsv2_required": true,
+    "root_volume_encrypted": true,
+    "root_volume_type": "gp3",
+    "container_health": "healthy",
+    "container_image_digest_pinned": true,
+    "service_binding": "127.0.0.1:8080",
+    "ui_deployed": false,
+    "ai_mode": "shadow",
+    "model_profile": "codex-recorded-shadow",
+    "live_provider_keys_present": false,
+    "runtime_secret_name": "agentsec-demo/runtime",
+    "runtime_secret_value_recorded": false
+  },
+  "least_privilege": {
+    "managed_policies": [
+      "AmazonSSMManagedInstanceCore"
+    ],
+    "inline_access": [
+      "read agentsec-demo/runtime only",
+      "obtain ECR authorization token",
+      "pull agentsec-demo-backend only"
+    ]
+  },
+  "verification": {
+    "ssm_command_id": "5c3617cd-f2c6-4e74-9a6c-8f111ae1472f",
+    "ssm_command_status": "Success",
+    "ssm_response_code": 0,
+    "standard_error_empty": true,
+    "raw_event_canary_echoed": false,
+    "scenarios": [
+      {
+        "name": "benign_inventory_read",
+        "overall_action": "allow",
+        "effect_allowed": true,
+        "alerts": [],
+        "ledger_verified": true
+      },
+      {
+        "name": "indirect_injection_secret_egress",
+        "overall_action": "deny",
+        "effect_allowed": false,
+        "alerts": [
+          "indirect_prompt_injection",
+          "secret_egress"
+        ],
+        "ledger_verified": true
+      }
+    ]
+  },
+  "exposure": {
+    "public_endpoint": false,
+    "public_ui": false,
+    "openai_live_enabled": false,
+    "anthropic_live_enabled": false
+  }
+}

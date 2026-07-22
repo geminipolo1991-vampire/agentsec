@@ -1,0 +1,872 @@
+{
+  "$defs": {
+    "AuthorizationAlertSummary": {
+      "additionalProperties": false,
+      "properties": {
+        "alert_id": {
+          "title": "Alert Id",
+          "type": "string"
+        },
+        "alert_type": {
+          "title": "Alert Type",
+          "type": "string"
+        },
+        "decision": {
+          "title": "Decision",
+          "type": "string"
+        },
+        "escalation": {
+          "title": "Escalation",
+          "type": "string"
+        },
+        "finding_id": {
+          "title": "Finding Id",
+          "type": "string"
+        },
+        "severity": {
+          "title": "Severity",
+          "type": "string"
+        }
+      },
+      "required": [
+        "alert_id",
+        "finding_id",
+        "alert_type",
+        "severity",
+        "decision",
+        "escalation"
+      ],
+      "title": "AuthorizationAlertSummary",
+      "type": "object"
+    },
+    "IncidentAlertDetail": {
+      "additionalProperties": false,
+      "properties": {
+        "alert_id": {
+          "title": "Alert Id",
+          "type": "string"
+        },
+        "alert_type": {
+          "title": "Alert Type",
+          "type": "string"
+        },
+        "confidence": {
+          "title": "Confidence",
+          "type": "number"
+        },
+        "detector_id": {
+          "title": "Detector Id",
+          "type": "string"
+        },
+        "event_id": {
+          "title": "Event Id",
+          "type": "string"
+        },
+        "evidence": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Evidence",
+          "type": "array"
+        },
+        "reason_codes": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Reason Codes",
+          "type": "array"
+        },
+        "recommended_action": {
+          "title": "Recommended Action",
+          "type": "string"
+        },
+        "severity": {
+          "title": "Severity",
+          "type": "string"
+        },
+        "title": {
+          "title": "Title",
+          "type": "string"
+        }
+      },
+      "required": [
+        "alert_id",
+        "event_id",
+        "alert_type",
+        "title",
+        "severity",
+        "confidence",
+        "detector_id",
+        "reason_codes",
+        "recommended_action",
+        "evidence"
+      ],
+      "title": "IncidentAlertDetail",
+      "type": "object"
+    },
+    "IncidentAuditEntry": {
+      "additionalProperties": false,
+      "properties": {
+        "actor": {
+          "title": "Actor",
+          "type": "string"
+        },
+        "at": {
+          "title": "At",
+          "type": "string"
+        },
+        "from_status": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "title": "From Status"
+        },
+        "reason": {
+          "title": "Reason",
+          "type": "string"
+        },
+        "to_status": {
+          "title": "To Status",
+          "type": "string"
+        }
+      },
+      "required": [
+        "from_status",
+        "to_status",
+        "actor",
+        "reason",
+        "at"
+      ],
+      "title": "IncidentAuditEntry",
+      "type": "object"
+    },
+    "IncidentDetail": {
+      "additionalProperties": false,
+      "properties": {
+        "alert": {
+          "$ref": "#/$defs/IncidentAlertDetail"
+        },
+        "alert_type": {
+          "title": "Alert Type",
+          "type": "string"
+        },
+        "detail_availability": {
+          "default": "complete",
+          "title": "Detail Availability",
+          "type": "string"
+        },
+        "enrichment": {
+          "items": {
+            "$ref": "#/$defs/IncidentEnrichmentFact"
+          },
+          "title": "Enrichment",
+          "type": "array"
+        },
+        "escalation": {
+          "$ref": "#/$defs/IncidentEscalationDetail"
+        },
+        "event_context": {
+          "$ref": "#/$defs/IncidentEventContext"
+        },
+        "finding": {
+          "$ref": "#/$defs/IncidentFindingDetail"
+        },
+        "incident_id": {
+          "title": "Incident Id",
+          "type": "string"
+        },
+        "ingestion": {
+          "$ref": "#/$defs/IncidentIngestionDetail"
+        },
+        "judgment": {
+          "$ref": "#/$defs/IncidentJudgmentDetail"
+        },
+        "redaction": {
+          "$ref": "#/$defs/IncidentRedaction"
+        },
+        "response": {
+          "$ref": "#/$defs/IncidentResponseDetail"
+        },
+        "risk_contributions": {
+          "items": {
+            "$ref": "#/$defs/RiskContribution"
+          },
+          "title": "Risk Contributions",
+          "type": "array"
+        },
+        "schema_version": {
+          "default": "1.0.0",
+          "title": "Schema Version",
+          "type": "string"
+        },
+        "timeline": {
+          "items": {
+            "$ref": "#/$defs/IncidentTimelineStep"
+          },
+          "title": "Timeline",
+          "type": "array"
+        },
+        "trace_mode": {
+          "default": "authoritative",
+          "title": "Trace Mode",
+          "type": "string"
+        },
+        "triage": {
+          "$ref": "#/$defs/IncidentTriageDetail"
+        },
+        "validation": {
+          "$ref": "#/$defs/IncidentValidation"
+        }
+      },
+      "required": [
+        "incident_id",
+        "alert_type",
+        "event_context",
+        "alert",
+        "ingestion",
+        "triage",
+        "risk_contributions",
+        "enrichment",
+        "judgment",
+        "escalation",
+        "response",
+        "finding",
+        "timeline",
+        "validation",
+        "redaction"
+      ],
+      "title": "IncidentDetail",
+      "type": "object"
+    },
+    "IncidentEnrichmentFact": {
+      "additionalProperties": false,
+      "properties": {
+        "evidence": {
+          "title": "Evidence",
+          "type": "string"
+        },
+        "impact": {
+          "title": "Impact",
+          "type": "string"
+        },
+        "kind": {
+          "title": "Kind",
+          "type": "string"
+        },
+        "source": {
+          "title": "Source",
+          "type": "string"
+        },
+        "status": {
+          "title": "Status",
+          "type": "string"
+        },
+        "value": {
+          "title": "Value",
+          "type": "string"
+        }
+      },
+      "required": [
+        "kind",
+        "status",
+        "value",
+        "evidence",
+        "source",
+        "impact"
+      ],
+      "title": "IncidentEnrichmentFact",
+      "type": "object"
+    },
+    "IncidentEscalationDetail": {
+      "additionalProperties": false,
+      "properties": {
+        "case_id": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "title": "Case Id"
+        },
+        "escalated_at": {
+          "title": "Escalated At",
+          "type": "string"
+        },
+        "level": {
+          "title": "Level",
+          "type": "string"
+        },
+        "queue": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "title": "Queue"
+        },
+        "reason": {
+          "title": "Reason",
+          "type": "string"
+        }
+      },
+      "required": [
+        "level",
+        "queue",
+        "case_id",
+        "reason",
+        "escalated_at"
+      ],
+      "title": "IncidentEscalationDetail",
+      "type": "object"
+    },
+    "IncidentEventContext": {
+      "additionalProperties": false,
+      "properties": {
+        "agent_id": {
+          "title": "Agent Id",
+          "type": "string"
+        },
+        "authority_operations": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Authority Operations",
+          "type": "array"
+        },
+        "data_classes": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Data Classes",
+          "type": "array"
+        },
+        "destination_class": {
+          "title": "Destination Class",
+          "type": "string"
+        },
+        "destination_ref": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "title": "Destination Ref"
+        },
+        "flow_id": {
+          "title": "Flow Id",
+          "type": "string"
+        },
+        "indicators": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Indicators",
+          "type": "array"
+        },
+        "operation": {
+          "title": "Operation",
+          "type": "string"
+        },
+        "resource_class": {
+          "title": "Resource Class",
+          "type": "string"
+        },
+        "resource_ref": {
+          "title": "Resource Ref",
+          "type": "string"
+        },
+        "source_ref": {
+          "title": "Source Ref",
+          "type": "string"
+        },
+        "source_trust": {
+          "title": "Source Trust",
+          "type": "string"
+        },
+        "source_type": {
+          "title": "Source Type",
+          "type": "string"
+        },
+        "tenant_id": {
+          "title": "Tenant Id",
+          "type": "string"
+        },
+        "tool_name": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "title": "Tool Name"
+        },
+        "tool_schema_drift": {
+          "title": "Tool Schema Drift",
+          "type": "boolean"
+        }
+      },
+      "required": [
+        "tenant_id",
+        "flow_id",
+        "agent_id",
+        "operation",
+        "source_type",
+        "source_trust",
+        "source_ref",
+        "resource_class",
+        "resource_ref",
+        "destination_class",
+        "destination_ref",
+        "data_classes",
+        "authority_operations",
+        "indicators",
+        "tool_name",
+        "tool_schema_drift"
+      ],
+      "title": "IncidentEventContext",
+      "type": "object"
+    },
+    "IncidentFindingDetail": {
+      "additionalProperties": false,
+      "properties": {
+        "audit": {
+          "items": {
+            "$ref": "#/$defs/IncidentAuditEntry"
+          },
+          "title": "Audit",
+          "type": "array"
+        },
+        "created_at": {
+          "title": "Created At",
+          "type": "string"
+        },
+        "finding_id": {
+          "title": "Finding Id",
+          "type": "string"
+        },
+        "status": {
+          "title": "Status",
+          "type": "string"
+        },
+        "updated_at": {
+          "title": "Updated At",
+          "type": "string"
+        }
+      },
+      "required": [
+        "finding_id",
+        "status",
+        "created_at",
+        "updated_at",
+        "audit"
+      ],
+      "title": "IncidentFindingDetail",
+      "type": "object"
+    },
+    "IncidentIngestionDetail": {
+      "additionalProperties": false,
+      "properties": {
+        "current_hash": {
+          "title": "Current Hash",
+          "type": "string"
+        },
+        "duplicate": {
+          "title": "Duplicate",
+          "type": "boolean"
+        },
+        "ingested_at": {
+          "title": "Ingested At",
+          "type": "string"
+        },
+        "previous_hash": {
+          "title": "Previous Hash",
+          "type": "string"
+        },
+        "sequence": {
+          "title": "Sequence",
+          "type": "integer"
+        }
+      },
+      "required": [
+        "duplicate",
+        "sequence",
+        "previous_hash",
+        "current_hash",
+        "ingested_at"
+      ],
+      "title": "IncidentIngestionDetail",
+      "type": "object"
+    },
+    "IncidentJudgmentDetail": {
+      "additionalProperties": false,
+      "properties": {
+        "action": {
+          "title": "Action",
+          "type": "string"
+        },
+        "ai_mode": {
+          "title": "Ai Mode",
+          "type": "string"
+        },
+        "deterministic_action": {
+          "title": "Deterministic Action",
+          "type": "string"
+        },
+        "judged_at": {
+          "title": "Judged At",
+          "type": "string"
+        },
+        "model_verdict": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/IncidentModelVerdict"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "policy_version": {
+          "title": "Policy Version",
+          "type": "string"
+        },
+        "reason_codes": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Reason Codes",
+          "type": "array"
+        }
+      },
+      "required": [
+        "action",
+        "deterministic_action",
+        "reason_codes",
+        "ai_mode",
+        "policy_version",
+        "judged_at",
+        "model_verdict"
+      ],
+      "title": "IncidentJudgmentDetail",
+      "type": "object"
+    },
+    "IncidentModelVerdict": {
+      "additionalProperties": false,
+      "properties": {
+        "action": {
+          "title": "Action",
+          "type": "string"
+        },
+        "confidence": {
+          "title": "Confidence",
+          "type": "number"
+        },
+        "model_id": {
+          "title": "Model Id",
+          "type": "string"
+        },
+        "provider": {
+          "title": "Provider",
+          "type": "string"
+        },
+        "reason_codes": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Reason Codes",
+          "type": "array"
+        }
+      },
+      "required": [
+        "provider",
+        "model_id",
+        "action",
+        "confidence",
+        "reason_codes"
+      ],
+      "title": "IncidentModelVerdict",
+      "type": "object"
+    },
+    "IncidentRedaction": {
+      "additionalProperties": false,
+      "properties": {
+        "hashed_reference_count": {
+          "minimum": 0,
+          "title": "Hashed Reference Count",
+          "type": "integer"
+        },
+        "policy_version": {
+          "default": "incident-detail-2026-07-22.1",
+          "title": "Policy Version",
+          "type": "string"
+        },
+        "raw_prompts_included": {
+          "default": false,
+          "title": "Raw Prompts Included",
+          "type": "boolean"
+        },
+        "raw_tool_arguments_included": {
+          "default": false,
+          "title": "Raw Tool Arguments Included",
+          "type": "boolean"
+        }
+      },
+      "required": [
+        "hashed_reference_count"
+      ],
+      "title": "IncidentRedaction",
+      "type": "object"
+    },
+    "IncidentResponseDetail": {
+      "additionalProperties": false,
+      "properties": {
+        "actions": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Actions",
+          "type": "array"
+        },
+        "effect_allowed": {
+          "title": "Effect Allowed",
+          "type": "boolean"
+        },
+        "notes": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Notes",
+          "type": "array"
+        },
+        "responded_at": {
+          "title": "Responded At",
+          "type": "string"
+        },
+        "responder": {
+          "title": "Responder",
+          "type": "string"
+        },
+        "simulated": {
+          "title": "Simulated",
+          "type": "boolean"
+        }
+      },
+      "required": [
+        "actions",
+        "effect_allowed",
+        "simulated",
+        "responder",
+        "notes",
+        "responded_at"
+      ],
+      "title": "IncidentResponseDetail",
+      "type": "object"
+    },
+    "IncidentTimelineStep": {
+      "additionalProperties": false,
+      "properties": {
+        "at": {
+          "title": "At",
+          "type": "string"
+        },
+        "evidence": {
+          "additionalProperties": {
+            "type": "string"
+          },
+          "title": "Evidence",
+          "type": "object"
+        },
+        "outcome": {
+          "title": "Outcome",
+          "type": "string"
+        },
+        "stage": {
+          "title": "Stage",
+          "type": "string"
+        }
+      },
+      "required": [
+        "stage",
+        "outcome",
+        "at"
+      ],
+      "title": "IncidentTimelineStep",
+      "type": "object"
+    },
+    "IncidentTriageDetail": {
+      "additionalProperties": false,
+      "properties": {
+        "assessed_at": {
+          "title": "Assessed At",
+          "type": "string"
+        },
+        "priority": {
+          "title": "Priority",
+          "type": "string"
+        },
+        "reasons": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Reasons",
+          "type": "array"
+        },
+        "risk_score": {
+          "title": "Risk Score",
+          "type": "integer"
+        },
+        "score_reproduced": {
+          "default": true,
+          "title": "Score Reproduced",
+          "type": "boolean"
+        },
+        "score_version": {
+          "default": "triage-2026-07-22.1",
+          "title": "Score Version",
+          "type": "string"
+        },
+        "severity": {
+          "title": "Severity",
+          "type": "string"
+        }
+      },
+      "required": [
+        "risk_score",
+        "severity",
+        "priority",
+        "reasons",
+        "assessed_at"
+      ],
+      "title": "IncidentTriageDetail",
+      "type": "object"
+    },
+    "IncidentValidation": {
+      "additionalProperties": false,
+      "properties": {
+        "authoritative_pipeline_result": {
+          "default": true,
+          "title": "Authoritative Pipeline Result",
+          "type": "boolean"
+        },
+        "basis": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Basis",
+          "type": "array"
+        },
+        "deterministic_match": {
+          "default": true,
+          "title": "Deterministic Match",
+          "type": "boolean"
+        },
+        "ledger_committed": {
+          "default": true,
+          "title": "Ledger Committed",
+          "type": "boolean"
+        },
+        "response_simulated": {
+          "title": "Response Simulated",
+          "type": "boolean"
+        },
+        "status": {
+          "default": "confirmed_policy_violation",
+          "title": "Status",
+          "type": "string"
+        }
+      },
+      "required": [
+        "response_simulated",
+        "basis"
+      ],
+      "title": "IncidentValidation",
+      "type": "object"
+    },
+    "RiskContribution": {
+      "additionalProperties": false,
+      "properties": {
+        "delta": {
+          "title": "Delta",
+          "type": "integer"
+        },
+        "evidence": {
+          "title": "Evidence",
+          "type": "string"
+        },
+        "label": {
+          "title": "Label",
+          "type": "string"
+        }
+      },
+      "required": [
+        "label",
+        "delta",
+        "evidence"
+      ],
+      "title": "RiskContribution",
+      "type": "object"
+    }
+  },
+  "additionalProperties": false,
+  "properties": {
+    "alerts": {
+      "items": {
+        "$ref": "#/$defs/AuthorizationAlertSummary"
+      },
+      "title": "Alerts",
+      "type": "array"
+    },
+    "effect_allowed": {
+      "title": "Effect Allowed",
+      "type": "boolean"
+    },
+    "event_id": {
+      "title": "Event Id",
+      "type": "string"
+    },
+    "incidents": {
+      "items": {
+        "$ref": "#/$defs/IncidentDetail"
+      },
+      "title": "Incidents",
+      "type": "array"
+    },
+    "ledger_verified": {
+      "title": "Ledger Verified",
+      "type": "boolean"
+    },
+    "overall_action": {
+      "title": "Overall Action",
+      "type": "string"
+    },
+    "schema_version": {
+      "default": "1.1.0",
+      "title": "Schema Version",
+      "type": "string"
+    }
+  },
+  "required": [
+    "event_id",
+    "overall_action",
+    "effect_allowed",
+    "ledger_verified"
+  ],
+  "title": "AuthorizationResponse",
+  "type": "object"
+}

@@ -1,0 +1,170 @@
+{
+  "AWSTemplateFormatVersion": "2010-09-09",
+  "Description": "AI-Agent Security PoC on a private, SSM-managed EC2 instance in the selected region",
+  "Parameters": {
+    "VpcId": {
+      "Type": "AWS::EC2::VPC::Id"
+    },
+    "SubnetId": {
+      "Type": "AWS::EC2::Subnet::Id",
+      "Description": "Private subnet with NAT or VPC endpoints for SSM, ECR, Secrets Manager, and HTTPS provider egress"
+    },
+    "AmiId": {
+      "Type": "AWS::EC2::Image::Id",
+      "Description": "Current approved Amazon Linux 2023 AMI with SSM Agent"
+    },
+    "InstanceType": {
+      "Type": "String",
+      "Default": "t3.small",
+      "AllowedValues": ["t3.micro", "t3.small", "t3.medium"]
+    },
+    "ContainerImage": {
+      "Type": "String",
+      "Description": "Immutable ECR image URI including sha256 digest"
+    },
+    "ContainerRepositoryArn": {
+      "Type": "String",
+      "Description": "ARN of the one ECR repository containing ContainerImage"
+    },
+    "RuntimeSecretName": {
+      "Type": "String",
+      "Default": "agentsec-demo/runtime",
+      "AllowedPattern": "^[A-Za-z0-9/_+=.@-]+$",
+      "Description": "Name of the dedicated AgentSec secret whose SecretString is a Docker env-file"
+    }
+  },
+  "Resources": {
+    "InstanceSecurityGroup": {
+      "Type": "AWS::EC2::SecurityGroup",
+      "Properties": {
+        "GroupDescription": "No ingress; HTTPS egress only for SSM, ECR, Secrets Manager, and approved model APIs",
+        "VpcId": {"Ref": "VpcId"},
+        "SecurityGroupEgress": [
+          {
+            "IpProtocol": "tcp",
+            "FromPort": 443,
+            "ToPort": 443,
+            "CidrIp": "0.0.0.0/0",
+            "Description": "HTTPS egress; use VPC endpoints and egress proxy for production"
+          }
+        ],
+        "Tags": [
+          {"Key": "Name", "Value": "agentsec-no-ingress"},
+          {"Key": "Project", "Value": "ai-agent-security"}
+        ]
+      }
+    },
+    "InstanceRole": {
+      "Type": "AWS::IAM::Role",
+      "Properties": {
+        "AssumeRolePolicyDocument": {
+          "Version": "2012-10-17",
+          "Statement": [
+            {
+              "Effect": "Allow",
+              "Principal": {"Service": ["ec2.amazonaws.com"]},
+              "Action": ["sts:AssumeRole"]
+            }
+          ]
+        },
+        "ManagedPolicyArns": [
+          "arn:aws:iam::aws:policy/AmazonSSMManagedInstanceCore"
+        ],
+        "Policies": [
+          {
+            "PolicyName": "AgentSecurityRuntimeRead",
+            "PolicyDocument": {
+              "Version": "2012-10-17",
+              "Statement": [
+                {
+                  "Sid": "ReadOneRuntimeSecret",
+                  "Effect": "Allow",
+                  "Action": ["secretsmanager:GetSecretValue"],
+                  "Resource": {
+                    "Fn::Sub": "arn:${AWS::Partition}:secretsmanager:${AWS::Region}:${AWS::AccountId}:secret:${RuntimeSecretName}-??????"
+                  }
+                },
+                {
+                  "Sid": "EcrLogin",
+                  "Effect": "Allow",
+                  "Action": ["ecr:GetAuthorizationToken"],
+                  "Resource": "*"
+                },
+                {
+                  "Sid": "PullOneRepository",
+                  "Effect": "Allow",
+                  "Action": [
+                    "ecr:BatchCheckLayerAvailability",
+                    "ecr:GetDownloadUrlForLayer",
+                    "ecr:BatchGetImage"
+                  ],
+                  "Resource": {"Ref": "ContainerRepositoryArn"}
+                }
+              ]
+            }
+          }
+        ]
+      }
+    },
+    "InstanceProfile": {
+      "Type": "AWS::IAM::InstanceProfile",
+      "Properties": {
+        "Roles": [{"Ref": "InstanceRole"}]
+      }
+    },
+    "AgentSecurityInstance": {
+      "Type": "AWS::EC2::Instance",
+      "Properties": {
+        "ImageId": {"Ref": "AmiId"},
+        "InstanceType": {"Ref": "InstanceType"},
+        "IamInstanceProfile": {"Ref": "InstanceProfile"},
+        "NetworkInterfaces": [
+          {
+            "AssociatePublicIpAddress": false,
+            "DeviceIndex": "0",
+            "DeleteOnTermination": true,
+            "GroupSet": [{"Ref": "InstanceSecurityGroup"}],
+            "SubnetId": {"Ref": "SubnetId"}
+          }
+        ],
+        "MetadataOptions": {
+          "HttpEndpoint": "enabled",
+          "HttpTokens": "required",
+          "HttpPutResponseHopLimit": 2,
+          "InstanceMetadataTags": "disabled"
+        },
+        "BlockDeviceMappings": [
+          {
+            "DeviceName": "/dev/xvda",
+            "Ebs": {
+              "DeleteOnTermination": true,
+              "Encrypted": true,
+              "VolumeSize": 16,
+              "VolumeType": "gp3"
+            }
+          }
+        ],
+        "UserData": {
+          "Fn::Base64": {
+            "Fn::Sub": "#!/bin/bash\nset -euo pipefail\ndnf install -y docker\ncommand -v aws >/dev/null\nsystemctl enable --now docker\ninstall -d -m 0700 /etc/agentsec\naws secretsmanager get-secret-value --region ${AWS::Region} --secret-id '${RuntimeSecretName}' --query SecretString --output text > /etc/agentsec/runtime.env\nchmod 0600 /etc/agentsec/runtime.env\nregistry=$(printf '%s' '${ContainerImage}' | cut -d/ -f1)\naws ecr get-login-password --region ${AWS::Region} | docker login --username AWS --password-stdin \"$registry\"\ndocker pull '${ContainerImage}'\ncat > /etc/systemd/system/agentsec.service <<'UNIT'\n[Unit]\nDescription=AI-Agent Security authorization service\nAfter=docker.service network-online.target\nRequires=docker.service\n\n[Service]\nRestart=always\nRestartSec=5\nExecStartPre=-/usr/bin/docker rm -f agentsec\nExecStart=/usr/bin/docker run --name agentsec --read-only --tmpfs /tmp:rw,noexec,nosuid,size=64m --cap-drop=ALL --security-opt=no-new-privileges --env-file=/etc/agentsec/runtime.env -p 127.0.0.1:8080:8080 '${ContainerImage}' serve --host 0.0.0.0 --port 8080\nExecStop=/usr/bin/docker stop agentsec\n\n[Install]\nWantedBy=multi-user.target\nUNIT\nsystemctl daemon-reload\nsystemctl enable --now agentsec.service\n"
+          }
+        },
+        "Tags": [
+          {"Key": "Name", "Value": "agentsec-tokyo"},
+          {"Key": "Project", "Value": "ai-agent-security"},
+          {"Key": "DataClassification", "Value": "restricted-metadata"}
+        ]
+      }
+    }
+  },
+  "Outputs": {
+    "InstanceId": {
+      "Value": {"Ref": "AgentSecurityInstance"},
+      "Description": "Use Systems Manager Session Manager; no inbound port is open"
+    },
+    "LocalServiceUrl": {
+      "Value": "http://127.0.0.1:8080",
+      "Description": "Reach only through SSM port forwarding during PoC"
+    }
+  }
+}

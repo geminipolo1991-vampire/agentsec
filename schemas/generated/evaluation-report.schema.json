@@ -1,0 +1,173 @@
+{
+  "$defs": {
+    "EvaluationMetrics": {
+      "additionalProperties": false,
+      "properties": {
+        "attack_scenarios": {
+          "minimum": 0,
+          "title": "Attack Scenarios",
+          "type": "integer"
+        },
+        "benign_scenarios": {
+          "minimum": 0,
+          "title": "Benign Scenarios",
+          "type": "integer"
+        },
+        "benign_task_completion_rate": {
+          "maximum": 1.0,
+          "minimum": 0.0,
+          "title": "Benign Task Completion Rate",
+          "type": "number"
+        },
+        "detector_recall": {
+          "maximum": 1.0,
+          "minimum": 0.0,
+          "title": "Detector Recall",
+          "type": "number"
+        },
+        "false_block_rate": {
+          "maximum": 1.0,
+          "minimum": 0.0,
+          "title": "False Block Rate",
+          "type": "number"
+        },
+        "forbidden_effect_attack_success_rate": {
+          "maximum": 1.0,
+          "minimum": 0.0,
+          "title": "Forbidden Effect Attack Success Rate",
+          "type": "number"
+        }
+      },
+      "required": [
+        "attack_scenarios",
+        "benign_scenarios",
+        "forbidden_effect_attack_success_rate",
+        "benign_task_completion_rate",
+        "false_block_rate",
+        "detector_recall"
+      ],
+      "title": "EvaluationMetrics",
+      "type": "object"
+    },
+    "EvaluationMode": {
+      "enum": [
+        "unprotected",
+        "telemetry_only",
+        "static_allowlist",
+        "sink_without_provenance",
+        "provenance_without_authority",
+        "deterministic",
+        "codex_shadow",
+        "semantic_hold"
+      ],
+      "title": "EvaluationMode",
+      "type": "string"
+    },
+    "ScenarioEvaluation": {
+      "additionalProperties": false,
+      "properties": {
+        "attack": {
+          "title": "Attack",
+          "type": "boolean"
+        },
+        "dataset_split": {
+          "title": "Dataset Split",
+          "type": "string"
+        },
+        "expected_alert_types": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Expected Alert Types",
+          "type": "array"
+        },
+        "forbidden_effect_completed": {
+          "title": "Forbidden Effect Completed",
+          "type": "boolean"
+        },
+        "ground_truth_passed": {
+          "title": "Ground Truth Passed",
+          "type": "boolean"
+        },
+        "observed_alert_types": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Observed Alert Types",
+          "type": "array"
+        },
+        "overall_action": {
+          "title": "Overall Action",
+          "type": "string"
+        },
+        "required_effect_completed": {
+          "title": "Required Effect Completed",
+          "type": "boolean"
+        },
+        "scenario": {
+          "title": "Scenario",
+          "type": "string"
+        }
+      },
+      "required": [
+        "scenario",
+        "dataset_split",
+        "attack",
+        "expected_alert_types",
+        "observed_alert_types",
+        "forbidden_effect_completed",
+        "required_effect_completed",
+        "overall_action",
+        "ground_truth_passed"
+      ],
+      "title": "ScenarioEvaluation",
+      "type": "object"
+    }
+  },
+  "additionalProperties": false,
+  "properties": {
+    "dataset_version": {
+      "title": "Dataset Version",
+      "type": "string"
+    },
+    "metrics": {
+      "$ref": "#/$defs/EvaluationMetrics"
+    },
+    "mode": {
+      "$ref": "#/$defs/EvaluationMode"
+    },
+    "record_digest": {
+      "title": "Record Digest",
+      "type": "string"
+    },
+    "scenarios": {
+      "items": {
+        "$ref": "#/$defs/ScenarioEvaluation"
+      },
+      "title": "Scenarios",
+      "type": "array"
+    },
+    "schema_version": {
+      "default": "1.0.0",
+      "title": "Schema Version",
+      "type": "string"
+    },
+    "split_metrics": {
+      "additionalProperties": {
+        "$ref": "#/$defs/EvaluationMetrics"
+      },
+      "title": "Split Metrics",
+      "type": "object"
+    }
+  },
+  "required": [
+    "dataset_version",
+    "mode",
+    "scenarios",
+    "metrics",
+    "split_metrics",
+    "record_digest"
+  ],
+  "title": "EvaluationReport",
+  "type": "object"
+}

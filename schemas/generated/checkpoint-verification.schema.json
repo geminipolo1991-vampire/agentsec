@@ -1,0 +1,25 @@
+{
+  "additionalProperties": false,
+  "properties": {
+    "reason": {
+      "title": "Reason",
+      "type": "string"
+    },
+    "sequence": {
+      "minimum": 0,
+      "title": "Sequence",
+      "type": "integer"
+    },
+    "valid": {
+      "title": "Valid",
+      "type": "boolean"
+    }
+  },
+  "required": [
+    "valid",
+    "reason",
+    "sequence"
+  ],
+  "title": "CheckpointVerification",
+  "type": "object"
+}

@@ -1,0 +1,59 @@
+{
+  "artifacts": [
+    {
+      "path": "reports/evaluation/ablation.json",
+      "record_digest": "09ff91acb1fc64c605894e006c9908d368dd6023439034656e15d6bba2b49e20",
+      "sha256": "9a3913a303a34b4ecfbc75e25dfa628762709a301d365d83c165d13660c006ab"
+    },
+    {
+      "path": "reports/evaluation/codex_shadow.json",
+      "record_digest": "4339271f413c6a84cecba3cf7f7d8f91da299696a00611723f574e50bc1f7d8a",
+      "sha256": "3a025ff220d5af25654f9e7ae155418574703ef1cd23e1193157cb2a704efbbf"
+    },
+    {
+      "path": "reports/evaluation/deterministic.json",
+      "record_digest": "9293b398da15bb0b9f1ead6a21fc74acd5e400feb9d15a9bb3a85d3f1e25e144",
+      "sha256": "875a6949e9bf97e17d7ccd462c71f978501e5f42342381c515947fbf255364f2"
+    },
+    {
+      "path": "reports/evaluation/provenance_without_authority.json",
+      "record_digest": "d8e295e5642e132253f30bec79a9339f9241e32f8bc87c8142633c8320af9e9c",
+      "sha256": "739386c193bcb123f502cc8c038bccfe5cda382d1ab923e971c5c817908fd355"
+    },
+    {
+      "path": "reports/evaluation/semantic_hold.json",
+      "record_digest": "3207960a0632a62e935c884a7a8073a0a1a96c9cfc616dfd398285412c74c3f1",
+      "sha256": "2c814ebce227fa6c723105df250f9ae27cd0decd1c784b269116e6e8ac7a1eb2"
+    },
+    {
+      "path": "reports/evaluation/sink_without_provenance.json",
+      "record_digest": "2b9cc9ad70735c4416dd7ed51f1588dcf3b20ba351bc284266085199a3cfbadd",
+      "sha256": "a43314d08ddb1caa2fce2fe1bc077b2c994eccf58b856a4948129f43f5ff0b66"
+    },
+    {
+      "path": "reports/evaluation/static_allowlist.json",
+      "record_digest": "5a41597b4d244cedf82335d48f2fc162d34455d713f2cf60fc5846871002db90",
+      "sha256": "8a7132d869f4a3590ace163160850a2487e1186139775519c00e8caecda78f4e"
+    },
+    {
+      "path": "reports/evaluation/telemetry_only.json",
+      "record_digest": "5b9b3855b4cb596599654c6774b79b12a644c3500b867512c7918ff8ee3d38a2",
+      "sha256": "0396a850ad86240ac6ee62ee60b863028f7d95a840c1fd76938bc540e6915707"
+    },
+    {
+      "path": "reports/evaluation/unprotected.json",
+      "record_digest": "6da6ead128402c6418c8fc0279d3939cf962666126a62c2730e21d5cf2d328ee",
+      "sha256": "bc160fc7cf5cae602111b86c4b866c8e758c11de24ca4500efd70d51d212c65a"
+    }
+  ],
+  "dataset_version": "synthetic-corpus-2026-07-22.1",
+  "input_digests": {
+    "configs/codex-evaluation.json": "04665950ce959b5fda2f7e5c2110fbf16ddeec08c293709ceee49c36ada72490",
+    "src/agentsec/detection.py": "a4ccea9027ab7e87c0e4e554c87e704549593b9b9c96e48b3c615b68fe437040",
+    "src/agentsec/evaluation.py": "cac231354a37a02c9dcfc802ecf1f87983c47cda751fcd2e287751c7f7958fdb",
+    "src/agentsec/scenarios.py": "bbfe5a2fd36cd1ce696f2b101b5c73215ae8045e966df8d7d91cac01655cd9c5",
+    "src/agentsec/synthetic.py": "5af135383c6ea50204d7b3b2943a0fa229ef1f924de7cc8542050bd06204a205"
+  },
+  "manifest_digest": "d842f37eef7182fed83f53527ec045b9f89c40389461d0f54b743058e5c9f02f",
+  "schema_version": "1.0.0"
+}

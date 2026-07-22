@@ -1,0 +1,98 @@
+{
+  "additionalProperties": false,
+  "properties": {
+    "alert_id": {
+      "title": "Alert Id",
+      "type": "string"
+    },
+    "alert_type": {
+      "title": "Alert Type",
+      "type": "string"
+    },
+    "confidence": {
+      "title": "Confidence",
+      "type": "number"
+    },
+    "destination_class": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "title": "Destination Class"
+    },
+    "evidence_ids": {
+      "items": {
+        "type": "string"
+      },
+      "title": "Evidence Ids",
+      "type": "array"
+    },
+    "operation": {
+      "title": "Operation",
+      "type": "string"
+    },
+    "priority": {
+      "title": "Priority",
+      "type": "string"
+    },
+    "reason_codes": {
+      "items": {
+        "type": "string"
+      },
+      "title": "Reason Codes",
+      "type": "array"
+    },
+    "redaction_count": {
+      "minimum": 0,
+      "title": "Redaction Count",
+      "type": "integer"
+    },
+    "resource_class": {
+      "title": "Resource Class",
+      "type": "string"
+    },
+    "risk_score": {
+      "title": "Risk Score",
+      "type": "integer"
+    },
+    "schema_version": {
+      "default": "1.0.0",
+      "title": "Schema Version",
+      "type": "string"
+    },
+    "severity": {
+      "title": "Severity",
+      "type": "string"
+    },
+    "source_trust": {
+      "title": "Source Trust",
+      "type": "string"
+    },
+    "untrusted_evidence_is_data": {
+      "default": true,
+      "title": "Untrusted Evidence Is Data",
+      "type": "boolean"
+    }
+  },
+  "required": [
+    "alert_id",
+    "alert_type",
+    "severity",
+    "confidence",
+    "source_trust",
+    "operation",
+    "resource_class",
+    "destination_class",
+    "reason_codes",
+    "evidence_ids",
+    "risk_score",
+    "priority",
+    "redaction_count"
+  ],
+  "title": "ModelEvidenceBundle",
+  "type": "object"
+}

@@ -1,0 +1,86 @@
+{
+  "$defs": {
+    "AblationComponent": {
+      "enum": [
+        "remove_provenance",
+        "remove_authority",
+        "remove_abom_drift",
+        "remove_independent_gateway",
+        "remove_graph_correlation",
+        "remove_ai_analysis",
+        "remove_memory_provenance",
+        "remove_checkpoint_verification"
+      ],
+      "title": "AblationComponent",
+      "type": "string"
+    },
+    "AblationResult": {
+      "additionalProperties": false,
+      "properties": {
+        "affected_scenarios": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Affected Scenarios",
+          "type": "array"
+        },
+        "attack_scenarios": {
+          "title": "Attack Scenarios",
+          "type": "integer"
+        },
+        "component": {
+          "$ref": "#/$defs/AblationComponent"
+        },
+        "forbidden_effect_attack_success_rate": {
+          "maximum": 1.0,
+          "minimum": 0.0,
+          "title": "Forbidden Effect Attack Success Rate",
+          "type": "number"
+        }
+      },
+      "required": [
+        "component",
+        "attack_scenarios",
+        "forbidden_effect_attack_success_rate",
+        "affected_scenarios"
+      ],
+      "title": "AblationResult",
+      "type": "object"
+    }
+  },
+  "additionalProperties": false,
+  "properties": {
+    "dataset_version": {
+      "title": "Dataset Version",
+      "type": "string"
+    },
+    "full_system_attack_success_rate": {
+      "title": "Full System Attack Success Rate",
+      "type": "number"
+    },
+    "record_digest": {
+      "title": "Record Digest",
+      "type": "string"
+    },
+    "results": {
+      "items": {
+        "$ref": "#/$defs/AblationResult"
+      },
+      "title": "Results",
+      "type": "array"
+    },
+    "schema_version": {
+      "default": "1.0.0",
+      "title": "Schema Version",
+      "type": "string"
+    }
+  },
+  "required": [
+    "dataset_version",
+    "full_system_attack_success_rate",
+    "results",
+    "record_digest"
+  ],
+  "title": "AblationReport",
+  "type": "object"
+}

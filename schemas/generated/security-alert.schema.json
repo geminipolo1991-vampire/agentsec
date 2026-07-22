@@ -1,0 +1,155 @@
+{
+  "$defs": {
+    "DecisionAction": {
+      "enum": [
+        "allow",
+        "allow_with_obligations",
+        "require_approval",
+        "deny"
+      ],
+      "title": "DecisionAction",
+      "type": "string"
+    },
+    "Severity": {
+      "enum": [
+        "info",
+        "low",
+        "medium",
+        "high",
+        "critical"
+      ],
+      "title": "Severity",
+      "type": "string"
+    },
+    "TrustClass": {
+      "enum": [
+        "trusted-control",
+        "authenticated-user",
+        "internal-data",
+        "external-untrusted",
+        "suspected-adversarial",
+        "unknown"
+      ],
+      "title": "TrustClass",
+      "type": "string"
+    }
+  },
+  "additionalProperties": false,
+  "properties": {
+    "agent_id": {
+      "title": "Agent Id",
+      "type": "string"
+    },
+    "alert_id": {
+      "title": "Alert Id",
+      "type": "string"
+    },
+    "alert_type": {
+      "title": "Alert Type",
+      "type": "string"
+    },
+    "confidence": {
+      "maximum": 1.0,
+      "minimum": 0.0,
+      "title": "Confidence",
+      "type": "number"
+    },
+    "destination": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Destination"
+    },
+    "detected_at": {
+      "format": "date-time",
+      "title": "Detected At",
+      "type": "string"
+    },
+    "detector_id": {
+      "title": "Detector Id",
+      "type": "string"
+    },
+    "event_id": {
+      "title": "Event Id",
+      "type": "string"
+    },
+    "evidence": {
+      "items": {
+        "type": "string"
+      },
+      "title": "Evidence",
+      "type": "array"
+    },
+    "fingerprint": {
+      "title": "Fingerprint",
+      "type": "string"
+    },
+    "flow_id": {
+      "title": "Flow Id",
+      "type": "string"
+    },
+    "operation": {
+      "title": "Operation",
+      "type": "string"
+    },
+    "reason_codes": {
+      "items": {
+        "type": "string"
+      },
+      "title": "Reason Codes",
+      "type": "array"
+    },
+    "recommended_action": {
+      "$ref": "#/$defs/DecisionAction"
+    },
+    "resource": {
+      "title": "Resource",
+      "type": "string"
+    },
+    "schema_version": {
+      "default": "1.0.0",
+      "title": "Schema Version",
+      "type": "string"
+    },
+    "severity": {
+      "$ref": "#/$defs/Severity"
+    },
+    "source_trust": {
+      "$ref": "#/$defs/TrustClass"
+    },
+    "tenant_id": {
+      "title": "Tenant Id",
+      "type": "string"
+    },
+    "title": {
+      "title": "Title",
+      "type": "string"
+    }
+  },
+  "required": [
+    "fingerprint",
+    "event_id",
+    "tenant_id",
+    "flow_id",
+    "agent_id",
+    "alert_type",
+    "title",
+    "severity",
+    "confidence",
+    "source_trust",
+    "operation",
+    "resource",
+    "detector_id",
+    "reason_codes",
+    "evidence",
+    "recommended_action"
+  ],
+  "title": "SecurityAlert",
+  "type": "object"
+}

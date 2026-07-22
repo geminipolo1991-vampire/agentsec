@@ -1,0 +1,48 @@
+{
+  "additionalProperties": false,
+  "properties": {
+    "event_id": {
+      "title": "Event Id",
+      "type": "string"
+    },
+    "exported_at": {
+      "format": "date-time",
+      "title": "Exported At",
+      "type": "string"
+    },
+    "response_code": {
+      "anyOf": [
+        {
+          "type": "integer"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Response Code"
+    },
+    "response_text": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Response Text"
+    },
+    "status": {
+      "title": "Status",
+      "type": "string"
+    }
+  },
+  "required": [
+    "event_id",
+    "status"
+  ],
+  "title": "SplunkExportReceipt",
+  "type": "object"
+}

@@ -1,0 +1,144 @@
+{
+  "$defs": {
+    "SocFindingExport": {
+      "additionalProperties": false,
+      "properties": {
+        "agent_id": {
+          "title": "Agent Id",
+          "type": "string"
+        },
+        "case_id": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "title": "Case Id"
+        },
+        "decision": {
+          "title": "Decision",
+          "type": "string"
+        },
+        "destination_class": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "title": "Destination Class"
+        },
+        "detector_id": {
+          "title": "Detector Id",
+          "type": "string"
+        },
+        "escalation_level": {
+          "title": "Escalation Level",
+          "type": "string"
+        },
+        "evidence_pivot_id": {
+          "title": "Evidence Pivot Id",
+          "type": "string"
+        },
+        "finding_id": {
+          "title": "Finding Id",
+          "type": "string"
+        },
+        "finding_type": {
+          "title": "Finding Type",
+          "type": "string"
+        },
+        "flow_id": {
+          "title": "Flow Id",
+          "type": "string"
+        },
+        "ledger_integrity": {
+          "title": "Ledger Integrity",
+          "type": "string"
+        },
+        "operation": {
+          "title": "Operation",
+          "type": "string"
+        },
+        "policy_version": {
+          "title": "Policy Version",
+          "type": "string"
+        },
+        "resource_class": {
+          "title": "Resource Class",
+          "type": "string"
+        },
+        "schema_version": {
+          "default": "1.0.0",
+          "title": "Schema Version",
+          "type": "string"
+        },
+        "severity": {
+          "title": "Severity",
+          "type": "string"
+        },
+        "status": {
+          "title": "Status",
+          "type": "string"
+        },
+        "tenant_id": {
+          "title": "Tenant Id",
+          "type": "string"
+        }
+      },
+      "required": [
+        "finding_id",
+        "finding_type",
+        "severity",
+        "status",
+        "tenant_id",
+        "agent_id",
+        "flow_id",
+        "operation",
+        "resource_class",
+        "destination_class",
+        "detector_id",
+        "policy_version",
+        "decision",
+        "escalation_level",
+        "case_id",
+        "evidence_pivot_id",
+        "ledger_integrity"
+      ],
+      "title": "SocFindingExport",
+      "type": "object"
+    }
+  },
+  "additionalProperties": false,
+  "properties": {
+    "attempts": {
+      "minimum": 1,
+      "title": "Attempts",
+      "type": "integer"
+    },
+    "error_category": {
+      "title": "Error Category",
+      "type": "string"
+    },
+    "event_id": {
+      "title": "Event Id",
+      "type": "string"
+    },
+    "export": {
+      "$ref": "#/$defs/SocFindingExport"
+    }
+  },
+  "required": [
+    "event_id",
+    "export",
+    "error_category",
+    "attempts"
+  ],
+  "title": "SplunkDeadLetter",
+  "type": "object"
+}

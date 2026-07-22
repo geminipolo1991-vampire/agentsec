@@ -1,0 +1,71 @@
+{
+  "$defs": {
+    "EvaluationArtifact": {
+      "additionalProperties": false,
+      "description": "One deterministic release record and the digest of its serialized form.",
+      "properties": {
+        "path": {
+          "title": "Path",
+          "type": "string"
+        },
+        "record_digest": {
+          "pattern": "^[0-9a-f]{64}$",
+          "title": "Record Digest",
+          "type": "string"
+        },
+        "sha256": {
+          "pattern": "^[0-9a-f]{64}$",
+          "title": "Sha256",
+          "type": "string"
+        }
+      },
+      "required": [
+        "path",
+        "sha256",
+        "record_digest"
+      ],
+      "title": "EvaluationArtifact",
+      "type": "object"
+    }
+  },
+  "additionalProperties": false,
+  "description": "Digest-bound index of the corpus inputs and committed evaluation records.",
+  "properties": {
+    "artifacts": {
+      "items": {
+        "$ref": "#/$defs/EvaluationArtifact"
+      },
+      "title": "Artifacts",
+      "type": "array"
+    },
+    "dataset_version": {
+      "title": "Dataset Version",
+      "type": "string"
+    },
+    "input_digests": {
+      "additionalProperties": {
+        "type": "string"
+      },
+      "title": "Input Digests",
+      "type": "object"
+    },
+    "manifest_digest": {
+      "pattern": "^[0-9a-f]{64}$",
+      "title": "Manifest Digest",
+      "type": "string"
+    },
+    "schema_version": {
+      "default": "1.0.0",
+      "title": "Schema Version",
+      "type": "string"
+    }
+  },
+  "required": [
+    "dataset_version",
+    "artifacts",
+    "input_digests",
+    "manifest_digest"
+  ],
+  "title": "EvaluationReleaseManifest",
+  "type": "object"
+}

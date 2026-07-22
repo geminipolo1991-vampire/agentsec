@@ -1,0 +1,186 @@
+{
+  "$defs": {
+    "TrustClass": {
+      "enum": [
+        "trusted-control",
+        "authenticated-user",
+        "internal-data",
+        "external-untrusted",
+        "suspected-adversarial",
+        "unknown"
+      ],
+      "title": "TrustClass",
+      "type": "string"
+    }
+  },
+  "additionalProperties": false,
+  "description": "Metadata-only observation of a proposed AI-agent effect.",
+  "properties": {
+    "agent_id": {
+      "maxLength": 128,
+      "minLength": 1,
+      "title": "Agent Id",
+      "type": "string"
+    },
+    "approval_present": {
+      "default": false,
+      "title": "Approval Present",
+      "type": "boolean"
+    },
+    "attributes": {
+      "additionalProperties": {
+        "type": "string"
+      },
+      "title": "Attributes",
+      "type": "object"
+    },
+    "authority_operations": {
+      "items": {
+        "type": "string"
+      },
+      "title": "Authority Operations",
+      "type": "array",
+      "uniqueItems": true
+    },
+    "data_classes": {
+      "items": {
+        "type": "string"
+      },
+      "title": "Data Classes",
+      "type": "array",
+      "uniqueItems": true
+    },
+    "declared_tool_schema_digest": {
+      "anyOf": [
+        {
+          "maxLength": 128,
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Declared Tool Schema Digest"
+    },
+    "destination": {
+      "anyOf": [
+        {
+          "maxLength": 512,
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Destination"
+    },
+    "event_id": {
+      "maxLength": 128,
+      "minLength": 5,
+      "title": "Event Id",
+      "type": "string"
+    },
+    "flow_id": {
+      "maxLength": 128,
+      "minLength": 1,
+      "title": "Flow Id",
+      "type": "string"
+    },
+    "indicators": {
+      "items": {
+        "type": "string"
+      },
+      "title": "Indicators",
+      "type": "array",
+      "uniqueItems": true
+    },
+    "is_effectful": {
+      "default": true,
+      "title": "Is Effectful",
+      "type": "boolean"
+    },
+    "observed_tool_schema_digest": {
+      "anyOf": [
+        {
+          "maxLength": 128,
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Observed Tool Schema Digest"
+    },
+    "occurred_at": {
+      "format": "date-time",
+      "title": "Occurred At",
+      "type": "string"
+    },
+    "operation": {
+      "maxLength": 128,
+      "minLength": 1,
+      "title": "Operation",
+      "type": "string"
+    },
+    "resource": {
+      "maxLength": 512,
+      "minLength": 1,
+      "title": "Resource",
+      "type": "string"
+    },
+    "schema_version": {
+      "default": "1.0.0",
+      "title": "Schema Version",
+      "type": "string"
+    },
+    "source_id": {
+      "maxLength": 256,
+      "minLength": 1,
+      "title": "Source Id",
+      "type": "string"
+    },
+    "source_trust": {
+      "$ref": "#/$defs/TrustClass"
+    },
+    "source_type": {
+      "maxLength": 64,
+      "minLength": 1,
+      "title": "Source Type",
+      "type": "string"
+    },
+    "tenant_id": {
+      "maxLength": 128,
+      "minLength": 1,
+      "title": "Tenant Id",
+      "type": "string"
+    },
+    "tool_name": {
+      "anyOf": [
+        {
+          "maxLength": 128,
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Tool Name"
+    }
+  },
+  "required": [
+    "tenant_id",
+    "flow_id",
+    "agent_id",
+    "operation",
+    "resource",
+    "source_type",
+    "source_id",
+    "source_trust"
+  ],
+  "title": "AgentEvent",
+  "type": "object"
+}

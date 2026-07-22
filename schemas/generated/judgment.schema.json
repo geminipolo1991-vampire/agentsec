@@ -1,0 +1,135 @@
+{
+  "$defs": {
+    "AiMode": {
+      "enum": [
+        "off",
+        "shadow",
+        "advisory",
+        "semantic_hold"
+      ],
+      "title": "AiMode",
+      "type": "string"
+    },
+    "DecisionAction": {
+      "enum": [
+        "allow",
+        "allow_with_obligations",
+        "require_approval",
+        "deny"
+      ],
+      "title": "DecisionAction",
+      "type": "string"
+    },
+    "ModelVerdict": {
+      "additionalProperties": false,
+      "properties": {
+        "action": {
+          "$ref": "#/$defs/DecisionAction"
+        },
+        "confidence": {
+          "maximum": 1.0,
+          "minimum": 0.0,
+          "title": "Confidence",
+          "type": "number"
+        },
+        "evidence_ids": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Evidence Ids",
+          "type": "array"
+        },
+        "model_id": {
+          "title": "Model Id",
+          "type": "string"
+        },
+        "provider": {
+          "title": "Provider",
+          "type": "string"
+        },
+        "reason_codes": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Reason Codes",
+          "type": "array"
+        },
+        "uncertainty": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Uncertainty"
+        }
+      },
+      "required": [
+        "provider",
+        "model_id",
+        "action",
+        "confidence",
+        "evidence_ids",
+        "reason_codes"
+      ],
+      "title": "ModelVerdict",
+      "type": "object"
+    }
+  },
+  "additionalProperties": false,
+  "properties": {
+    "action": {
+      "$ref": "#/$defs/DecisionAction"
+    },
+    "ai_mode": {
+      "$ref": "#/$defs/AiMode",
+      "default": "off"
+    },
+    "alert_id": {
+      "title": "Alert Id",
+      "type": "string"
+    },
+    "deterministic_action": {
+      "$ref": "#/$defs/DecisionAction"
+    },
+    "judged_at": {
+      "format": "date-time",
+      "title": "Judged At",
+      "type": "string"
+    },
+    "model_verdict": {
+      "anyOf": [
+        {
+          "$ref": "#/$defs/ModelVerdict"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null
+    },
+    "policy_version": {
+      "title": "Policy Version",
+      "type": "string"
+    },
+    "reason_codes": {
+      "items": {
+        "type": "string"
+      },
+      "title": "Reason Codes",
+      "type": "array"
+    }
+  },
+  "required": [
+    "alert_id",
+    "action",
+    "reason_codes",
+    "deterministic_action",
+    "policy_version"
+  ],
+  "title": "Judgment",
+  "type": "object"
+}

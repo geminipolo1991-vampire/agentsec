@@ -1,0 +1,25 @@
+services:
+  agent-security:
+    build:
+      context: ../..
+    image: agent-security:local
+    restart: unless-stopped
+    read_only: true
+    tmpfs:
+      - /tmp:size=64m,noexec,nosuid,nodev
+    cap_drop:
+      - ALL
+    security_opt:
+      - no-new-privileges:true
+    environment:
+      AGENTSEC_BIND_HOST: 0.0.0.0
+      AGENTSEC_PORT: 8080
+      AGENTSEC_INGEST_TOKEN: ${AGENTSEC_INGEST_TOKEN:?set through a secret manager}
+      AGENTSEC_AI_MODE: ${AGENTSEC_AI_MODE:-shadow}
+      AGENTSEC_MODEL_PROFILE: ${AGENTSEC_MODEL_PROFILE:-codex-recorded-shadow}
+      OPENAI_MODEL_ID: ${OPENAI_MODEL_ID:-}
+      OPENAI_API_KEY: ${OPENAI_API_KEY:-}
+      ANTHROPIC_MODEL_ID: ${ANTHROPIC_MODEL_ID:-}
+      ANTHROPIC_API_KEY: ${ANTHROPIC_API_KEY:-}
+    ports:
+      - 127.0.0.1:8080:8080

@@ -1,0 +1,122 @@
+{
+  "additionalProperties": false,
+  "properties": {
+    "data_classes": {
+      "items": {
+        "type": "string"
+      },
+      "title": "Data Classes",
+      "type": "array",
+      "uniqueItems": true
+    },
+    "delegation_depth": {
+      "default": 0,
+      "minimum": 0,
+      "title": "Delegation Depth",
+      "type": "integer"
+    },
+    "destinations": {
+      "items": {
+        "type": "string"
+      },
+      "title": "Destinations",
+      "type": "array",
+      "uniqueItems": true
+    },
+    "environment": {
+      "title": "Environment",
+      "type": "string"
+    },
+    "grant_id": {
+      "title": "Grant Id",
+      "type": "string"
+    },
+    "issuer": {
+      "title": "Issuer",
+      "type": "string"
+    },
+    "max_delegation_depth": {
+      "default": 0,
+      "minimum": 0,
+      "title": "Max Delegation Depth",
+      "type": "integer"
+    },
+    "max_execution_count": {
+      "default": 1,
+      "minimum": 1,
+      "title": "Max Execution Count",
+      "type": "integer"
+    },
+    "operations": {
+      "items": {
+        "type": "string"
+      },
+      "title": "Operations",
+      "type": "array",
+      "uniqueItems": true
+    },
+    "parent_grant_id": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Parent Grant Id"
+    },
+    "resources": {
+      "items": {
+        "type": "string"
+      },
+      "title": "Resources",
+      "type": "array",
+      "uniqueItems": true
+    },
+    "schema_version": {
+      "default": "1.0.0",
+      "title": "Schema Version",
+      "type": "string"
+    },
+    "signature": {
+      "default": "",
+      "title": "Signature",
+      "type": "string"
+    },
+    "signature_algorithm": {
+      "default": "hmac-sha256-poc",
+      "title": "Signature Algorithm",
+      "type": "string"
+    },
+    "subject": {
+      "title": "Subject",
+      "type": "string"
+    },
+    "tenant_id": {
+      "title": "Tenant Id",
+      "type": "string"
+    },
+    "valid_from": {
+      "format": "date-time",
+      "title": "Valid From",
+      "type": "string"
+    },
+    "valid_until": {
+      "format": "date-time",
+      "title": "Valid Until",
+      "type": "string"
+    }
+  },
+  "required": [
+    "issuer",
+    "subject",
+    "tenant_id",
+    "environment",
+    "operations",
+    "resources"
+  ],
+  "title": "AuthorityGrant",
+  "type": "object"
+}

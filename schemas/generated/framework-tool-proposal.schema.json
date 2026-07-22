@@ -1,0 +1,167 @@
+{
+  "$defs": {
+    "TrustClass": {
+      "enum": [
+        "trusted-control",
+        "authenticated-user",
+        "internal-data",
+        "external-untrusted",
+        "suspected-adversarial",
+        "unknown"
+      ],
+      "title": "TrustClass",
+      "type": "string"
+    }
+  },
+  "additionalProperties": false,
+  "properties": {
+    "approved": {
+      "default": false,
+      "title": "Approved",
+      "type": "boolean"
+    },
+    "canonical_operation": {
+      "title": "Canonical Operation",
+      "type": "string"
+    },
+    "data_labels": {
+      "items": {
+        "type": "string"
+      },
+      "title": "Data Labels",
+      "type": "array",
+      "uniqueItems": true
+    },
+    "declared_schema_hash": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Declared Schema Hash"
+    },
+    "destination_uri": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Destination Uri"
+    },
+    "effectful": {
+      "default": true,
+      "title": "Effectful",
+      "type": "boolean"
+    },
+    "effective_operations": {
+      "items": {
+        "type": "string"
+      },
+      "title": "Effective Operations",
+      "type": "array",
+      "uniqueItems": true
+    },
+    "event_attributes": {
+      "additionalProperties": {
+        "type": "string"
+      },
+      "title": "Event Attributes",
+      "type": "object"
+    },
+    "event_schema_version": {
+      "default": "1.0.0",
+      "title": "Event Schema Version",
+      "type": "string"
+    },
+    "observed_schema_hash": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Observed Schema Hash"
+    },
+    "proposal_id": {
+      "title": "Proposal Id",
+      "type": "string"
+    },
+    "proposed_at": {
+      "format": "date-time",
+      "title": "Proposed At",
+      "type": "string"
+    },
+    "resource_uri": {
+      "title": "Resource Uri",
+      "type": "string"
+    },
+    "run_id": {
+      "title": "Run Id",
+      "type": "string"
+    },
+    "security_indicators": {
+      "items": {
+        "type": "string"
+      },
+      "title": "Security Indicators",
+      "type": "array",
+      "uniqueItems": true
+    },
+    "source_kind": {
+      "title": "Source Kind",
+      "type": "string"
+    },
+    "source_reference": {
+      "title": "Source Reference",
+      "type": "string"
+    },
+    "source_trust": {
+      "$ref": "#/$defs/TrustClass"
+    },
+    "tenant_id": {
+      "title": "Tenant Id",
+      "type": "string"
+    },
+    "tool": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Tool"
+    },
+    "workload_id": {
+      "title": "Workload Id",
+      "type": "string"
+    }
+  },
+  "required": [
+    "tenant_id",
+    "run_id",
+    "workload_id",
+    "canonical_operation",
+    "resource_uri",
+    "source_kind",
+    "source_reference",
+    "source_trust",
+    "proposal_id",
+    "proposed_at"
+  ],
+  "title": "FrameworkToolProposal",
+  "type": "object"
+}

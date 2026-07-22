@@ -1,0 +1,47 @@
+{
+  "additionalProperties": false,
+  "properties": {
+    "latency_ms": {
+      "title": "Latency Ms",
+      "type": "number"
+    },
+    "model_id": {
+      "title": "Model Id",
+      "type": "string"
+    },
+    "output_digest": {
+      "title": "Output Digest",
+      "type": "string"
+    },
+    "provider": {
+      "title": "Provider",
+      "type": "string"
+    },
+    "request_id": {
+      "title": "Request Id",
+      "type": "string"
+    },
+    "usage": {
+      "additionalProperties": {
+        "type": "integer"
+      },
+      "title": "Usage",
+      "type": "object"
+    },
+    "validation_status": {
+      "default": "valid",
+      "title": "Validation Status",
+      "type": "string"
+    }
+  },
+  "required": [
+    "request_id",
+    "provider",
+    "model_id",
+    "usage",
+    "latency_ms",
+    "output_digest"
+  ],
+  "title": "ProviderCallRecord",
+  "type": "object"
+}

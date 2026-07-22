@@ -1,0 +1,14 @@
+{
+  "schema_version": "1.0.0",
+  "policy_version": "policy-2026-07-22.1",
+  "decision_order": [
+    "deny",
+    "require_approval",
+    "allow_with_obligations",
+    "allow"
+  ],
+  "ai_mode": "shadow",
+  "ai_failure_behavior": "deterministic_fallback",
+  "critical_response": "deny_and_page",
+  "test_effects": "simulation_only"
+}

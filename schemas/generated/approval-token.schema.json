@@ -1,0 +1,85 @@
+{
+  "additionalProperties": false,
+  "properties": {
+    "agent_id": {
+      "title": "Agent Id",
+      "type": "string"
+    },
+    "approver_id": {
+      "title": "Approver Id",
+      "type": "string"
+    },
+    "binding_digest": {
+      "title": "Binding Digest",
+      "type": "string"
+    },
+    "event_id": {
+      "title": "Event Id",
+      "type": "string"
+    },
+    "expires_at": {
+      "format": "date-time",
+      "title": "Expires At",
+      "type": "string"
+    },
+    "flow_id": {
+      "title": "Flow Id",
+      "type": "string"
+    },
+    "issued_at": {
+      "format": "date-time",
+      "title": "Issued At",
+      "type": "string"
+    },
+    "max_execution_count": {
+      "default": 1,
+      "maximum": 1,
+      "minimum": 1,
+      "title": "Max Execution Count",
+      "type": "integer"
+    },
+    "nonce": {
+      "title": "Nonce",
+      "type": "string"
+    },
+    "policy_version": {
+      "title": "Policy Version",
+      "type": "string"
+    },
+    "schema_version": {
+      "default": "1.0.0",
+      "title": "Schema Version",
+      "type": "string"
+    },
+    "signature": {
+      "default": "",
+      "title": "Signature",
+      "type": "string"
+    },
+    "signature_algorithm": {
+      "default": "hmac-sha256-poc",
+      "title": "Signature Algorithm",
+      "type": "string"
+    },
+    "tenant_id": {
+      "title": "Tenant Id",
+      "type": "string"
+    },
+    "token_id": {
+      "title": "Token Id",
+      "type": "string"
+    }
+  },
+  "required": [
+    "approver_id",
+    "tenant_id",
+    "agent_id",
+    "event_id",
+    "flow_id",
+    "policy_version",
+    "binding_digest",
+    "expires_at"
+  ],
+  "title": "ApprovalToken",
+  "type": "object"
+}
