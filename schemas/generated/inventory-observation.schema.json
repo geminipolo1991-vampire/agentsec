@@ -1,0 +1,179 @@
+{
+  "additionalProperties": false,
+  "properties": {
+    "agent_external_id": {
+      "maxLength": 256,
+      "minLength": 1,
+      "title": "Agent External Id",
+      "type": "string"
+    },
+    "agent_name": {
+      "anyOf": [
+        {
+          "maxLength": 256,
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Agent Name"
+    },
+    "application_external_id": {
+      "maxLength": 256,
+      "minLength": 1,
+      "title": "Application External Id",
+      "type": "string"
+    },
+    "application_name": {
+      "anyOf": [
+        {
+          "maxLength": 256,
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Application Name"
+    },
+    "environment": {
+      "default": "unknown",
+      "maxLength": 64,
+      "minLength": 1,
+      "title": "Environment",
+      "type": "string"
+    },
+    "model_id": {
+      "anyOf": [
+        {
+          "maxLength": 256,
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Model Id"
+    },
+    "model_profile_id": {
+      "anyOf": [
+        {
+          "maxLength": 128,
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Model Profile Id"
+    },
+    "model_provider": {
+      "anyOf": [
+        {
+          "maxLength": 64,
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Model Provider"
+    },
+    "observation_id": {
+      "maxLength": 128,
+      "minLength": 5,
+      "title": "Observation Id",
+      "type": "string"
+    },
+    "observed_at": {
+      "format": "date-time",
+      "title": "Observed At",
+      "type": "string"
+    },
+    "operation": {
+      "anyOf": [
+        {
+          "maxLength": 128,
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Operation"
+    },
+    "resource_scope": {
+      "anyOf": [
+        {
+          "maxLength": 512,
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Resource Scope"
+    },
+    "source_ref": {
+      "maxLength": 512,
+      "minLength": 1,
+      "title": "Source Ref",
+      "type": "string"
+    },
+    "source_type": {
+      "maxLength": 64,
+      "minLength": 1,
+      "title": "Source Type",
+      "type": "string"
+    },
+    "tenant_id": {
+      "maxLength": 128,
+      "minLength": 1,
+      "title": "Tenant Id",
+      "type": "string"
+    },
+    "tool_name": {
+      "anyOf": [
+        {
+          "maxLength": 128,
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Tool Name"
+    },
+    "tool_schema_digest": {
+      "anyOf": [
+        {
+          "maxLength": 256,
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Tool Schema Digest"
+    }
+  },
+  "required": [
+    "tenant_id",
+    "source_ref",
+    "source_type",
+    "application_external_id",
+    "agent_external_id"
+  ],
+  "title": "InventoryObservation",
+  "type": "object"
+}

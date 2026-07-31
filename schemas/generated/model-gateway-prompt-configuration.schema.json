@@ -1,0 +1,35 @@
+{
+  "additionalProperties": false,
+  "properties": {
+    "output_schema_sha256": {
+      "pattern": "^[0-9a-f]{64}$",
+      "title": "Output Schema Sha256",
+      "type": "string"
+    },
+    "prompt_id": {
+      "title": "Prompt Id",
+      "type": "string"
+    },
+    "system_instructions": {
+      "title": "System Instructions",
+      "type": "string"
+    },
+    "version": {
+      "default": 1,
+      "title": "Version",
+      "type": "integer"
+    },
+    "workload": {
+      "title": "Workload",
+      "type": "string"
+    }
+  },
+  "required": [
+    "prompt_id",
+    "workload",
+    "system_instructions",
+    "output_schema_sha256"
+  ],
+  "title": "PromptConfiguration",
+  "type": "object"
+}

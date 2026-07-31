@@ -1,0 +1,379 @@
+{
+  "$defs": {
+    "DecisionAction": {
+      "enum": [
+        "allow",
+        "allow_with_obligations",
+        "require_approval",
+        "deny"
+      ],
+      "title": "DecisionAction",
+      "type": "string"
+    },
+    "DetectionCondition": {
+      "additionalProperties": false,
+      "properties": {
+        "compare_field": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/DetectionEventField"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        },
+        "field": {
+          "$ref": "#/$defs/DetectionEventField"
+        },
+        "operator": {
+          "$ref": "#/$defs/DetectionOperator"
+        },
+        "value": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "boolean"
+            },
+            {
+              "type": "integer"
+            },
+            {
+              "type": "number"
+            },
+            {
+              "items": {
+                "type": "string"
+              },
+              "type": "array"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Value"
+        }
+      },
+      "required": [
+        "field",
+        "operator"
+      ],
+      "title": "DetectionCondition",
+      "type": "object"
+    },
+    "DetectionEventField": {
+      "enum": [
+        "event_id",
+        "flow_id",
+        "agent_id",
+        "operation",
+        "resource",
+        "destination",
+        "source_type",
+        "source_id",
+        "source_trust",
+        "data_classes",
+        "authority_operations",
+        "indicators",
+        "approval_present",
+        "is_effectful",
+        "tool_name",
+        "declared_tool_schema_digest",
+        "observed_tool_schema_digest"
+      ],
+      "title": "DetectionEventField",
+      "type": "string"
+    },
+    "DetectionExecutionMode": {
+      "enum": [
+        "streaming",
+        "scheduled",
+        "both"
+      ],
+      "title": "DetectionExecutionMode",
+      "type": "string"
+    },
+    "DetectionOperator": {
+      "enum": [
+        "equals",
+        "not_equals",
+        "in",
+        "not_in",
+        "contains",
+        "not_contains",
+        "exists",
+        "not_exists",
+        "equals_field",
+        "not_equals_field",
+        "contains_field",
+        "not_contains_field"
+      ],
+      "title": "DetectionOperator",
+      "type": "string"
+    },
+    "DetectionPredicate": {
+      "additionalProperties": false,
+      "properties": {
+        "all_conditions": {
+          "items": {
+            "$ref": "#/$defs/DetectionCondition"
+          },
+          "maxItems": 32,
+          "title": "All Conditions",
+          "type": "array"
+        },
+        "any_conditions": {
+          "items": {
+            "$ref": "#/$defs/DetectionCondition"
+          },
+          "maxItems": 32,
+          "title": "Any Conditions",
+          "type": "array"
+        }
+      },
+      "title": "DetectionPredicate",
+      "type": "object"
+    },
+    "DetectionRuleDefinition": {
+      "additionalProperties": false,
+      "properties": {
+        "alert_type": {
+          "pattern": "^[a-z][a-z0-9_]{2,127}$",
+          "title": "Alert Type",
+          "type": "string"
+        },
+        "confidence": {
+          "maximum": 1.0,
+          "minimum": 0.0,
+          "title": "Confidence",
+          "type": "number"
+        },
+        "correlation_predicates": {
+          "items": {
+            "$ref": "#/$defs/DetectionPredicate"
+          },
+          "maxItems": 10,
+          "title": "Correlation Predicates",
+          "type": "array"
+        },
+        "description": {
+          "maxLength": 1024,
+          "minLength": 3,
+          "title": "Description",
+          "type": "string"
+        },
+        "enabled": {
+          "default": true,
+          "title": "Enabled",
+          "type": "boolean"
+        },
+        "evidence_fields": {
+          "items": {
+            "$ref": "#/$defs/DetectionEventField"
+          },
+          "maxItems": 16,
+          "title": "Evidence Fields",
+          "type": "array"
+        },
+        "execution_mode": {
+          "$ref": "#/$defs/DetectionExecutionMode"
+        },
+        "framework_mappings": {
+          "items": {
+            "type": "string"
+          },
+          "maxItems": 32,
+          "minItems": 1,
+          "title": "Framework Mappings",
+          "type": "array"
+        },
+        "group_by": {
+          "$ref": "#/$defs/DetectionEventField",
+          "default": "flow_id"
+        },
+        "kind": {
+          "$ref": "#/$defs/DetectionRuleKind"
+        },
+        "name": {
+          "maxLength": 256,
+          "minLength": 3,
+          "title": "Name",
+          "type": "string"
+        },
+        "predicate": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/DetectionPredicate"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        },
+        "reason_codes": {
+          "items": {
+            "type": "string"
+          },
+          "maxItems": 32,
+          "minItems": 1,
+          "title": "Reason Codes",
+          "type": "array"
+        },
+        "recommended_action": {
+          "$ref": "#/$defs/DecisionAction"
+        },
+        "rule_id": {
+          "pattern": "^DET-[A-Z0-9-]{3,80}$",
+          "title": "Rule Id",
+          "type": "string"
+        },
+        "semantic_min_confidence": {
+          "anyOf": [
+            {
+              "maximum": 1.0,
+              "minimum": 0.0,
+              "type": "number"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Semantic Min Confidence"
+        },
+        "semantic_profile": {
+          "anyOf": [
+            {
+              "pattern": "^[A-Za-z0-9][A-Za-z0-9._-]{2,127}$",
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Semantic Profile"
+        },
+        "sequence_steps": {
+          "items": {
+            "$ref": "#/$defs/DetectionPredicate"
+          },
+          "maxItems": 10,
+          "title": "Sequence Steps",
+          "type": "array"
+        },
+        "severity": {
+          "$ref": "#/$defs/Severity"
+        },
+        "tags": {
+          "items": {
+            "type": "string"
+          },
+          "maxItems": 32,
+          "title": "Tags",
+          "type": "array"
+        },
+        "threshold": {
+          "anyOf": [
+            {
+              "maximum": 10000,
+              "minimum": 2,
+              "type": "integer"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Threshold"
+        },
+        "title": {
+          "maxLength": 512,
+          "minLength": 3,
+          "title": "Title",
+          "type": "string"
+        },
+        "version": {
+          "pattern": "^[A-Za-z0-9][A-Za-z0-9._-]{0,63}$",
+          "title": "Version",
+          "type": "string"
+        },
+        "window_seconds": {
+          "anyOf": [
+            {
+              "maximum": 604800,
+              "minimum": 1,
+              "type": "integer"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Window Seconds"
+        }
+      },
+      "required": [
+        "rule_id",
+        "version",
+        "name",
+        "description",
+        "kind",
+        "execution_mode",
+        "alert_type",
+        "title",
+        "severity",
+        "confidence",
+        "recommended_action",
+        "reason_codes",
+        "framework_mappings"
+      ],
+      "title": "DetectionRuleDefinition",
+      "type": "object"
+    },
+    "DetectionRuleKind": {
+      "enum": [
+        "event",
+        "sequence",
+        "threshold",
+        "correlation",
+        "semantic"
+      ],
+      "title": "DetectionRuleKind",
+      "type": "string"
+    },
+    "Severity": {
+      "enum": [
+        "info",
+        "low",
+        "medium",
+        "high",
+        "critical"
+      ],
+      "title": "Severity",
+      "type": "string"
+    }
+  },
+  "additionalProperties": false,
+  "properties": {
+    "definition": {
+      "$ref": "#/$defs/DetectionRuleDefinition"
+    },
+    "definition_sha256": {
+      "pattern": "^[0-9a-f]{64}$",
+      "title": "Definition Sha256",
+      "type": "string"
+    }
+  },
+  "required": [
+    "definition",
+    "definition_sha256"
+  ],
+  "title": "ContentPackEntry",
+  "type": "object"
+}

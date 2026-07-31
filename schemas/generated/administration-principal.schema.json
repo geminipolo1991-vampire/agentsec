@@ -1,0 +1,89 @@
+{
+  "$defs": {
+    "HumanRole": {
+      "enum": [
+        "viewer",
+        "analyst",
+        "incident_commander",
+        "policy_owner",
+        "platform_administrator",
+        "security_auditor"
+      ],
+      "title": "HumanRole",
+      "type": "string"
+    }
+  },
+  "additionalProperties": false,
+  "properties": {
+    "actor_id": {
+      "pattern": "^(analyst|system)://[A-Za-z0-9_.@/-]+$",
+      "title": "Actor Id",
+      "type": "string"
+    },
+    "authenticated_at": {
+      "format": "date-time",
+      "title": "Authenticated At",
+      "type": "string"
+    },
+    "authentication_method": {
+      "pattern": "^(sso_assertion|local_test_adapter)$",
+      "title": "Authentication Method",
+      "type": "string"
+    },
+    "expires_at": {
+      "format": "date-time",
+      "title": "Expires At",
+      "type": "string"
+    },
+    "mfa_verified": {
+      "title": "Mfa Verified",
+      "type": "boolean"
+    },
+    "roles": {
+      "items": {
+        "$ref": "#/$defs/HumanRole"
+      },
+      "maxItems": 6,
+      "minItems": 1,
+      "title": "Roles",
+      "type": "array",
+      "uniqueItems": true
+    },
+    "session_id": {
+      "pattern": "^session_[0-9a-f]{32}$",
+      "title": "Session Id",
+      "type": "string"
+    },
+    "step_up_until": {
+      "anyOf": [
+        {
+          "format": "date-time",
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Step Up Until"
+    },
+    "tenant_id": {
+      "maxLength": 128,
+      "minLength": 1,
+      "title": "Tenant Id",
+      "type": "string"
+    }
+  },
+  "required": [
+    "tenant_id",
+    "actor_id",
+    "session_id",
+    "roles",
+    "authentication_method",
+    "mfa_verified",
+    "authenticated_at",
+    "expires_at"
+  ],
+  "title": "AdministrationPrincipal",
+  "type": "object"
+}

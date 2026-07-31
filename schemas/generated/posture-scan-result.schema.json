@@ -1,0 +1,87 @@
+{
+  "additionalProperties": false,
+  "properties": {
+    "accepted_exceptions": {
+      "minimum": 0,
+      "title": "Accepted Exceptions",
+      "type": "integer"
+    },
+    "check_count": {
+      "minimum": 0,
+      "title": "Check Count",
+      "type": "integer"
+    },
+    "completed_at": {
+      "format": "date-time",
+      "title": "Completed At",
+      "type": "string"
+    },
+    "component_count": {
+      "minimum": 0,
+      "title": "Component Count",
+      "type": "integer"
+    },
+    "evaluations": {
+      "minimum": 0,
+      "title": "Evaluations",
+      "type": "integer"
+    },
+    "failing": {
+      "minimum": 0,
+      "title": "Failing",
+      "type": "integer"
+    },
+    "open_findings": {
+      "minimum": 0,
+      "title": "Open Findings",
+      "type": "integer"
+    },
+    "passing": {
+      "minimum": 0,
+      "title": "Passing",
+      "type": "integer"
+    },
+    "posture_score": {
+      "maximum": 100,
+      "minimum": 0,
+      "title": "Posture Score",
+      "type": "integer"
+    },
+    "resolved_findings": {
+      "minimum": 0,
+      "title": "Resolved Findings",
+      "type": "integer"
+    },
+    "scan_id": {
+      "pattern": "^psts_[A-Za-z0-9]+$",
+      "title": "Scan Id",
+      "type": "string"
+    },
+    "started_at": {
+      "format": "date-time",
+      "title": "Started At",
+      "type": "string"
+    },
+    "tenant_id": {
+      "title": "Tenant Id",
+      "type": "string"
+    }
+  },
+  "required": [
+    "scan_id",
+    "tenant_id",
+    "check_count",
+    "component_count",
+    "evaluations",
+    "failing",
+    "passing",
+    "open_findings",
+    "accepted_exceptions",
+    "resolved_findings",
+    "posture_score",
+    "started_at",
+    "completed_at"
+  ],
+  "title": "PostureScanResult",
+  "type": "object"
+}

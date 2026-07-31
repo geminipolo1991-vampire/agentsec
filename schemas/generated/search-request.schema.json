@@ -1,0 +1,47 @@
+{
+  "additionalProperties": false,
+  "properties": {
+    "cursor": {
+      "anyOf": [
+        {
+          "maxLength": 4096,
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Cursor"
+    },
+    "page_size": {
+      "default": 50,
+      "maximum": 200,
+      "minimum": 1,
+      "title": "Page Size",
+      "type": "integer"
+    },
+    "query": {
+      "default": "*",
+      "maxLength": 4096,
+      "minLength": 1,
+      "title": "Query",
+      "type": "string"
+    },
+    "sort_by": {
+      "default": "created_at",
+      "maxLength": 64,
+      "minLength": 1,
+      "title": "Sort By",
+      "type": "string"
+    },
+    "sort_order": {
+      "default": "desc",
+      "pattern": "^(asc|desc)$",
+      "title": "Sort Order",
+      "type": "string"
+    }
+  },
+  "title": "SearchRequest",
+  "type": "object"
+}

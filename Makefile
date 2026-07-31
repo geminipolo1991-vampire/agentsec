@@ -1,7 +1,16 @@
-.PHONY: test demo workflow-demo codex-demo schemas check-schemas reports check-reports clean-install evaluate evaluate-all ablate compile secret-scan dependency-check release-audit verify
+.PHONY: test test-sdk test-ui lint-ui demo workflow-demo codex-demo schemas check-schemas reports check-reports continuous-evaluate clean-install evaluate evaluate-all ablate compile secret-scan dependency-check module-audit goal-audit release-audit verify
 
 test:
 	PYTHONPATH=src python3 -m unittest discover -s tests -v
+
+test-sdk:
+	node --test sdk/typescript/test/*.test.mjs
+
+test-ui:
+	npm --prefix ui test
+
+lint-ui:
+	npm --prefix ui run lint
 
 demo:
 	PYTHONPATH=src python3 -m agentsec demo --pretty
@@ -23,6 +32,9 @@ reports:
 
 check-reports:
 	PYTHONPATH=src python3 tools/write_release_reports.py --check
+
+continuous-evaluate: check-reports
+	PYTHONPATH=src python3 tools/verify_continuous_evaluation.py
 
 clean-install:
 	python3 tools/verify_clean_install.py
@@ -52,7 +64,13 @@ secret-scan:
 dependency-check:
 	python3 -m pip check
 
-release-audit: check-schemas check-reports test clean-install compile secret-scan dependency-check
+module-audit:
+	python3 tools/verify_module_catalog.py
+
+goal-audit:
+	python3 tools/verify_module_catalog.py --require-complete
+
+release-audit: check-schemas check-reports continuous-evaluate test test-sdk test-ui lint-ui clean-install compile secret-scan dependency-check module-audit
 	PYTHONPATH=src python3 tools/release_audit.py
 
 verify: release-audit workflow-demo codex-demo evaluate-all ablate

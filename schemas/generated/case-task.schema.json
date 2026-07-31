@@ -1,0 +1,130 @@
+{
+  "$defs": {
+    "CaseTaskStatus": {
+      "enum": [
+        "open",
+        "in_progress",
+        "done",
+        "cancelled"
+      ],
+      "title": "CaseTaskStatus",
+      "type": "string"
+    }
+  },
+  "additionalProperties": false,
+  "properties": {
+    "assigned_to": {
+      "anyOf": [
+        {
+          "maxLength": 256,
+          "pattern": "^(analyst|system|workload)://[A-Za-z0-9_.@/-]+$",
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Assigned To"
+    },
+    "case_id": {
+      "pattern": "^case_[0-9a-f]{32}$",
+      "title": "Case Id",
+      "type": "string"
+    },
+    "completed_at": {
+      "anyOf": [
+        {
+          "format": "date-time",
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Completed At"
+    },
+    "completed_by": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Completed By"
+    },
+    "created_at": {
+      "format": "date-time",
+      "title": "Created At",
+      "type": "string"
+    },
+    "created_by": {
+      "title": "Created By",
+      "type": "string"
+    },
+    "description": {
+      "maxLength": 1024,
+      "minLength": 3,
+      "title": "Description",
+      "type": "string"
+    },
+    "due_at": {
+      "anyOf": [
+        {
+          "format": "date-time",
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Due At"
+    },
+    "status": {
+      "$ref": "#/$defs/CaseTaskStatus",
+      "default": "open"
+    },
+    "task_id": {
+      "pattern": "^ctk_[0-9a-f]{32}$",
+      "title": "Task Id",
+      "type": "string"
+    },
+    "task_sha256": {
+      "pattern": "^[0-9a-f]{64}$",
+      "title": "Task Sha256",
+      "type": "string"
+    },
+    "tenant_id": {
+      "title": "Tenant Id",
+      "type": "string"
+    },
+    "title": {
+      "maxLength": 256,
+      "minLength": 3,
+      "title": "Title",
+      "type": "string"
+    },
+    "updated_at": {
+      "format": "date-time",
+      "title": "Updated At",
+      "type": "string"
+    }
+  },
+  "required": [
+    "case_id",
+    "tenant_id",
+    "title",
+    "description",
+    "created_by",
+    "created_at",
+    "updated_at",
+    "task_sha256"
+  ],
+  "title": "CaseTask",
+  "type": "object"
+}

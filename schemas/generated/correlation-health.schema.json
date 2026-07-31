@@ -1,0 +1,68 @@
+{
+  "additionalProperties": false,
+  "properties": {
+    "active_suppressions": {
+      "minimum": 0,
+      "title": "Active Suppressions",
+      "type": "integer"
+    },
+    "calculated_at": {
+      "format": "date-time",
+      "title": "Calculated At",
+      "type": "string"
+    },
+    "closed_incidents": {
+      "minimum": 0,
+      "title": "Closed Incidents",
+      "type": "integer"
+    },
+    "merged_incidents": {
+      "minimum": 0,
+      "title": "Merged Incidents",
+      "type": "integer"
+    },
+    "multi_finding_incidents": {
+      "minimum": 0,
+      "title": "Multi Finding Incidents",
+      "type": "integer"
+    },
+    "open_incidents": {
+      "minimum": 0,
+      "title": "Open Incidents",
+      "type": "integer"
+    },
+    "suppressed_findings": {
+      "minimum": 0,
+      "title": "Suppressed Findings",
+      "type": "integer"
+    },
+    "tenant_id": {
+      "title": "Tenant Id",
+      "type": "string"
+    },
+    "total_findings": {
+      "minimum": 0,
+      "title": "Total Findings",
+      "type": "integer"
+    },
+    "total_incidents": {
+      "minimum": 0,
+      "title": "Total Incidents",
+      "type": "integer"
+    }
+  },
+  "required": [
+    "tenant_id",
+    "total_incidents",
+    "open_incidents",
+    "closed_incidents",
+    "merged_incidents",
+    "total_findings",
+    "multi_finding_incidents",
+    "suppressed_findings",
+    "active_suppressions",
+    "calculated_at"
+  ],
+  "title": "CorrelationHealth",
+  "type": "object"
+}

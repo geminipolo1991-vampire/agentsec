@@ -1,0 +1,36 @@
+{
+  "$defs": {
+    "AttachmentScanStatus": {
+      "enum": [
+        "pending",
+        "clean",
+        "quarantined"
+      ],
+      "title": "AttachmentScanStatus",
+      "type": "string"
+    }
+  },
+  "additionalProperties": false,
+  "properties": {
+    "expected_version": {
+      "minimum": 1,
+      "title": "Expected Version",
+      "type": "integer"
+    },
+    "scanner_ref": {
+      "pattern": "^scanner_sha256:[0-9a-f]{24}$",
+      "title": "Scanner Ref",
+      "type": "string"
+    },
+    "status": {
+      "$ref": "#/$defs/AttachmentScanStatus"
+    }
+  },
+  "required": [
+    "expected_version",
+    "status",
+    "scanner_ref"
+  ],
+  "title": "CaseAttachmentScanRequest",
+  "type": "object"
+}

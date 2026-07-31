@@ -1,0 +1,241 @@
+{
+  "$defs": {
+    "EnrichmentCacheStatus": {
+      "enum": [
+        "not_applicable",
+        "miss",
+        "fresh",
+        "stale"
+      ],
+      "title": "EnrichmentCacheStatus",
+      "type": "string"
+    },
+    "EnrichmentResult": {
+      "additionalProperties": false,
+      "properties": {
+        "affects_triage": {
+          "default": false,
+          "title": "Affects Triage",
+          "type": "boolean"
+        },
+        "cache_status": {
+          "$ref": "#/$defs/EnrichmentCacheStatus",
+          "default": "not_applicable"
+        },
+        "confidence": {
+          "default": 0.0,
+          "maximum": 1.0,
+          "minimum": 0.0,
+          "title": "Confidence",
+          "type": "number"
+        },
+        "connector_version": {
+          "anyOf": [
+            {
+              "maxLength": 64,
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Connector Version"
+        },
+        "evidence_refs": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Evidence Refs",
+          "type": "array"
+        },
+        "expires_at": {
+          "anyOf": [
+            {
+              "format": "date-time",
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Expires At"
+        },
+        "facts": {
+          "additionalProperties": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "boolean"
+              },
+              {
+                "type": "integer"
+              },
+              {
+                "type": "number"
+              },
+              {
+                "items": {
+                  "type": "string"
+                },
+                "type": "array"
+              }
+            ]
+          },
+          "title": "Facts",
+          "type": "object"
+        },
+        "failure_effect": {
+          "title": "Failure Effect",
+          "type": "string"
+        },
+        "freshness_seconds": {
+          "anyOf": [
+            {
+              "minimum": 0,
+              "type": "integer"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Freshness Seconds"
+        },
+        "latency_ms": {
+          "default": 0,
+          "minimum": 0,
+          "title": "Latency Ms",
+          "type": "integer"
+        },
+        "observed_at": {
+          "format": "date-time",
+          "title": "Observed At",
+          "type": "string"
+        },
+        "policy_decision": {
+          "default": "built_in",
+          "maxLength": 64,
+          "title": "Policy Decision",
+          "type": "string"
+        },
+        "source": {
+          "title": "Source",
+          "type": "string"
+        },
+        "status": {
+          "$ref": "#/$defs/EnrichmentStatus"
+        }
+      },
+      "required": [
+        "source",
+        "status",
+        "failure_effect"
+      ],
+      "title": "EnrichmentResult",
+      "type": "object"
+    },
+    "EnrichmentStatus": {
+      "enum": [
+        "complete",
+        "partial",
+        "unavailable",
+        "failed"
+      ],
+      "title": "EnrichmentStatus",
+      "type": "string"
+    }
+  },
+  "additionalProperties": false,
+  "properties": {
+    "cache_hits": {
+      "default": 0,
+      "minimum": 0,
+      "title": "Cache Hits",
+      "type": "integer"
+    },
+    "completed_sources": {
+      "minimum": 0,
+      "title": "Completed Sources",
+      "type": "integer"
+    },
+    "connector_sources": {
+      "default": 0,
+      "minimum": 0,
+      "title": "Connector Sources",
+      "type": "integer"
+    },
+    "mandatory_context_complete": {
+      "title": "Mandatory Context Complete",
+      "type": "boolean"
+    },
+    "observed_at": {
+      "format": "date-time",
+      "title": "Observed At",
+      "type": "string"
+    },
+    "policy_digest": {
+      "anyOf": [
+        {
+          "pattern": "^[0-9a-f]{64}$",
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Policy Digest"
+    },
+    "snapshot_id": {
+      "title": "Snapshot Id",
+      "type": "string"
+    },
+    "sources": {
+      "items": {
+        "$ref": "#/$defs/EnrichmentResult"
+      },
+      "title": "Sources",
+      "type": "array"
+    },
+    "stale_fallbacks": {
+      "default": 0,
+      "minimum": 0,
+      "title": "Stale Fallbacks",
+      "type": "integer"
+    },
+    "status": {
+      "$ref": "#/$defs/EnrichmentStatus"
+    },
+    "timed_out_sources": {
+      "default": 0,
+      "minimum": 0,
+      "title": "Timed Out Sources",
+      "type": "integer"
+    },
+    "total_sources": {
+      "minimum": 1,
+      "title": "Total Sources",
+      "type": "integer"
+    },
+    "warnings": {
+      "items": {
+        "type": "string"
+      },
+      "title": "Warnings",
+      "type": "array"
+    }
+  },
+  "required": [
+    "status",
+    "sources",
+    "completed_sources",
+    "total_sources",
+    "mandatory_context_complete"
+  ],
+  "title": "EnrichmentSnapshot",
+  "type": "object"
+}

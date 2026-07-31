@@ -1,0 +1,121 @@
+{
+  "$defs": {
+    "DetectionCondition": {
+      "additionalProperties": false,
+      "properties": {
+        "compare_field": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/DetectionEventField"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        },
+        "field": {
+          "$ref": "#/$defs/DetectionEventField"
+        },
+        "operator": {
+          "$ref": "#/$defs/DetectionOperator"
+        },
+        "value": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "boolean"
+            },
+            {
+              "type": "integer"
+            },
+            {
+              "type": "number"
+            },
+            {
+              "items": {
+                "type": "string"
+              },
+              "type": "array"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Value"
+        }
+      },
+      "required": [
+        "field",
+        "operator"
+      ],
+      "title": "DetectionCondition",
+      "type": "object"
+    },
+    "DetectionEventField": {
+      "enum": [
+        "event_id",
+        "flow_id",
+        "agent_id",
+        "operation",
+        "resource",
+        "destination",
+        "source_type",
+        "source_id",
+        "source_trust",
+        "data_classes",
+        "authority_operations",
+        "indicators",
+        "approval_present",
+        "is_effectful",
+        "tool_name",
+        "declared_tool_schema_digest",
+        "observed_tool_schema_digest"
+      ],
+      "title": "DetectionEventField",
+      "type": "string"
+    },
+    "DetectionOperator": {
+      "enum": [
+        "equals",
+        "not_equals",
+        "in",
+        "not_in",
+        "contains",
+        "not_contains",
+        "exists",
+        "not_exists",
+        "equals_field",
+        "not_equals_field",
+        "contains_field",
+        "not_contains_field"
+      ],
+      "title": "DetectionOperator",
+      "type": "string"
+    }
+  },
+  "additionalProperties": false,
+  "properties": {
+    "all_conditions": {
+      "items": {
+        "$ref": "#/$defs/DetectionCondition"
+      },
+      "maxItems": 32,
+      "title": "All Conditions",
+      "type": "array"
+    },
+    "any_conditions": {
+      "items": {
+        "$ref": "#/$defs/DetectionCondition"
+      },
+      "maxItems": 32,
+      "title": "Any Conditions",
+      "type": "array"
+    }
+  },
+  "title": "DetectionPredicate",
+  "type": "object"
+}

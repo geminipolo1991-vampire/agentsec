@@ -1,0 +1,54 @@
+{
+  "$defs": {
+    "SimulationVariant": {
+      "enum": [
+        "plain",
+        "japanese",
+        "spanish",
+        "unicode_confusable",
+        "zero_width",
+        "base64",
+        "mixed_obfuscation"
+      ],
+      "title": "SimulationVariant",
+      "type": "string"
+    }
+  },
+  "additionalProperties": false,
+  "properties": {
+    "base_scenario_id": {
+      "pattern": "^sim_[a-z0-9_]{3,96}$",
+      "title": "Base Scenario Id",
+      "type": "string"
+    },
+    "base_version": {
+      "pattern": "^[0-9]+\\.[0-9]+\\.[0-9]+$",
+      "title": "Base Version",
+      "type": "string"
+    },
+    "name": {
+      "anyOf": [
+        {
+          "maxLength": 256,
+          "minLength": 3,
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Name"
+    },
+    "variant": {
+      "$ref": "#/$defs/SimulationVariant"
+    }
+  },
+  "required": [
+    "base_scenario_id",
+    "base_version",
+    "variant"
+  ],
+  "title": "SimulationMutationRequest",
+  "type": "object"
+}

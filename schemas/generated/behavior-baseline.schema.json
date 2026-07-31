@@ -1,0 +1,143 @@
+{
+  "$defs": {
+    "BaselineState": {
+      "enum": [
+        "learning",
+        "active"
+      ],
+      "title": "BaselineState",
+      "type": "string"
+    },
+    "BehaviorEntityType": {
+      "enum": [
+        "agent",
+        "source",
+        "tool",
+        "destination"
+      ],
+      "title": "BehaviorEntityType",
+      "type": "string"
+    }
+  },
+  "additionalProperties": false,
+  "properties": {
+    "authority_gap_count": {
+      "minimum": 0,
+      "title": "Authority Gap Count",
+      "type": "integer"
+    },
+    "baseline_sha256": {
+      "pattern": "^[0-9a-f]{64}$",
+      "title": "Baseline Sha256",
+      "type": "string"
+    },
+    "config_version": {
+      "title": "Config Version",
+      "type": "string"
+    },
+    "destination_counts": {
+      "additionalProperties": {
+        "type": "integer"
+      },
+      "title": "Destination Counts",
+      "type": "object"
+    },
+    "effectful_count": {
+      "minimum": 0,
+      "title": "Effectful Count",
+      "type": "integer"
+    },
+    "entity_ref": {
+      "title": "Entity Ref",
+      "type": "string"
+    },
+    "entity_type": {
+      "$ref": "#/$defs/BehaviorEntityType"
+    },
+    "first_observed_at": {
+      "format": "date-time",
+      "title": "First Observed At",
+      "type": "string"
+    },
+    "hour_counts": {
+      "additionalProperties": {
+        "type": "integer"
+      },
+      "title": "Hour Counts",
+      "type": "object"
+    },
+    "last_observed_at": {
+      "format": "date-time",
+      "title": "Last Observed At",
+      "type": "string"
+    },
+    "observation_count": {
+      "minimum": 1,
+      "title": "Observation Count",
+      "type": "integer"
+    },
+    "operation_counts": {
+      "additionalProperties": {
+        "type": "integer"
+      },
+      "title": "Operation Counts",
+      "type": "object"
+    },
+    "revision": {
+      "minimum": 1,
+      "title": "Revision",
+      "type": "integer"
+    },
+    "schema_drift_count": {
+      "minimum": 0,
+      "title": "Schema Drift Count",
+      "type": "integer"
+    },
+    "schema_version": {
+      "default": "1.0.0",
+      "title": "Schema Version",
+      "type": "string"
+    },
+    "sensitive_data_count": {
+      "minimum": 0,
+      "title": "Sensitive Data Count",
+      "type": "integer"
+    },
+    "source_trust_counts": {
+      "additionalProperties": {
+        "type": "integer"
+      },
+      "title": "Source Trust Counts",
+      "type": "object"
+    },
+    "state": {
+      "$ref": "#/$defs/BaselineState"
+    },
+    "tenant_id": {
+      "title": "Tenant Id",
+      "type": "string"
+    }
+  },
+  "required": [
+    "tenant_id",
+    "entity_ref",
+    "entity_type",
+    "revision",
+    "state",
+    "observation_count",
+    "operation_counts",
+    "destination_counts",
+    "source_trust_counts",
+    "hour_counts",
+    "authority_gap_count",
+    "sensitive_data_count",
+    "schema_drift_count",
+    "effectful_count",
+    "first_observed_at",
+    "last_observed_at",
+    "config_version",
+    "baseline_sha256"
+  ],
+  "title": "BehaviorBaseline",
+  "type": "object"
+}

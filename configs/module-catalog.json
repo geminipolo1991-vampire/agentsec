@@ -1,0 +1,248 @@
+{
+  "schema_version": "2.0.0",
+  "scope": "Approved AgentSec 24-module full product",
+  "completion_rule": "The product goal is complete only when every approved module is verified with implementation, automated verification, and a module acceptance record.",
+  "modules": [
+    {
+      "id": "M01",
+      "name": "AI telemetry collection",
+      "status": "verified",
+      "implementation": ["src/agentsec/telemetry.py", "sdk/typescript/index.mjs"],
+      "verification": ["tests/test_telemetry_collection.py", "sdk/typescript/test/sdk.test.mjs"],
+      "acceptance_record": "docs/modules/module-01-telemetry-collection.md",
+      "remaining": "No Module 1 work remains; durable gateway, storage, search, inventory, and key-custody capabilities remain explicitly assigned to Modules 2, 4, 5, 6, and 24."
+    },
+    {
+      "id": "M02",
+      "name": "Ingestion gateway",
+      "status": "verified",
+      "implementation": ["src/agentsec/gateway.py", "src/agentsec/service.py", "src/agentsec/telemetry.py", "sdk/typescript/index.mjs"],
+      "verification": ["tests/test_ingestion_gateway.py", "tests/test_telemetry_collection.py", "tests/test_service.py", "sdk/typescript/test/sdk.test.mjs"],
+      "acceptance_record": "docs/modules/module-02-ingestion-gateway.md",
+      "remaining": "No Module 2 behavior remains; production broker/database clustering, long-term evidence retention, and platform identity remain explicitly assigned to downstream adapters and Modules 4 and 24."
+    },
+    {
+      "id": "M03",
+      "name": "Canonical AI-security data model",
+      "status": "verified",
+      "implementation": ["src/agentsec/datamodel.py", "src/agentsec/contracts.py", "src/agentsec/incidents.py"],
+      "verification": ["tests/test_canonical_datamodel.py", "tests/test_schema_contracts.py"],
+      "acceptance_record": "docs/modules/module-03-canonical-data-model.md",
+      "remaining": "No Module 3 work remains; durable repositories, indexing, correlation, and workflow population remain explicitly assigned to Modules 4, 5, 12, and 14–19."
+    },
+    {
+      "id": "M04",
+      "name": "Evidence ledger and storage",
+      "status": "verified",
+      "implementation": ["src/agentsec/storage.py", "src/agentsec/datamodel.py", "src/agentsec/gateway.py"],
+      "verification": ["tests/test_canonical_storage.py", "tests/test_canonical_datamodel.py", "tests/test_ingestion_gateway.py"],
+      "acceptance_record": "docs/modules/module-04-evidence-ledger-storage.md",
+      "remaining": "No Module 4 behavior remains; clustered production adapters, whole-database key custody, and platform DR/SLO operation remain explicitly assigned to deployment adapters and Module 24."
+    },
+    {
+      "id": "M05",
+      "name": "Search and threat hunting",
+      "status": "verified",
+      "implementation": ["src/agentsec/search.py", "src/agentsec/service.py", "src/agentsec/storage.py", "tools/live_ui_bridge.py", "ui/app/page.tsx", "ui/app/globals.css"],
+      "verification": ["tests/test_search_hunting.py", "tests/test_live_ui_bridge.py", "ui/tests/source-contract.test.mjs", "ui/tests/rendered-html.test.mjs"],
+      "acceptance_record": "docs/modules/module-05-search-threat-hunting.md",
+      "remaining": "No Module 5 behavior remains; distributed search adapters, product-wide analyst identity, external API publication, and managed key custody remain explicitly assigned to deployment adapters and Modules 20, 21, and 24."
+    },
+    {
+      "id": "M06",
+      "name": "Agent application and model inventory",
+      "status": "verified",
+      "implementation": ["src/agentsec/inventory.py", "src/agentsec/abom.py", "src/agentsec/model_registry.py", "src/agentsec/service.py", "tools/live_ui_bridge.py", "ui/app/page.tsx", "ui/app/globals.css"],
+      "verification": ["tests/test_inventory.py", "tests/test_abom_graph_checkpoint.py", "tests/test_providers.py", "tests/test_live_ui_bridge.py", "ui/tests/source-contract.test.mjs", "ui/tests/rendered-html.test.mjs"],
+      "acceptance_record": "docs/modules/module-06-agent-application-model-inventory.md",
+      "remaining": "No Module 6 behavior remains; fleet-scale collectors, distributed inventory adapters, attack-path analysis, posture evaluation, product-wide analyst identity, and managed platform controls remain assigned to deployment adapters and Modules 7, 8, 20, and 24."
+    },
+    {
+      "id": "M07",
+      "name": "AI security graph and attack paths",
+      "status": "verified",
+      "implementation": ["src/agentsec/graph.py", "src/agentsec/inventory.py", "src/agentsec/service.py", "tools/live_ui_bridge.py", "ui/app/page.tsx", "ui/app/globals.css"],
+      "verification": ["tests/test_security_graph.py", "tests/test_abom_graph_checkpoint.py", "tests/test_live_ui_bridge.py", "ui/tests/source-contract.test.mjs", "ui/tests/rendered-html.test.mjs"],
+      "acceptance_record": "docs/modules/module-07-ai-security-graph-attack-paths.md",
+      "remaining": "No Module 7 work remains; distributed graph adapters, posture findings, cross-finding correlation, product-wide analyst identity, and managed platform controls remain assigned to deployment adapters and Modules 8, 12, 20, and 24."
+    },
+        {
+            "id": "M08",
+            "name": "AI security posture management",
+            "status": "verified",
+            "implementation": [
+                "src/agentsec/posture.py",
+                "src/agentsec/inventory.py",
+                "src/agentsec/service.py",
+                "tools/live_ui_bridge.py",
+                "ui/app/page.tsx",
+                "ui/app/globals.css"
+            ],
+            "verification": [
+                "tests/test_posture.py",
+                "tests/test_live_ui_bridge.py",
+                "ui/tests/source-contract.test.mjs",
+                "ui/tests/rendered-html.test.mjs"
+            ],
+            "acceptance_record": "docs/modules/module-08-ai-security-posture-management.md",
+            "remaining": "No Module 8 work remains; distributed adapters, richer detections, multi-finding correlation, shared case workflows, product-wide analyst identity, and managed platform controls remain assigned to deployment adapters and Modules 9, 12, 17, 20, and 24."
+    },
+    {
+      "id": "M09",
+      "name": "Detection and rule engine",
+      "status": "verified",
+      "implementation": ["src/agentsec/detection.py", "src/agentsec/contracts.py", "src/agentsec/datamodel.py", "src/agentsec/search.py", "src/agentsec/service.py"],
+      "verification": ["tests/test_detection_engine.py", "tests/test_pipeline.py", "tests/test_synthetic_workflow.py"],
+      "acceptance_record": "docs/modules/module-09-detection-rule-engine.md",
+      "remaining": "No Module 9 work remains; content authoring and promotion, learned analytics, alert-to-incident correlation, live provider qualification, validation labs, distributed scheduling, and managed platform controls remain assigned to Modules 10–12, 15, 22, and 24."
+    },
+    {
+      "id": "M10",
+      "name": "Detection content management",
+      "status": "verified",
+      "implementation": ["src/agentsec/content.py", "src/agentsec/detection.py", "src/agentsec/service.py", "tools/live_ui_bridge.py", "ui/app/page.tsx", "ui/app/globals.css"],
+      "verification": ["tests/test_detection_content.py", "tests/test_live_ui_bridge.py", "ui/tests/source-contract.test.mjs", "ui/tests/rendered-html.test.mjs"],
+      "acceptance_record": "docs/modules/module-10-detection-content-management.md",
+      "remaining": "No Module 10 work remains; behavioral analytics, correlation, live model governance, broader validation labs, product-wide analyst identity, managed key custody, distributed publication reconciliation, and platform operations remain assigned to Modules 11, 12, 15, 20, 22, and 24."
+    },
+    {
+      "id": "M11",
+      "name": "Behavioral analytics and risk engine",
+      "status": "verified",
+      "implementation": ["src/agentsec/behavior.py", "src/agentsec/pipeline.py", "src/agentsec/workflow.py", "src/agentsec/contracts.py", "src/agentsec/incidents.py", "src/agentsec/service.py", "tools/live_ui_bridge.py", "ui/app/page.tsx", "ui/app/globals.css"],
+      "verification": ["tests/test_behavioral_risk.py", "tests/test_live_ui_bridge.py", "tests/test_pipeline.py", "tests/test_incidents.py", "tests/test_service.py", "ui/tests/source-contract.test.mjs", "ui/tests/rendered-html.test.mjs"],
+      "acceptance_record": "docs/modules/module-11-behavioral-analytics-risk-engine.md",
+      "remaining": "No Module 11 work remains; multi-finding correlation, live enrichment/model governance, broad evaluation/calibration, product-wide analyst identity, managed signing, distributed storage, and platform operations remain assigned to Modules 12–16, 20, 23, and 24."
+    },
+    {
+      "id": "M12",
+      "name": "Finding correlation and incident creation",
+      "status": "verified",
+      "implementation": ["src/agentsec/correlation.py", "src/agentsec/pipeline.py", "src/agentsec/service.py", "tools/live_ui_bridge.py", "ui/app/page.tsx", "ui/app/globals.css"],
+      "verification": ["tests/test_incident_correlation.py", "tests/test_ledger_and_findings.py", "tests/test_incidents.py", "tests/test_incident_http_api.py", "tests/test_live_ui_bridge.py", "tests/test_pipeline.py", "tests/test_service.py", "ui/tests/source-contract.test.mjs", "ui/tests/rendered-html.test.mjs"],
+      "acceptance_record": "docs/modules/module-12-finding-correlation-incident-creation.md",
+      "remaining": "No Module 12 work remains; asynchronous live enrichment, governed AI analysis/judgment, collaborative case management, product-wide analyst identity, managed signatures, distributed transactions/storage, and platform operations remain assigned to Modules 13–17, 20, and 24."
+    },
+    {
+      "id": "M13",
+      "name": "Enrichment engine",
+      "status": "verified",
+      "implementation": ["src/agentsec/enrichment.py", "src/agentsec/contracts.py", "src/agentsec/pipeline.py", "src/agentsec/service.py", "configs/enrichment-connectors.example.json", "ui/app/page.tsx"],
+      "verification": ["tests/test_enrichment_connectors.py", "tests/test_enrichment_integration.py", "tests/test_pipeline.py", "tests/test_incidents.py", "tests/test_service.py", "ui/tests/source-contract.test.mjs", "ui/tests/rendered-html.test.mjs"],
+      "acceptance_record": "docs/modules/module-13-enrichment-engine.md",
+      "remaining": "No Module 13 work remains; governed AI analyst roles, model/provider routing, evidence judgment, collaborative cases, product-wide human identity, managed keys, distributed storage, and platform operations remain assigned to Modules 14–17, 20, and 24."
+    },
+    {
+      "id": "M14",
+      "name": "AI Analyst Engine",
+      "status": "verified",
+      "implementation": ["src/agentsec/analyst.py", "src/agentsec/contracts.py", "src/agentsec/pipeline.py", "src/agentsec/incidents.py", "src/agentsec/service.py", "configs/codex-analyst-evaluation.json", "ui/app/page.tsx", "ui/app/globals.css"],
+      "verification": ["tests/test_ai_analyst.py", "tests/test_pipeline.py", "tests/test_incidents.py", "tests/test_service.py", "tests/test_providers.py", "tests/test_provider_adapters.py", "ui/tests/source-contract.test.mjs", "ui/tests/rendered-html.test.mjs"],
+      "acceptance_record": "docs/modules/module-14-ai-analyst-engine.md",
+      "remaining": "No Module 14 work remains; live provider/model governance, claim validation, evaluated learning, and managed platform identity/keys/HA remain explicitly assigned to Modules 15, 16, 23, and 24."
+    },
+    {
+      "id": "M15",
+      "name": "Model gateway and AI governance",
+      "status": "verified",
+      "implementation": ["src/agentsec/model_gateway.py", "src/agentsec/providers.py", "src/agentsec/analyst.py", "src/agentsec/service.py", "configs/model-gateway.example.json", "tools/live_ui_bridge.py", "ui/app/page.tsx", "ui/app/globals.css", "tools/generate_schemas.py"],
+      "verification": ["tests/test_model_gateway.py", "tests/test_model_gateway_http_api.py", "tests/test_model_gateway_runtime.py", "tests/test_analyst_provider_adapters.py", "tests/test_provider_transport.py", "tests/test_provider_adapters.py", "tests/test_providers.py", "tests/test_ai_analyst.py", "tests/test_runtime.py", "tests/test_service.py", "tests/test_live_ui_bridge.py", "ui/tests/source-contract.test.mjs", "ui/tests/rendered-html.test.mjs"],
+      "acceptance_record": "docs/modules/module-15-model-gateway-and-ai-governance.md",
+      "remaining": "No Module 15 work remains; evidence-claim validation and calibrated judgment, continuous evaluation, and production human identity, managed keys, distributed quotas/state, HA/DR, and platform operations remain assigned to Modules 16, 23, and 24."
+    },
+    {
+      "id": "M16",
+      "name": "Evidence validator and judgment engine",
+      "status": "verified",
+      "implementation": ["src/agentsec/judgment.py", "src/agentsec/contracts.py", "src/agentsec/workflow.py", "src/agentsec/analyst.py", "src/agentsec/providers.py", "src/agentsec/incidents.py", "ui/app/page.tsx", "ui/app/globals.css", "tools/generate_schemas.py"],
+      "verification": ["tests/test_judgment_engine.py", "tests/test_pipeline.py", "tests/test_ai_analyst.py", "tests/test_analyst_provider_adapters.py", "tests/test_provider_adapters.py", "tests/test_providers.py", "tests/test_model_gateway.py", "tests/test_incidents.py", "tests/test_incident_http_api.py", "tests/test_service.py", "tests/test_live_ui_bridge.py", "ui/tests/source-contract.test.mjs", "ui/tests/rendered-html.test.mjs"],
+      "acceptance_record": "docs/modules/module-16-evidence-validator-and-judgment-engine.md",
+      "remaining": "No Module 16 work remains; adversarial simulation breadth, empirical calibration/drift governance, and production human identity, managed signing, and HA remain assigned to Modules 22, 23, and 24."
+    },
+    {
+      "id": "M17",
+      "name": "Incident and case management",
+      "status": "verified",
+      "implementation": ["src/agentsec/cases.py", "src/agentsec/pipeline.py", "src/agentsec/incidents.py", "src/agentsec/service.py", "tools/live_ui_bridge.py", "ui/app/page.tsx", "ui/app/globals.css", "tools/generate_schemas.py"],
+      "verification": ["tests/test_case_management.py", "tests/test_live_ui_bridge.py", "tests/test_service.py", "tests/test_pipeline.py", "tests/test_incident_http_api.py", "tests/test_incidents.py", "ui/tests/source-contract.test.mjs", "ui/tests/rendered-html.test.mjs"],
+      "acceptance_record": "docs/modules/module-17-incident-and-case-management.md",
+      "remaining": "No Module 17 work remains; complete analyst UX hardening and production human identity/managed storage/signing/HA remain assigned to Modules 20 and 24."
+    },
+    {
+      "id": "M18",
+      "name": "Escalation and notification",
+      "status": "verified",
+      "implementation": ["src/agentsec/notifications.py", "configs/notification-policy.example.json", "src/agentsec/pipeline.py", "src/agentsec/service.py", "tools/live_ui_bridge.py", "ui/app/page.tsx", "ui/app/globals.css", "tools/generate_schemas.py"],
+      "verification": ["tests/test_notifications.py", "tests/test_live_ui_bridge.py", "tests/test_service.py", "tests/test_pipeline.py", "tests/test_case_management.py", "tests/test_incident_correlation.py", "tests/test_schema_contracts.py", "tests/test_runtime.py", "ui/tests/source-contract.test.mjs", "ui/tests/rendered-html.test.mjs"],
+      "acceptance_record": "docs/modules/module-18-escalation-and-notification.md",
+      "remaining": "No Module 18 work remains; final analyst experience belongs to Module 20, while provider-specific qualification, webhook identities, managed egress, clustered workers/storage, secrets, signing, backup, and HA belong to Module 24."
+    },
+    {
+      "id": "M19",
+      "name": "Response and playbook automation",
+      "status": "verified",
+      "implementation": ["src/agentsec/response.py", "configs/response-playbooks.example.json", "src/agentsec/pipeline.py", "src/agentsec/service.py", "tools/live_ui_bridge.py", "ui/app/page.tsx", "ui/app/globals.css", "tools/generate_schemas.py"],
+      "verification": ["tests/test_response_automation.py", "tests/test_live_ui_bridge.py", "tests/test_service.py", "tests/test_pipeline.py", "tests/test_schema_contracts.py", "ui/tests/source-contract.test.mjs", "ui/tests/rendered-html.test.mjs"],
+      "acceptance_record": "docs/modules/module-19-response-and-playbook-automation.md",
+      "remaining": "No Module 19 work remains; complete authenticated analyst experience belongs to Module 20, external response and SIEM product integration belongs to Module 21, and provider qualification, human identity, managed egress, secrets, signing, clustered workflow/storage, reconciliation, backup, and HA belong to Module 24."
+    },
+    {
+      "id": "M20",
+      "name": "Analyst user interface",
+      "status": "verified",
+      "implementation": ["tools/live_ui_bridge.py", "ui/app/page.tsx", "ui/app/globals.css", "ui/eslint.config.mjs", "ui/package.json"],
+      "verification": ["tests/test_live_ui_bridge.py", "ui/tests/source-contract.test.mjs", "ui/tests/rendered-html.test.mjs"],
+      "acceptance_record": "docs/modules/module-20-analyst-user-interface.md",
+      "remaining": "No Module 20 work remains; external API and SIEM product integration belongs to Module 21, representative simulation/evaluation belongs to Modules 22 and 23, and production human identity, platform security, managed operations, and audit belong to Module 24."
+    },
+    {
+      "id": "M21",
+      "name": "External API and SIEM integration",
+      "status": "verified",
+      "implementation": [
+        "src/agentsec/integrations.py",
+        "src/agentsec/service.py",
+        "src/agentsec/splunk.py",
+        "configs/external-integrations.example.json",
+        "configs/external-api-clients.example.json",
+        "sdk/typescript/index.mjs",
+        "sdk/typescript/index.d.ts"
+      ],
+      "verification": [
+        "tests/test_external_integrations.py",
+        "tests/test_external_api_http.py",
+        "tests/test_adapters_observation_splunk.py",
+        "sdk/typescript/test/sdk.test.mjs"
+      ],
+      "acceptance_record": "docs/modules/module-21-external-api-and-siem-integration.md",
+      "remaining": "No Module 21 work remains; representative adversarial simulation and continuous evaluation belong to Modules 22 and 23, while managed client/workload identity, secrets and signing keys, qualified egress, distributed delivery, immutable audit, HA/DR, and SLOs belong to Module 24."
+    },
+    {
+      "id": "M22",
+      "name": "Simulation and validation lab",
+      "status": "verified",
+      "implementation": ["src/agentsec/simulation.py", "src/agentsec/service.py", "tools/live_ui_bridge.py", "ui/app/page.tsx", "ui/app/globals.css"],
+      "verification": ["tests/test_simulation_lab.py", "tests/test_service.py", "tests/test_live_ui_bridge.py", "ui/tests/source-contract.test.mjs", "ui/tests/rendered-html.test.mjs"],
+      "acceptance_record": "docs/modules/module-22-simulation-and-validation-lab.md",
+      "remaining": "No Module 22 work remains. Module 23 owns larger blind datasets, per-use-case and model-quality metrics, feedback, calibration and drift gates; Module 24 owns production identity, managed sandbox/key/audit infrastructure, distributed execution, backup/restore, HA/DR, and operational assurance."
+    },
+    {
+      "id": "M23",
+      "name": "Evaluation and continuous improvement",
+      "status": "verified",
+      "implementation": ["src/agentsec/evaluation.py", "src/agentsec/continuous_evaluation.py", "src/agentsec/service.py", "tools/write_release_reports.py", "tools/verify_continuous_evaluation.py", "tools/live_ui_bridge.py", "ui/app/page.tsx", "ui/app/globals.css"],
+      "verification": ["tests/test_evaluation.py", "tests/test_continuous_evaluation.py", "tests/test_release_records.py", "tests/test_live_ui_bridge.py", "ui/tests/source-contract.test.mjs", "ui/tests/rendered-html.test.mjs"],
+      "acceptance_record": "docs/modules/module-23-evaluation-and-continuous-improvement.md",
+      "remaining": "No Module 23 work remains. Module 24 owns production SSO/MFA and RBAC, workload identity, managed key and secret rotation, immutable administrative audit infrastructure, tenant residency/retention administration, supply-chain assurance, distributed state, SLOs, backup/restore, HA, and disaster recovery."
+    },
+    {
+      "id": "M24",
+      "name": "Administration platform security and audit",
+      "status": "verified",
+      "implementation": ["src/agentsec/administration.py", "src/agentsec/service.py", "tools/live_ui_bridge.py", "ui/app/page.tsx", "ui/app/globals.css", "configs/administration.example.json"],
+      "verification": ["tests/test_administration.py", "tests/test_live_ui_bridge.py", "ui/tests/source-contract.test.mjs", "ui/tests/rendered-html.test.mjs"],
+      "acceptance_record": "docs/modules/module-24-administration-platform-security-and-audit.md",
+      "remaining": "No approved Module 24 reference behavior remains. Production external IdP federation, external KMS/HSM custody, independently attested geographic enforcement, managed immutable audit retention, distributed HA/DR, and operational qualification remain explicit deployment non-claims rather than hidden completion claims."
+    }
+  ]
+}

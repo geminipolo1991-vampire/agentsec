@@ -76,6 +76,7 @@ class SyntheticWorkflowTests(unittest.TestCase):
             [
                 PipelineStage.DETECTION,
                 PipelineStage.INGESTION,
+                PipelineStage.ENRICHMENT,
                 PipelineStage.TRIAGE,
                 PipelineStage.JUDGMENT,
                 PipelineStage.ESCALATION,

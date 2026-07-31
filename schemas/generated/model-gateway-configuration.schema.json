@@ -1,0 +1,250 @@
+{
+  "$defs": {
+    "AiMode": {
+      "enum": [
+        "off",
+        "shadow",
+        "advisory",
+        "semantic_hold"
+      ],
+      "title": "AiMode",
+      "type": "string"
+    },
+    "DataClassification": {
+      "enum": [
+        "public",
+        "internal",
+        "confidential",
+        "restricted"
+      ],
+      "title": "DataClassification",
+      "type": "string"
+    },
+    "PromptConfiguration": {
+      "additionalProperties": false,
+      "properties": {
+        "output_schema_sha256": {
+          "pattern": "^[0-9a-f]{64}$",
+          "title": "Output Schema Sha256",
+          "type": "string"
+        },
+        "prompt_id": {
+          "title": "Prompt Id",
+          "type": "string"
+        },
+        "system_instructions": {
+          "title": "System Instructions",
+          "type": "string"
+        },
+        "version": {
+          "default": 1,
+          "title": "Version",
+          "type": "integer"
+        },
+        "workload": {
+          "title": "Workload",
+          "type": "string"
+        }
+      },
+      "required": [
+        "prompt_id",
+        "workload",
+        "system_instructions",
+        "output_schema_sha256"
+      ],
+      "title": "PromptConfiguration",
+      "type": "object"
+    },
+    "ProviderKind": {
+      "enum": [
+        "openai",
+        "anthropic"
+      ],
+      "title": "ProviderKind",
+      "type": "string"
+    },
+    "RouteConfiguration": {
+      "additionalProperties": false,
+      "properties": {
+        "allowed_data_classes": {
+          "items": {
+            "$ref": "#/$defs/DataClassification"
+          },
+          "title": "Allowed Data Classes",
+          "type": "array",
+          "uniqueItems": true
+        },
+        "allowed_modes": {
+          "items": {
+            "$ref": "#/$defs/AiMode"
+          },
+          "title": "Allowed Modes",
+          "type": "array",
+          "uniqueItems": true
+        },
+        "endpoint": {
+          "title": "Endpoint",
+          "type": "string"
+        },
+        "exact_model_id": {
+          "title": "Exact Model Id",
+          "type": "string"
+        },
+        "fallback_route_id": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Fallback Route Id"
+        },
+        "max_concurrency": {
+          "default": 4,
+          "title": "Max Concurrency",
+          "type": "integer"
+        },
+        "max_output_tokens": {
+          "default": 512,
+          "title": "Max Output Tokens",
+          "type": "integer"
+        },
+        "max_requests_per_minute": {
+          "default": 60,
+          "title": "Max Requests Per Minute",
+          "type": "integer"
+        },
+        "max_tokens_per_day": {
+          "default": 100000,
+          "title": "Max Tokens Per Day",
+          "type": "integer"
+        },
+        "priority": {
+          "default": 100,
+          "title": "Priority",
+          "type": "integer"
+        },
+        "prompt_id": {
+          "title": "Prompt Id",
+          "type": "string"
+        },
+        "prompt_version": {
+          "default": 1,
+          "title": "Prompt Version",
+          "type": "integer"
+        },
+        "provider": {
+          "$ref": "#/$defs/ProviderKind"
+        },
+        "region": {
+          "title": "Region",
+          "type": "string"
+        },
+        "revision": {
+          "default": 1,
+          "title": "Revision",
+          "type": "integer"
+        },
+        "route_id": {
+          "title": "Route Id",
+          "type": "string"
+        },
+        "secret_id": {
+          "title": "Secret Id",
+          "type": "string"
+        },
+        "secret_version": {
+          "default": 1,
+          "title": "Secret Version",
+          "type": "integer"
+        },
+        "timeout_seconds": {
+          "default": 30.0,
+          "title": "Timeout Seconds",
+          "type": "number"
+        },
+        "workload": {
+          "title": "Workload",
+          "type": "string"
+        }
+      },
+      "required": [
+        "route_id",
+        "provider",
+        "exact_model_id",
+        "endpoint",
+        "secret_id",
+        "prompt_id",
+        "workload",
+        "allowed_modes",
+        "allowed_data_classes",
+        "region"
+      ],
+      "title": "RouteConfiguration",
+      "type": "object"
+    },
+    "SecretConfiguration": {
+      "additionalProperties": false,
+      "properties": {
+        "environment_variable": {
+          "title": "Environment Variable",
+          "type": "string"
+        },
+        "secret_id": {
+          "title": "Secret Id",
+          "type": "string"
+        },
+        "version": {
+          "default": 1,
+          "title": "Version",
+          "type": "integer"
+        }
+      },
+      "required": [
+        "secret_id",
+        "environment_variable"
+      ],
+      "title": "SecretConfiguration",
+      "type": "object"
+    }
+  },
+  "additionalProperties": false,
+  "properties": {
+    "prompts": {
+      "items": {
+        "$ref": "#/$defs/PromptConfiguration"
+      },
+      "title": "Prompts",
+      "type": "array"
+    },
+    "routes": {
+      "items": {
+        "$ref": "#/$defs/RouteConfiguration"
+      },
+      "title": "Routes",
+      "type": "array"
+    },
+    "schema_version": {
+      "default": "1.0.0",
+      "title": "Schema Version",
+      "type": "string"
+    },
+    "secrets": {
+      "items": {
+        "$ref": "#/$defs/SecretConfiguration"
+      },
+      "title": "Secrets",
+      "type": "array"
+    }
+  },
+  "required": [
+    "prompts",
+    "secrets",
+    "routes"
+  ],
+  "title": "ModelGatewayConfiguration",
+  "type": "object"
+}

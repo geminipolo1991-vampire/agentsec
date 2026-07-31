@@ -1,0 +1,85 @@
+{
+  "$defs": {
+    "InventorySource": {
+      "enum": [
+        "declared",
+        "observed",
+        "imported"
+      ],
+      "title": "InventorySource",
+      "type": "string"
+    }
+  },
+  "additionalProperties": false,
+  "properties": {
+    "changed_fields": {
+      "items": {
+        "type": "string"
+      },
+      "title": "Changed Fields",
+      "type": "array"
+    },
+    "component_id": {
+      "title": "Component Id",
+      "type": "string"
+    },
+    "configuration": {
+      "additionalProperties": true,
+      "title": "Configuration",
+      "type": "object"
+    },
+    "configuration_digest": {
+      "pattern": "^[0-9a-f]{64}$",
+      "title": "Configuration Digest",
+      "type": "string"
+    },
+    "observed_at": {
+      "format": "date-time",
+      "title": "Observed At",
+      "type": "string"
+    },
+    "previous_digest": {
+      "anyOf": [
+        {
+          "pattern": "^[0-9a-f]{64}$",
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Previous Digest"
+    },
+    "recorded_at": {
+      "format": "date-time",
+      "title": "Recorded At",
+      "type": "string"
+    },
+    "source": {
+      "$ref": "#/$defs/InventorySource"
+    },
+    "tenant_id": {
+      "title": "Tenant Id",
+      "type": "string"
+    },
+    "version": {
+      "minimum": 1,
+      "title": "Version",
+      "type": "integer"
+    }
+  },
+  "required": [
+    "component_id",
+    "tenant_id",
+    "version",
+    "configuration_digest",
+    "configuration",
+    "changed_fields",
+    "source",
+    "observed_at",
+    "recorded_at"
+  ],
+  "title": "ConfigurationRevision",
+  "type": "object"
+}

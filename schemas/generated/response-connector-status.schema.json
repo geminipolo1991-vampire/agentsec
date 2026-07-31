@@ -1,0 +1,55 @@
+{
+  "$defs": {
+    "ResponseOperation": {
+      "enum": [
+        "session.quarantine",
+        "session.restore",
+        "agent.pause",
+        "agent.resume",
+        "identity.suspend",
+        "identity.restore",
+        "network.block_destination",
+        "network.unblock_destination",
+        "ticket.annotate"
+      ],
+      "title": "ResponseOperation",
+      "type": "string"
+    }
+  },
+  "additionalProperties": false,
+  "properties": {
+    "connector_id": {
+      "pattern": "^connector://[A-Za-z0-9_.@/-]+$",
+      "title": "Connector Id",
+      "type": "string"
+    },
+    "enabled": {
+      "title": "Enabled",
+      "type": "boolean"
+    },
+    "name": {
+      "title": "Name",
+      "type": "string"
+    },
+    "operations": {
+      "items": {
+        "$ref": "#/$defs/ResponseOperation"
+      },
+      "title": "Operations",
+      "type": "array"
+    },
+    "ready": {
+      "title": "Ready",
+      "type": "boolean"
+    }
+  },
+  "required": [
+    "connector_id",
+    "name",
+    "operations",
+    "enabled",
+    "ready"
+  ],
+  "title": "ResponseConnectorStatus",
+  "type": "object"
+}

@@ -1,0 +1,47 @@
+{
+  "additionalProperties": false,
+  "properties": {
+    "content_sha256": {
+      "pattern": "^[0-9a-f]{64}$",
+      "title": "Content Sha256",
+      "type": "string"
+    },
+    "display_name": {
+      "maxLength": 256,
+      "minLength": 1,
+      "title": "Display Name",
+      "type": "string"
+    },
+    "evidence_ref": {
+      "pattern": "^[a-z][a-z0-9_-]{1,31}_sha256:[0-9a-f]{24}$",
+      "title": "Evidence Ref",
+      "type": "string"
+    },
+    "expected_version": {
+      "minimum": 1,
+      "title": "Expected Version",
+      "type": "integer"
+    },
+    "media_type": {
+      "pattern": "^(application/pdf|application/json|text/plain|image/png|image/jpeg)$",
+      "title": "Media Type",
+      "type": "string"
+    },
+    "size_bytes": {
+      "maximum": 10485760,
+      "minimum": 1,
+      "title": "Size Bytes",
+      "type": "integer"
+    }
+  },
+  "required": [
+    "expected_version",
+    "display_name",
+    "media_type",
+    "size_bytes",
+    "content_sha256",
+    "evidence_ref"
+  ],
+  "title": "CaseAttachmentRequest",
+  "type": "object"
+}

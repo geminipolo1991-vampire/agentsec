@@ -1,0 +1,383 @@
+{
+  "$defs": {
+    "AnalystRole": {
+      "enum": [
+        "triage",
+        "investigation",
+        "judge",
+        "escalation",
+        "response_advisor"
+      ],
+      "title": "AnalystRole",
+      "type": "string"
+    },
+    "ClaimValidationResult": {
+      "additionalProperties": false,
+      "properties": {
+        "calibrated_confidence": {
+          "maximum": 1.0,
+          "minimum": 0.0,
+          "title": "Calibrated Confidence",
+          "type": "number"
+        },
+        "claim_id": {
+          "pattern": "^acm_[0-9a-f]{32}$",
+          "title": "Claim Id",
+          "type": "string"
+        },
+        "claimed_confidence": {
+          "maximum": 1.0,
+          "minimum": 0.0,
+          "title": "Claimed Confidence",
+          "type": "number"
+        },
+        "conflicting_evidence_ids": {
+          "items": {
+            "type": "string"
+          },
+          "maxItems": 16,
+          "title": "Conflicting Evidence Ids",
+          "type": "array"
+        },
+        "evidence_ids": {
+          "items": {
+            "type": "string"
+          },
+          "maxItems": 16,
+          "title": "Evidence Ids",
+          "type": "array"
+        },
+        "independent_sources": {
+          "maximum": 16,
+          "minimum": 0,
+          "title": "Independent Sources",
+          "type": "integer"
+        },
+        "matched_evidence_ids": {
+          "items": {
+            "type": "string"
+          },
+          "maxItems": 16,
+          "title": "Matched Evidence Ids",
+          "type": "array"
+        },
+        "reason_codes": {
+          "items": {
+            "type": "string"
+          },
+          "maxItems": 16,
+          "title": "Reason Codes",
+          "type": "array"
+        },
+        "role": {
+          "$ref": "#/$defs/AnalystRole"
+        },
+        "status": {
+          "$ref": "#/$defs/ClaimValidationStatus"
+        }
+      },
+      "required": [
+        "claim_id",
+        "role",
+        "status",
+        "independent_sources",
+        "claimed_confidence",
+        "calibrated_confidence"
+      ],
+      "title": "ClaimValidationResult",
+      "type": "object"
+    },
+    "ClaimValidationStatus": {
+      "enum": [
+        "verified",
+        "partial",
+        "unsupported",
+        "contradicted",
+        "rejected"
+      ],
+      "title": "ClaimValidationStatus",
+      "type": "string"
+    },
+    "DecisionAction": {
+      "enum": [
+        "allow",
+        "allow_with_obligations",
+        "require_approval",
+        "deny"
+      ],
+      "title": "DecisionAction",
+      "type": "string"
+    },
+    "JudgmentContradiction": {
+      "additionalProperties": false,
+      "properties": {
+        "evidence_ids": {
+          "items": {
+            "type": "string"
+          },
+          "maxItems": 16,
+          "title": "Evidence Ids",
+          "type": "array"
+        },
+        "fact_key": {
+          "pattern": "^[a-z][a-z0-9_]{1,63}$",
+          "title": "Fact Key",
+          "type": "string"
+        },
+        "left_claim_id": {
+          "pattern": "^acm_[0-9a-f]{32}$",
+          "title": "Left Claim Id",
+          "type": "string"
+        },
+        "reason_code": {
+          "pattern": "^[A-Z][A-Z0-9_]{2,63}$",
+          "title": "Reason Code",
+          "type": "string"
+        },
+        "right_claim_id": {
+          "pattern": "^acm_[0-9a-f]{32}$",
+          "title": "Right Claim Id",
+          "type": "string"
+        },
+        "subject": {
+          "maxLength": 128,
+          "minLength": 1,
+          "title": "Subject",
+          "type": "string"
+        }
+      },
+      "required": [
+        "left_claim_id",
+        "right_claim_id",
+        "subject",
+        "fact_key",
+        "reason_code"
+      ],
+      "title": "JudgmentContradiction",
+      "type": "object"
+    },
+    "JudgmentValidationIssue": {
+      "additionalProperties": false,
+      "properties": {
+        "code": {
+          "pattern": "^[A-Z][A-Z0-9_]{2,63}$",
+          "title": "Code",
+          "type": "string"
+        },
+        "evidence_ids": {
+          "items": {
+            "type": "string"
+          },
+          "maxItems": 16,
+          "title": "Evidence Ids",
+          "type": "array"
+        },
+        "message": {
+          "maxLength": 256,
+          "minLength": 3,
+          "title": "Message",
+          "type": "string"
+        },
+        "role": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/AnalystRole"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        },
+        "severity": {
+          "enum": [
+            "warning",
+            "error",
+            "critical"
+          ],
+          "title": "Severity",
+          "type": "string"
+        }
+      },
+      "required": [
+        "code",
+        "severity",
+        "message"
+      ],
+      "title": "JudgmentValidationIssue",
+      "type": "object"
+    },
+    "JudgmentValidationStatus": {
+      "enum": [
+        "passed",
+        "human_review",
+        "rejected"
+      ],
+      "title": "JudgmentValidationStatus",
+      "type": "string"
+    },
+    "MandatoryEvidenceCheck": {
+      "additionalProperties": false,
+      "properties": {
+        "cited_kinds": {
+          "items": {
+            "type": "string"
+          },
+          "maxItems": 16,
+          "title": "Cited Kinds",
+          "type": "array"
+        },
+        "missing_kinds": {
+          "items": {
+            "type": "string"
+          },
+          "maxItems": 16,
+          "title": "Missing Kinds",
+          "type": "array"
+        },
+        "passed": {
+          "title": "Passed",
+          "type": "boolean"
+        },
+        "required_kinds": {
+          "items": {
+            "type": "string"
+          },
+          "maxItems": 16,
+          "minItems": 1,
+          "title": "Required Kinds",
+          "type": "array"
+        },
+        "role": {
+          "$ref": "#/$defs/AnalystRole"
+        }
+      },
+      "required": [
+        "role",
+        "required_kinds",
+        "passed"
+      ],
+      "title": "MandatoryEvidenceCheck",
+      "type": "object"
+    }
+  },
+  "additionalProperties": false,
+  "properties": {
+    "accepted_claims": {
+      "minimum": 0,
+      "title": "Accepted Claims",
+      "type": "integer"
+    },
+    "automation_eligible": {
+      "const": false,
+      "default": false,
+      "title": "Automation Eligible",
+      "type": "boolean"
+    },
+    "calibrated_confidence": {
+      "maximum": 1.0,
+      "minimum": 0.0,
+      "title": "Calibrated Confidence",
+      "type": "number"
+    },
+    "claim_results": {
+      "items": {
+        "$ref": "#/$defs/ClaimValidationResult"
+      },
+      "maxItems": 80,
+      "title": "Claim Results",
+      "type": "array"
+    },
+    "contradictions": {
+      "items": {
+        "$ref": "#/$defs/JudgmentContradiction"
+      },
+      "maxItems": 32,
+      "title": "Contradictions",
+      "type": "array"
+    },
+    "deterministic_action": {
+      "$ref": "#/$defs/DecisionAction"
+    },
+    "human_gate_reasons": {
+      "items": {
+        "type": "string"
+      },
+      "maxItems": 32,
+      "title": "Human Gate Reasons",
+      "type": "array"
+    },
+    "human_gate_required": {
+      "title": "Human Gate Required",
+      "type": "boolean"
+    },
+    "issues": {
+      "items": {
+        "$ref": "#/$defs/JudgmentValidationIssue"
+      },
+      "maxItems": 64,
+      "title": "Issues",
+      "type": "array"
+    },
+    "machine_action": {
+      "$ref": "#/$defs/DecisionAction"
+    },
+    "mandatory_evidence": {
+      "items": {
+        "$ref": "#/$defs/MandatoryEvidenceCheck"
+      },
+      "maxItems": 5,
+      "minItems": 5,
+      "title": "Mandatory Evidence",
+      "type": "array"
+    },
+    "policy_version": {
+      "maxLength": 64,
+      "minLength": 1,
+      "title": "Policy Version",
+      "type": "string"
+    },
+    "rejected_claims": {
+      "minimum": 0,
+      "title": "Rejected Claims",
+      "type": "integer"
+    },
+    "report_id": {
+      "pattern": "^jvr_[0-9a-f]{32}$",
+      "title": "Report Id",
+      "type": "string"
+    },
+    "report_sha256": {
+      "pattern": "^[0-9a-f]{64}$",
+      "title": "Report Sha256",
+      "type": "string"
+    },
+    "schema_version": {
+      "default": "1.0.0",
+      "title": "Schema Version",
+      "type": "string"
+    },
+    "status": {
+      "$ref": "#/$defs/JudgmentValidationStatus"
+    },
+    "validated_at": {
+      "format": "date-time",
+      "title": "Validated At",
+      "type": "string"
+    }
+  },
+  "required": [
+    "policy_version",
+    "status",
+    "deterministic_action",
+    "machine_action",
+    "human_gate_required",
+    "mandatory_evidence",
+    "accepted_claims",
+    "rejected_claims",
+    "calibrated_confidence",
+    "report_sha256"
+  ],
+  "title": "JudgmentValidationReport",
+  "type": "object"
+}

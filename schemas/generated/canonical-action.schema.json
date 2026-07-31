@@ -1,0 +1,166 @@
+{
+  "$defs": {
+    "ActionStatus": {
+      "enum": [
+        "proposed",
+        "awaiting_approval",
+        "approved",
+        "executing",
+        "succeeded",
+        "failed",
+        "rolled_back",
+        "cancelled"
+      ],
+      "title": "ActionStatus",
+      "type": "string"
+    }
+  },
+  "additionalProperties": false,
+  "properties": {
+    "action_id": {
+      "maxLength": 128,
+      "minLength": 5,
+      "title": "Action Id",
+      "type": "string"
+    },
+    "action_type": {
+      "maxLength": 128,
+      "minLength": 1,
+      "title": "Action Type",
+      "type": "string"
+    },
+    "approval_ref": {
+      "anyOf": [
+        {
+          "maxLength": 256,
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Approval Ref"
+    },
+    "completed_at": {
+      "anyOf": [
+        {
+          "format": "date-time",
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Completed At"
+    },
+    "created_at": {
+      "format": "date-time",
+      "title": "Created At",
+      "type": "string"
+    },
+    "evidence_ids": {
+      "items": {
+        "maxLength": 256,
+        "minLength": 1,
+        "type": "string"
+      },
+      "maxItems": 1024,
+      "title": "Evidence Ids",
+      "type": "array"
+    },
+    "executor_ref": {
+      "maxLength": 256,
+      "minLength": 1,
+      "title": "Executor Ref",
+      "type": "string"
+    },
+    "incident_id": {
+      "maxLength": 128,
+      "minLength": 5,
+      "title": "Incident Id",
+      "type": "string"
+    },
+    "judgment_id": {
+      "maxLength": 128,
+      "minLength": 5,
+      "title": "Judgment Id",
+      "type": "string"
+    },
+    "labels": {
+      "items": {
+        "type": "string"
+      },
+      "maxItems": 64,
+      "title": "Labels",
+      "type": "array",
+      "uniqueItems": true
+    },
+    "record_type": {
+      "const": "action",
+      "default": "action",
+      "title": "Record Type",
+      "type": "string"
+    },
+    "requested_at": {
+      "format": "date-time",
+      "title": "Requested At",
+      "type": "string"
+    },
+    "result_code": {
+      "anyOf": [
+        {
+          "maxLength": 128,
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Result Code"
+    },
+    "schema_version": {
+      "const": "1.0.0",
+      "default": "1.0.0",
+      "title": "Schema Version",
+      "type": "string"
+    },
+    "simulated": {
+      "title": "Simulated",
+      "type": "boolean"
+    },
+    "status": {
+      "$ref": "#/$defs/ActionStatus"
+    },
+    "target_entity_ids": {
+      "items": {
+        "maxLength": 256,
+        "minLength": 1,
+        "type": "string"
+      },
+      "maxItems": 1024,
+      "title": "Target Entity Ids",
+      "type": "array"
+    },
+    "tenant_id": {
+      "maxLength": 128,
+      "minLength": 1,
+      "title": "Tenant Id",
+      "type": "string"
+    }
+  },
+  "required": [
+    "tenant_id",
+    "action_id",
+    "incident_id",
+    "judgment_id",
+    "action_type",
+    "status",
+    "simulated",
+    "executor_ref"
+  ],
+  "title": "ActionRecord",
+  "type": "object"
+}

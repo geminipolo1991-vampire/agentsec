@@ -1,0 +1,15 @@
+{
+  "additionalProperties": false,
+  "properties": {
+    "request_id": {
+      "pattern": "^req_[A-Za-z0-9]{8,64}$",
+      "title": "Request Id",
+      "type": "string"
+    }
+  },
+  "required": [
+    "request_id"
+  ],
+  "title": "SimulationReplayRequest",
+  "type": "object"
+}

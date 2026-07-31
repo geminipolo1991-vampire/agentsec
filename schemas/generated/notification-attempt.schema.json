@@ -1,0 +1,108 @@
+{
+  "$defs": {
+    "AttemptOutcome": {
+      "enum": [
+        "delivered",
+        "ack_pending",
+        "retry_scheduled",
+        "dead_letter"
+      ],
+      "title": "AttemptOutcome",
+      "type": "string"
+    }
+  },
+  "additionalProperties": false,
+  "properties": {
+    "attempt_id": {
+      "pattern": "^nat_[0-9a-f]{32}$",
+      "title": "Attempt Id",
+      "type": "string"
+    },
+    "attempt_number": {
+      "maximum": 1000,
+      "minimum": 1,
+      "title": "Attempt Number",
+      "type": "integer"
+    },
+    "attempt_sha256": {
+      "pattern": "^[0-9a-f]{64}$",
+      "title": "Attempt Sha256",
+      "type": "string"
+    },
+    "attempted_at": {
+      "format": "date-time",
+      "title": "Attempted At",
+      "type": "string"
+    },
+    "delivery_id": {
+      "pattern": "^ndv_[0-9a-f]{32}$",
+      "title": "Delivery Id",
+      "type": "string"
+    },
+    "error_code": {
+      "anyOf": [
+        {
+          "pattern": "^[a-z][a-z0-9_]{2,63}$",
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Error Code"
+    },
+    "latency_ms": {
+      "maximum": 120000,
+      "minimum": 0,
+      "title": "Latency Ms",
+      "type": "integer"
+    },
+    "notification_id": {
+      "pattern": "^ntf_[0-9a-f]{32}$",
+      "title": "Notification Id",
+      "type": "string"
+    },
+    "outcome": {
+      "$ref": "#/$defs/AttemptOutcome"
+    },
+    "provider_receipt_sha256": {
+      "anyOf": [
+        {
+          "pattern": "^[0-9a-f]{64}$",
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Provider Receipt Sha256"
+    },
+    "redrive_count": {
+      "maximum": 5,
+      "minimum": 0,
+      "title": "Redrive Count",
+      "type": "integer"
+    },
+    "tenant_id": {
+      "maxLength": 128,
+      "minLength": 1,
+      "title": "Tenant Id",
+      "type": "string"
+    }
+  },
+  "required": [
+    "delivery_id",
+    "notification_id",
+    "tenant_id",
+    "attempt_number",
+    "redrive_count",
+    "outcome",
+    "latency_ms",
+    "attempted_at",
+    "attempt_sha256"
+  ],
+  "title": "NotificationAttempt",
+  "type": "object"
+}

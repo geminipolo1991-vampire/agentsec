@@ -1,0 +1,218 @@
+{
+  "$defs": {
+    "IntegrationDelivery": {
+      "additionalProperties": false,
+      "properties": {
+        "accepted_at": {
+          "anyOf": [
+            {
+              "format": "date-time",
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Accepted At"
+        },
+        "acknowledged_at": {
+          "anyOf": [
+            {
+              "format": "date-time",
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Acknowledged At"
+        },
+        "attempts": {
+          "maximum": 1000,
+          "minimum": 0,
+          "title": "Attempts",
+          "type": "integer"
+        },
+        "created_at": {
+          "format": "date-time",
+          "title": "Created At",
+          "type": "string"
+        },
+        "delivery_id": {
+          "pattern": "^idl_[0-9a-f]{32}$",
+          "title": "Delivery Id",
+          "type": "string"
+        },
+        "delivery_sha256": {
+          "pattern": "^[0-9a-f]{64}$",
+          "title": "Delivery Sha256",
+          "type": "string"
+        },
+        "destination_id": {
+          "pattern": "^integration://[A-Za-z0-9_.@/-]+$",
+          "title": "Destination Id",
+          "type": "string"
+        },
+        "event_id": {
+          "pattern": "^xevt_[0-9a-f]{32}$",
+          "title": "Event Id",
+          "type": "string"
+        },
+        "kind": {
+          "$ref": "#/$defs/IntegrationKind"
+        },
+        "last_error_code": {
+          "anyOf": [
+            {
+              "pattern": "^[a-z][a-z0-9_]{2,63}$",
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Last Error Code"
+        },
+        "max_attempts": {
+          "maximum": 20,
+          "minimum": 1,
+          "title": "Max Attempts",
+          "type": "integer"
+        },
+        "next_attempt_at": {
+          "format": "date-time",
+          "title": "Next Attempt At",
+          "type": "string"
+        },
+        "provider_receipt_sha256": {
+          "anyOf": [
+            {
+              "pattern": "^[0-9a-f]{64}$",
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Provider Receipt Sha256"
+        },
+        "provider_reference_sha256": {
+          "anyOf": [
+            {
+              "pattern": "^[0-9a-f]{64}$",
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Provider Reference Sha256"
+        },
+        "redrive_count": {
+          "maximum": 10,
+          "minimum": 0,
+          "title": "Redrive Count",
+          "type": "integer"
+        },
+        "schema_version": {
+          "default": "1.0.0",
+          "title": "Schema Version",
+          "type": "string"
+        },
+        "state": {
+          "$ref": "#/$defs/IntegrationDeliveryState"
+        },
+        "tenant_id": {
+          "maxLength": 128,
+          "minLength": 1,
+          "title": "Tenant Id",
+          "type": "string"
+        },
+        "updated_at": {
+          "format": "date-time",
+          "title": "Updated At",
+          "type": "string"
+        }
+      },
+      "required": [
+        "delivery_id",
+        "tenant_id",
+        "event_id",
+        "destination_id",
+        "kind",
+        "state",
+        "attempts",
+        "redrive_count",
+        "max_attempts",
+        "next_attempt_at",
+        "created_at",
+        "updated_at",
+        "delivery_sha256"
+      ],
+      "title": "IntegrationDelivery",
+      "type": "object"
+    },
+    "IntegrationDeliveryState": {
+      "enum": [
+        "queued",
+        "retry",
+        "ack_pending",
+        "delivered",
+        "dead_letter"
+      ],
+      "title": "IntegrationDeliveryState",
+      "type": "string"
+    },
+    "IntegrationKind": {
+      "enum": [
+        "splunk_hec",
+        "elastic_bulk",
+        "signed_webhook",
+        "syslog_tls",
+        "cef_tls",
+        "otlp_http_json"
+      ],
+      "title": "IntegrationKind",
+      "type": "string"
+    }
+  },
+  "additionalProperties": false,
+  "properties": {
+    "count": {
+      "maximum": 200,
+      "minimum": 0,
+      "title": "Count",
+      "type": "integer"
+    },
+    "deliveries": {
+      "items": {
+        "$ref": "#/$defs/IntegrationDelivery"
+      },
+      "maxItems": 200,
+      "title": "Deliveries",
+      "type": "array"
+    },
+    "schema_version": {
+      "default": "1.0.0",
+      "title": "Schema Version",
+      "type": "string"
+    },
+    "total": {
+      "minimum": 0,
+      "title": "Total",
+      "type": "integer"
+    }
+  },
+  "required": [
+    "deliveries",
+    "count",
+    "total"
+  ],
+  "title": "IntegrationDeliveryPage",
+  "type": "object"
+}

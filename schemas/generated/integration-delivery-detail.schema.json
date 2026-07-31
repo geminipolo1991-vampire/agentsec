@@ -1,0 +1,461 @@
+{
+  "$defs": {
+    "ExternalSecurityEvent": {
+      "additionalProperties": false,
+      "properties": {
+        "agent_id": {
+          "maxLength": 128,
+          "minLength": 1,
+          "title": "Agent Id",
+          "type": "string"
+        },
+        "case_id": {
+          "anyOf": [
+            {
+              "maxLength": 128,
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Case Id"
+        },
+        "decision": {
+          "maxLength": 64,
+          "minLength": 1,
+          "title": "Decision",
+          "type": "string"
+        },
+        "destination_class": {
+          "anyOf": [
+            {
+              "maxLength": 64,
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Destination Class"
+        },
+        "detector_id": {
+          "maxLength": 128,
+          "minLength": 1,
+          "title": "Detector Id",
+          "type": "string"
+        },
+        "escalation_level": {
+          "maxLength": 64,
+          "minLength": 1,
+          "title": "Escalation Level",
+          "type": "string"
+        },
+        "event_id": {
+          "pattern": "^xevt_[0-9a-f]{32}$",
+          "title": "Event Id",
+          "type": "string"
+        },
+        "event_type": {
+          "default": "finding",
+          "pattern": "^(finding|incident|alert|audit)$",
+          "title": "Event Type",
+          "type": "string"
+        },
+        "evidence_pivot_id": {
+          "maxLength": 128,
+          "minLength": 1,
+          "title": "Evidence Pivot Id",
+          "type": "string"
+        },
+        "finding_id": {
+          "pattern": "^fnd_[A-Za-z0-9]+$",
+          "title": "Finding Id",
+          "type": "string"
+        },
+        "finding_type": {
+          "pattern": "^[a-z][a-z0-9_]{2,63}$",
+          "title": "Finding Type",
+          "type": "string"
+        },
+        "flow_id": {
+          "maxLength": 128,
+          "minLength": 1,
+          "title": "Flow Id",
+          "type": "string"
+        },
+        "ledger_integrity": {
+          "pattern": "^(verified|failed)$",
+          "title": "Ledger Integrity",
+          "type": "string"
+        },
+        "observed_at": {
+          "format": "date-time",
+          "title": "Observed At",
+          "type": "string"
+        },
+        "operation": {
+          "maxLength": 128,
+          "minLength": 1,
+          "title": "Operation",
+          "type": "string"
+        },
+        "policy_version": {
+          "maxLength": 128,
+          "minLength": 1,
+          "title": "Policy Version",
+          "type": "string"
+        },
+        "record_sha256": {
+          "pattern": "^[0-9a-f]{64}$",
+          "title": "Record Sha256",
+          "type": "string"
+        },
+        "resource_class": {
+          "maxLength": 64,
+          "minLength": 1,
+          "title": "Resource Class",
+          "type": "string"
+        },
+        "schema_version": {
+          "default": "1.0.0",
+          "title": "Schema Version",
+          "type": "string"
+        },
+        "severity": {
+          "pattern": "^(info|low|medium|high|critical)$",
+          "title": "Severity",
+          "type": "string"
+        },
+        "status": {
+          "maxLength": 64,
+          "minLength": 1,
+          "title": "Status",
+          "type": "string"
+        },
+        "tenant_id": {
+          "maxLength": 128,
+          "minLength": 1,
+          "title": "Tenant Id",
+          "type": "string"
+        }
+      },
+      "required": [
+        "event_id",
+        "tenant_id",
+        "finding_id",
+        "finding_type",
+        "severity",
+        "status",
+        "agent_id",
+        "flow_id",
+        "operation",
+        "resource_class",
+        "detector_id",
+        "policy_version",
+        "decision",
+        "escalation_level",
+        "evidence_pivot_id",
+        "ledger_integrity",
+        "observed_at",
+        "record_sha256"
+      ],
+      "title": "ExternalSecurityEvent",
+      "type": "object"
+    },
+    "IntegrationAttempt": {
+      "additionalProperties": false,
+      "properties": {
+        "accepted": {
+          "title": "Accepted",
+          "type": "boolean"
+        },
+        "acknowledged": {
+          "title": "Acknowledged",
+          "type": "boolean"
+        },
+        "attempt_id": {
+          "pattern": "^iat_[0-9a-f]{32}$",
+          "title": "Attempt Id",
+          "type": "string"
+        },
+        "attempted_at": {
+          "format": "date-time",
+          "title": "Attempted At",
+          "type": "string"
+        },
+        "delivery_id": {
+          "pattern": "^idl_[0-9a-f]{32}$",
+          "title": "Delivery Id",
+          "type": "string"
+        },
+        "error_code": {
+          "anyOf": [
+            {
+              "pattern": "^[a-z][a-z0-9_]{2,63}$",
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Error Code"
+        },
+        "operation": {
+          "pattern": "^(send|ack_poll)$",
+          "title": "Operation",
+          "type": "string"
+        },
+        "provider_receipt_sha256": {
+          "anyOf": [
+            {
+              "pattern": "^[0-9a-f]{64}$",
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Provider Receipt Sha256"
+        },
+        "provider_reference_sha256": {
+          "anyOf": [
+            {
+              "pattern": "^[0-9a-f]{64}$",
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Provider Reference Sha256"
+        },
+        "sequence": {
+          "minimum": 1,
+          "title": "Sequence",
+          "type": "integer"
+        }
+      },
+      "required": [
+        "attempt_id",
+        "delivery_id",
+        "sequence",
+        "operation",
+        "accepted",
+        "acknowledged",
+        "attempted_at"
+      ],
+      "title": "IntegrationAttempt",
+      "type": "object"
+    },
+    "IntegrationDelivery": {
+      "additionalProperties": false,
+      "properties": {
+        "accepted_at": {
+          "anyOf": [
+            {
+              "format": "date-time",
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Accepted At"
+        },
+        "acknowledged_at": {
+          "anyOf": [
+            {
+              "format": "date-time",
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Acknowledged At"
+        },
+        "attempts": {
+          "maximum": 1000,
+          "minimum": 0,
+          "title": "Attempts",
+          "type": "integer"
+        },
+        "created_at": {
+          "format": "date-time",
+          "title": "Created At",
+          "type": "string"
+        },
+        "delivery_id": {
+          "pattern": "^idl_[0-9a-f]{32}$",
+          "title": "Delivery Id",
+          "type": "string"
+        },
+        "delivery_sha256": {
+          "pattern": "^[0-9a-f]{64}$",
+          "title": "Delivery Sha256",
+          "type": "string"
+        },
+        "destination_id": {
+          "pattern": "^integration://[A-Za-z0-9_.@/-]+$",
+          "title": "Destination Id",
+          "type": "string"
+        },
+        "event_id": {
+          "pattern": "^xevt_[0-9a-f]{32}$",
+          "title": "Event Id",
+          "type": "string"
+        },
+        "kind": {
+          "$ref": "#/$defs/IntegrationKind"
+        },
+        "last_error_code": {
+          "anyOf": [
+            {
+              "pattern": "^[a-z][a-z0-9_]{2,63}$",
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Last Error Code"
+        },
+        "max_attempts": {
+          "maximum": 20,
+          "minimum": 1,
+          "title": "Max Attempts",
+          "type": "integer"
+        },
+        "next_attempt_at": {
+          "format": "date-time",
+          "title": "Next Attempt At",
+          "type": "string"
+        },
+        "provider_receipt_sha256": {
+          "anyOf": [
+            {
+              "pattern": "^[0-9a-f]{64}$",
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Provider Receipt Sha256"
+        },
+        "provider_reference_sha256": {
+          "anyOf": [
+            {
+              "pattern": "^[0-9a-f]{64}$",
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Provider Reference Sha256"
+        },
+        "redrive_count": {
+          "maximum": 10,
+          "minimum": 0,
+          "title": "Redrive Count",
+          "type": "integer"
+        },
+        "schema_version": {
+          "default": "1.0.0",
+          "title": "Schema Version",
+          "type": "string"
+        },
+        "state": {
+          "$ref": "#/$defs/IntegrationDeliveryState"
+        },
+        "tenant_id": {
+          "maxLength": 128,
+          "minLength": 1,
+          "title": "Tenant Id",
+          "type": "string"
+        },
+        "updated_at": {
+          "format": "date-time",
+          "title": "Updated At",
+          "type": "string"
+        }
+      },
+      "required": [
+        "delivery_id",
+        "tenant_id",
+        "event_id",
+        "destination_id",
+        "kind",
+        "state",
+        "attempts",
+        "redrive_count",
+        "max_attempts",
+        "next_attempt_at",
+        "created_at",
+        "updated_at",
+        "delivery_sha256"
+      ],
+      "title": "IntegrationDelivery",
+      "type": "object"
+    },
+    "IntegrationDeliveryState": {
+      "enum": [
+        "queued",
+        "retry",
+        "ack_pending",
+        "delivered",
+        "dead_letter"
+      ],
+      "title": "IntegrationDeliveryState",
+      "type": "string"
+    },
+    "IntegrationKind": {
+      "enum": [
+        "splunk_hec",
+        "elastic_bulk",
+        "signed_webhook",
+        "syslog_tls",
+        "cef_tls",
+        "otlp_http_json"
+      ],
+      "title": "IntegrationKind",
+      "type": "string"
+    }
+  },
+  "additionalProperties": false,
+  "properties": {
+    "attempts": {
+      "items": {
+        "$ref": "#/$defs/IntegrationAttempt"
+      },
+      "maxItems": 1000,
+      "title": "Attempts",
+      "type": "array"
+    },
+    "delivery": {
+      "$ref": "#/$defs/IntegrationDelivery"
+    },
+    "event": {
+      "$ref": "#/$defs/ExternalSecurityEvent"
+    }
+  },
+  "required": [
+    "delivery",
+    "event",
+    "attempts"
+  ],
+  "title": "IntegrationDeliveryDetail",
+  "type": "object"
+}

@@ -1,0 +1,106 @@
+{
+  "$defs": {
+    "ResponseOperation": {
+      "enum": [
+        "session.quarantine",
+        "session.restore",
+        "agent.pause",
+        "agent.resume",
+        "identity.suspend",
+        "identity.restore",
+        "network.block_destination",
+        "network.unblock_destination",
+        "ticket.annotate"
+      ],
+      "title": "ResponseOperation",
+      "type": "string"
+    },
+    "TargetSelector": {
+      "enum": [
+        "session",
+        "agent",
+        "resource",
+        "destination",
+        "case"
+      ],
+      "title": "TargetSelector",
+      "type": "string"
+    }
+  },
+  "additionalProperties": false,
+  "properties": {
+    "connector_id": {
+      "pattern": "^connector://[A-Za-z0-9_.@/-]+$",
+      "title": "Connector Id",
+      "type": "string"
+    },
+    "expected_state": {
+      "pattern": "^[a-z][a-z0-9_]{1,63}$",
+      "title": "Expected State",
+      "type": "string"
+    },
+    "name": {
+      "maxLength": 128,
+      "minLength": 3,
+      "title": "Name",
+      "type": "string"
+    },
+    "operation": {
+      "$ref": "#/$defs/ResponseOperation"
+    },
+    "requires_approval": {
+      "default": true,
+      "title": "Requires Approval",
+      "type": "boolean"
+    },
+    "rollback_expected_state": {
+      "anyOf": [
+        {
+          "pattern": "^[a-z][a-z0-9_]{1,63}$",
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Rollback Expected State"
+    },
+    "rollback_operation": {
+      "anyOf": [
+        {
+          "$ref": "#/$defs/ResponseOperation"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null
+    },
+    "step_id": {
+      "pattern": "^step://[A-Za-z0-9_.@/-]+$",
+      "title": "Step Id",
+      "type": "string"
+    },
+    "target_selector": {
+      "$ref": "#/$defs/TargetSelector"
+    },
+    "timeout_seconds": {
+      "default": 5.0,
+      "maximum": 30.0,
+      "minimum": 0.1,
+      "title": "Timeout Seconds",
+      "type": "number"
+    }
+  },
+  "required": [
+    "step_id",
+    "name",
+    "operation",
+    "connector_id",
+    "target_selector",
+    "expected_state"
+  ],
+  "title": "PlaybookStepDefinition",
+  "type": "object"
+}

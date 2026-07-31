@@ -1,0 +1,42 @@
+{
+  "$defs": {
+    "SimulationRunMode": {
+      "enum": [
+        "protected",
+        "control",
+        "comparison"
+      ],
+      "title": "SimulationRunMode",
+      "type": "string"
+    }
+  },
+  "additionalProperties": false,
+  "properties": {
+    "mode": {
+      "$ref": "#/$defs/SimulationRunMode",
+      "default": "comparison"
+    },
+    "request_id": {
+      "pattern": "^req_[A-Za-z0-9]{8,64}$",
+      "title": "Request Id",
+      "type": "string"
+    },
+    "scenario_id": {
+      "pattern": "^sim_[a-z0-9_]{3,96}$",
+      "title": "Scenario Id",
+      "type": "string"
+    },
+    "version": {
+      "pattern": "^[0-9]+\\.[0-9]+\\.[0-9]+$",
+      "title": "Version",
+      "type": "string"
+    }
+  },
+  "required": [
+    "request_id",
+    "scenario_id",
+    "version"
+  ],
+  "title": "SimulationRunRequest",
+  "type": "object"
+}

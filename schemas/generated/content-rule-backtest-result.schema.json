@@ -1,0 +1,77 @@
+{
+  "additionalProperties": false,
+  "properties": {
+    "alert_count": {
+      "minimum": 0,
+      "title": "Alert Count",
+      "type": "integer"
+    },
+    "alert_types": {
+      "items": {
+        "type": "string"
+      },
+      "title": "Alert Types",
+      "type": "array"
+    },
+    "completed_at": {
+      "format": "date-time",
+      "title": "Completed At",
+      "type": "string"
+    },
+    "definition_sha256": {
+      "pattern": "^[0-9a-f]{64}$",
+      "title": "Definition Sha256",
+      "type": "string"
+    },
+    "duration_ms": {
+      "minimum": 0,
+      "title": "Duration Ms",
+      "type": "integer"
+    },
+    "errors": {
+      "items": {
+        "type": "string"
+      },
+      "title": "Errors",
+      "type": "array"
+    },
+    "event_count": {
+      "maximum": 1000,
+      "minimum": 1,
+      "title": "Event Count",
+      "type": "integer"
+    },
+    "match_rate": {
+      "maximum": 1.0,
+      "minimum": 0.0,
+      "title": "Match Rate",
+      "type": "number"
+    },
+    "matched_event_ids": {
+      "items": {
+        "type": "string"
+      },
+      "title": "Matched Event Ids",
+      "type": "array"
+    },
+    "result_sha256": {
+      "pattern": "^[0-9a-f]{64}$",
+      "title": "Result Sha256",
+      "type": "string"
+    }
+  },
+  "required": [
+    "definition_sha256",
+    "event_count",
+    "alert_count",
+    "matched_event_ids",
+    "alert_types",
+    "errors",
+    "match_rate",
+    "result_sha256",
+    "duration_ms",
+    "completed_at"
+  ],
+  "title": "RuleBacktestResult",
+  "type": "object"
+}

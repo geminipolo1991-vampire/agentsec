@@ -1,0 +1,401 @@
+{
+  "$defs": {
+    "AttackSequenceStep": {
+      "additionalProperties": false,
+      "properties": {
+        "event_id": {
+          "title": "Event Id",
+          "type": "string"
+        },
+        "evidence_refs": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Evidence Refs",
+          "type": "array"
+        },
+        "finding_id": {
+          "title": "Finding Id",
+          "type": "string"
+        },
+        "occurred_at": {
+          "format": "date-time",
+          "title": "Occurred At",
+          "type": "string"
+        },
+        "order": {
+          "minimum": 1,
+          "title": "Order",
+          "type": "integer"
+        },
+        "stage": {
+          "$ref": "#/$defs/AttackStage"
+        }
+      },
+      "required": [
+        "order",
+        "stage",
+        "finding_id",
+        "event_id",
+        "occurred_at",
+        "evidence_refs"
+      ],
+      "title": "AttackSequenceStep",
+      "type": "object"
+    },
+    "AttackStage": {
+      "enum": [
+        "initial_access",
+        "execution",
+        "persistence",
+        "privilege_escalation",
+        "discovery",
+        "collection",
+        "exfiltration",
+        "impact",
+        "anomalous_behavior"
+      ],
+      "title": "AttackStage",
+      "type": "string"
+    },
+    "CorrelationAuditEntry": {
+      "additionalProperties": false,
+      "properties": {
+        "action": {
+          "pattern": "^[a-z][a-z0-9_.-]{2,63}$",
+          "title": "Action",
+          "type": "string"
+        },
+        "actor_id": {
+          "title": "Actor Id",
+          "type": "string"
+        },
+        "at": {
+          "format": "date-time",
+          "title": "At",
+          "type": "string"
+        },
+        "reason": {
+          "maxLength": 512,
+          "minLength": 3,
+          "title": "Reason",
+          "type": "string"
+        }
+      },
+      "required": [
+        "action",
+        "actor_id",
+        "reason",
+        "at"
+      ],
+      "title": "CorrelationAuditEntry",
+      "type": "object"
+    },
+    "CorrelationIncidentStatus": {
+      "enum": [
+        "open",
+        "investigating",
+        "contained",
+        "closed",
+        "merged"
+      ],
+      "title": "CorrelationIncidentStatus",
+      "type": "string"
+    },
+    "IncidentFindingLink": {
+      "additionalProperties": false,
+      "properties": {
+        "agent_ref": {
+          "title": "Agent Ref",
+          "type": "string"
+        },
+        "alert_id": {
+          "title": "Alert Id",
+          "type": "string"
+        },
+        "alert_type": {
+          "title": "Alert Type",
+          "type": "string"
+        },
+        "attack_stage": {
+          "$ref": "#/$defs/AttackStage"
+        },
+        "correlation_reasons": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Correlation Reasons",
+          "type": "array"
+        },
+        "correlation_score": {
+          "maximum": 100,
+          "minimum": 0,
+          "title": "Correlation Score",
+          "type": "integer"
+        },
+        "decision": {
+          "title": "Decision",
+          "type": "string"
+        },
+        "entity_refs": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Entity Refs",
+          "type": "array"
+        },
+        "event_id": {
+          "title": "Event Id",
+          "type": "string"
+        },
+        "evidence_refs": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Evidence Refs",
+          "type": "array"
+        },
+        "finding_id": {
+          "title": "Finding Id",
+          "type": "string"
+        },
+        "flow_ref": {
+          "title": "Flow Ref",
+          "type": "string"
+        },
+        "linked_at": {
+          "format": "date-time",
+          "title": "Linked At",
+          "type": "string"
+        },
+        "occurred_at": {
+          "format": "date-time",
+          "title": "Occurred At",
+          "type": "string"
+        },
+        "priority": {
+          "title": "Priority",
+          "type": "string"
+        },
+        "risk_score": {
+          "maximum": 100,
+          "minimum": 0,
+          "title": "Risk Score",
+          "type": "integer"
+        },
+        "sequence_order": {
+          "minimum": 1,
+          "title": "Sequence Order",
+          "type": "integer"
+        },
+        "severity": {
+          "title": "Severity",
+          "type": "string"
+        },
+        "title": {
+          "title": "Title",
+          "type": "string"
+        }
+      },
+      "required": [
+        "finding_id",
+        "alert_id",
+        "event_id",
+        "alert_type",
+        "title",
+        "severity",
+        "risk_score",
+        "priority",
+        "decision",
+        "attack_stage",
+        "flow_ref",
+        "agent_ref",
+        "entity_refs",
+        "evidence_refs",
+        "correlation_reasons",
+        "correlation_score",
+        "sequence_order",
+        "occurred_at",
+        "linked_at"
+      ],
+      "title": "IncidentFindingLink",
+      "type": "object"
+    }
+  },
+  "additionalProperties": false,
+  "properties": {
+    "attack_sequence": {
+      "items": {
+        "$ref": "#/$defs/AttackSequenceStep"
+      },
+      "maxItems": 500,
+      "minItems": 1,
+      "title": "Attack Sequence",
+      "type": "array"
+    },
+    "audit": {
+      "items": {
+        "$ref": "#/$defs/CorrelationAuditEntry"
+      },
+      "maxItems": 2048,
+      "minItems": 1,
+      "title": "Audit",
+      "type": "array"
+    },
+    "closed_at": {
+      "anyOf": [
+        {
+          "format": "date-time",
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Closed At"
+    },
+    "correlation_policy_version": {
+      "default": "correlation-2026-07-24.1",
+      "title": "Correlation Policy Version",
+      "type": "string"
+    },
+    "created_at": {
+      "format": "date-time",
+      "title": "Created At",
+      "type": "string"
+    },
+    "entity_refs": {
+      "items": {
+        "type": "string"
+      },
+      "maxItems": 2048,
+      "minItems": 2,
+      "title": "Entity Refs",
+      "type": "array"
+    },
+    "evidence_refs": {
+      "items": {
+        "type": "string"
+      },
+      "maxItems": 2048,
+      "title": "Evidence Refs",
+      "type": "array"
+    },
+    "finding_count": {
+      "maximum": 500,
+      "minimum": 1,
+      "title": "Finding Count",
+      "type": "integer"
+    },
+    "finding_links": {
+      "items": {
+        "$ref": "#/$defs/IncidentFindingLink"
+      },
+      "maxItems": 500,
+      "minItems": 1,
+      "title": "Finding Links",
+      "type": "array"
+    },
+    "incident_id": {
+      "pattern": "^inc_[A-Za-z0-9]+$",
+      "title": "Incident Id",
+      "type": "string"
+    },
+    "incident_sha256": {
+      "pattern": "^[0-9a-f]{64}$",
+      "title": "Incident Sha256",
+      "type": "string"
+    },
+    "parent_incident_id": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Parent Incident Id"
+    },
+    "priority": {
+      "title": "Priority",
+      "type": "string"
+    },
+    "reopened_count": {
+      "default": 0,
+      "minimum": 0,
+      "title": "Reopened Count",
+      "type": "integer"
+    },
+    "revision": {
+      "minimum": 1,
+      "title": "Revision",
+      "type": "integer"
+    },
+    "risk_score": {
+      "maximum": 100,
+      "minimum": 0,
+      "title": "Risk Score",
+      "type": "integer"
+    },
+    "schema_version": {
+      "default": "1.0.0",
+      "title": "Schema Version",
+      "type": "string"
+    },
+    "severity": {
+      "title": "Severity",
+      "type": "string"
+    },
+    "status": {
+      "$ref": "#/$defs/CorrelationIncidentStatus"
+    },
+    "superseded_by": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Superseded By"
+    },
+    "tenant_id": {
+      "title": "Tenant Id",
+      "type": "string"
+    },
+    "title": {
+      "title": "Title",
+      "type": "string"
+    },
+    "updated_at": {
+      "format": "date-time",
+      "title": "Updated At",
+      "type": "string"
+    }
+  },
+  "required": [
+    "incident_id",
+    "tenant_id",
+    "title",
+    "status",
+    "severity",
+    "priority",
+    "risk_score",
+    "finding_count",
+    "finding_links",
+    "attack_sequence",
+    "entity_refs",
+    "revision",
+    "audit",
+    "created_at",
+    "updated_at",
+    "incident_sha256"
+  ],
+  "title": "CorrelatedIncident",
+  "type": "object"
+}

@@ -1,0 +1,118 @@
+{
+  "additionalProperties": false,
+  "properties": {
+    "active": {
+      "default": true,
+      "title": "Active",
+      "type": "boolean"
+    },
+    "agent_ref": {
+      "anyOf": [
+        {
+          "pattern": "^agent_sha256:[0-9a-f]{32}$",
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Agent Ref"
+    },
+    "alert_type": {
+      "maxLength": 128,
+      "minLength": 3,
+      "title": "Alert Type",
+      "type": "string"
+    },
+    "created_at": {
+      "format": "date-time",
+      "title": "Created At",
+      "type": "string"
+    },
+    "created_by": {
+      "title": "Created By",
+      "type": "string"
+    },
+    "expires_at": {
+      "format": "date-time",
+      "title": "Expires At",
+      "type": "string"
+    },
+    "reason": {
+      "maxLength": 512,
+      "minLength": 10,
+      "title": "Reason",
+      "type": "string"
+    },
+    "revocation_reason": {
+      "anyOf": [
+        {
+          "maxLength": 512,
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Revocation Reason"
+    },
+    "revoked_at": {
+      "anyOf": [
+        {
+          "format": "date-time",
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Revoked At"
+    },
+    "revoked_by": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Revoked By"
+    },
+    "schema_version": {
+      "default": "1.0.0",
+      "title": "Schema Version",
+      "type": "string"
+    },
+    "suppression_id": {
+      "pattern": "^sup_[A-Za-z0-9]+$",
+      "title": "Suppression Id",
+      "type": "string"
+    },
+    "suppression_sha256": {
+      "pattern": "^[0-9a-f]{64}$",
+      "title": "Suppression Sha256",
+      "type": "string"
+    },
+    "tenant_id": {
+      "title": "Tenant Id",
+      "type": "string"
+    }
+  },
+  "required": [
+    "suppression_id",
+    "tenant_id",
+    "alert_type",
+    "reason",
+    "created_by",
+    "created_at",
+    "expires_at",
+    "suppression_sha256"
+  ],
+  "title": "SuppressionRule",
+  "type": "object"
+}

@@ -1,0 +1,112 @@
+{
+  "$defs": {
+    "KeyState": {
+      "enum": [
+        "pending",
+        "active",
+        "retired",
+        "revoked"
+      ],
+      "title": "KeyState",
+      "type": "string"
+    }
+  },
+  "additionalProperties": false,
+  "properties": {
+    "approved_by": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Approved By"
+    },
+    "fingerprint": {
+      "pattern": "^[0-9a-f]{64}$",
+      "title": "Fingerprint",
+      "type": "string"
+    },
+    "key_id": {
+      "pattern": "^managed-key://[A-Za-z0-9_.@/-]+$",
+      "title": "Key Id",
+      "type": "string"
+    },
+    "previous_key_id": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Previous Key Id"
+    },
+    "provider_reference": {
+      "pattern": "^keyref://[A-Za-z0-9_.@/-]+$",
+      "title": "Provider Reference",
+      "type": "string"
+    },
+    "purpose": {
+      "pattern": "^(signing|encryption|connector|checkpoint)$",
+      "title": "Purpose",
+      "type": "string"
+    },
+    "record_sha256": {
+      "pattern": "^[0-9a-f]{64}$",
+      "title": "Record Sha256",
+      "type": "string"
+    },
+    "registered_by": {
+      "title": "Registered By",
+      "type": "string"
+    },
+    "rotation_due_at": {
+      "format": "date-time",
+      "title": "Rotation Due At",
+      "type": "string"
+    },
+    "schema_version": {
+      "default": "1.0.0",
+      "title": "Schema Version",
+      "type": "string"
+    },
+    "state": {
+      "$ref": "#/$defs/KeyState"
+    },
+    "tenant_id": {
+      "title": "Tenant Id",
+      "type": "string"
+    },
+    "updated_at": {
+      "format": "date-time",
+      "title": "Updated At",
+      "type": "string"
+    },
+    "version": {
+      "minimum": 1,
+      "title": "Version",
+      "type": "integer"
+    }
+  },
+  "required": [
+    "tenant_id",
+    "key_id",
+    "purpose",
+    "provider_reference",
+    "fingerprint",
+    "state",
+    "version",
+    "rotation_due_at",
+    "registered_by",
+    "updated_at",
+    "record_sha256"
+  ],
+  "title": "ManagedKeyRecord",
+  "type": "object"
+}

@@ -1,0 +1,73 @@
+{
+  "$defs": {
+    "SecurityNodeType": {
+      "enum": [
+        "application",
+        "agent",
+        "model",
+        "tool",
+        "data_store",
+        "source",
+        "resource",
+        "destination",
+        "decision",
+        "finding"
+      ],
+      "title": "SecurityNodeType",
+      "type": "string"
+    }
+  },
+  "additionalProperties": false,
+  "properties": {
+    "as_of": {
+      "format": "date-time",
+      "title": "As Of",
+      "type": "string"
+    },
+    "by_node_type": {
+      "additionalProperties": {
+        "type": "integer"
+      },
+      "propertyNames": {
+        "$ref": "#/$defs/SecurityNodeType"
+      },
+      "title": "By Node Type",
+      "type": "object"
+    },
+    "edge_count": {
+      "minimum": 0,
+      "title": "Edge Count",
+      "type": "integer"
+    },
+    "external_destinations": {
+      "minimum": 0,
+      "title": "External Destinations",
+      "type": "integer"
+    },
+    "high_risk_nodes": {
+      "minimum": 0,
+      "title": "High Risk Nodes",
+      "type": "integer"
+    },
+    "node_count": {
+      "minimum": 0,
+      "title": "Node Count",
+      "type": "integer"
+    },
+    "tenant_id": {
+      "title": "Tenant Id",
+      "type": "string"
+    }
+  },
+  "required": [
+    "tenant_id",
+    "as_of",
+    "node_count",
+    "edge_count",
+    "by_node_type",
+    "high_risk_nodes",
+    "external_destinations"
+  ],
+  "title": "SecurityGraphSummary",
+  "type": "object"
+}

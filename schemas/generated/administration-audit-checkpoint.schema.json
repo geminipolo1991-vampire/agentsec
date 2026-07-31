@@ -1,0 +1,53 @@
+{
+  "additionalProperties": false,
+  "properties": {
+    "checkpoint_id": {
+      "pattern": "^admin-checkpoint_[0-9a-f]{32}$",
+      "title": "Checkpoint Id",
+      "type": "string"
+    },
+    "created_at": {
+      "format": "date-time",
+      "title": "Created At",
+      "type": "string"
+    },
+    "created_by": {
+      "title": "Created By",
+      "type": "string"
+    },
+    "current_sha256": {
+      "pattern": "^[0-9a-f]{64}$",
+      "title": "Current Sha256",
+      "type": "string"
+    },
+    "sequence": {
+      "minimum": 0,
+      "title": "Sequence",
+      "type": "integer"
+    },
+    "signature": {
+      "default": "",
+      "title": "Signature",
+      "type": "string"
+    },
+    "signature_algorithm": {
+      "default": "hmac-sha256-poc",
+      "title": "Signature Algorithm",
+      "type": "string"
+    },
+    "tenant_id": {
+      "title": "Tenant Id",
+      "type": "string"
+    }
+  },
+  "required": [
+    "checkpoint_id",
+    "tenant_id",
+    "sequence",
+    "current_sha256",
+    "created_at",
+    "created_by"
+  ],
+  "title": "AdministrationAuditCheckpoint",
+  "type": "object"
+}

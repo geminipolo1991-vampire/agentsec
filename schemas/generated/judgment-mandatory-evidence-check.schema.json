@@ -1,0 +1,57 @@
+{
+  "$defs": {
+    "AnalystRole": {
+      "enum": [
+        "triage",
+        "investigation",
+        "judge",
+        "escalation",
+        "response_advisor"
+      ],
+      "title": "AnalystRole",
+      "type": "string"
+    }
+  },
+  "additionalProperties": false,
+  "properties": {
+    "cited_kinds": {
+      "items": {
+        "type": "string"
+      },
+      "maxItems": 16,
+      "title": "Cited Kinds",
+      "type": "array"
+    },
+    "missing_kinds": {
+      "items": {
+        "type": "string"
+      },
+      "maxItems": 16,
+      "title": "Missing Kinds",
+      "type": "array"
+    },
+    "passed": {
+      "title": "Passed",
+      "type": "boolean"
+    },
+    "required_kinds": {
+      "items": {
+        "type": "string"
+      },
+      "maxItems": 16,
+      "minItems": 1,
+      "title": "Required Kinds",
+      "type": "array"
+    },
+    "role": {
+      "$ref": "#/$defs/AnalystRole"
+    }
+  },
+  "required": [
+    "role",
+    "required_kinds",
+    "passed"
+  ],
+  "title": "MandatoryEvidenceCheck",
+  "type": "object"
+}

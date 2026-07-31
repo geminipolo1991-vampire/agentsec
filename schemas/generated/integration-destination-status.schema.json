@@ -1,0 +1,98 @@
+{
+  "$defs": {
+    "IntegrationKind": {
+      "enum": [
+        "splunk_hec",
+        "elastic_bulk",
+        "signed_webhook",
+        "syslog_tls",
+        "cef_tls",
+        "otlp_http_json"
+      ],
+      "title": "IntegrationKind",
+      "type": "string"
+    }
+  },
+  "additionalProperties": false,
+  "properties": {
+    "ack_pending": {
+      "minimum": 0,
+      "title": "Ack Pending",
+      "type": "integer"
+    },
+    "credential_configured": {
+      "title": "Credential Configured",
+      "type": "boolean"
+    },
+    "credential_required": {
+      "title": "Credential Required",
+      "type": "boolean"
+    },
+    "dead_letter": {
+      "minimum": 0,
+      "title": "Dead Letter",
+      "type": "integer"
+    },
+    "delivered": {
+      "minimum": 0,
+      "title": "Delivered",
+      "type": "integer"
+    },
+    "destination_id": {
+      "title": "Destination Id",
+      "type": "string"
+    },
+    "enabled": {
+      "title": "Enabled",
+      "type": "boolean"
+    },
+    "indexer_ack": {
+      "title": "Indexer Ack",
+      "type": "boolean"
+    },
+    "kind": {
+      "$ref": "#/$defs/IntegrationKind"
+    },
+    "last_error_code": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Last Error Code"
+    },
+    "name": {
+      "title": "Name",
+      "type": "string"
+    },
+    "queued": {
+      "minimum": 0,
+      "title": "Queued",
+      "type": "integer"
+    },
+    "ready": {
+      "title": "Ready",
+      "type": "boolean"
+    }
+  },
+  "required": [
+    "destination_id",
+    "name",
+    "kind",
+    "enabled",
+    "ready",
+    "credential_required",
+    "credential_configured",
+    "indexer_ack",
+    "queued",
+    "ack_pending",
+    "delivered",
+    "dead_letter"
+  ],
+  "title": "IntegrationDestinationStatus",
+  "type": "object"
+}

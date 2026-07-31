@@ -1,0 +1,99 @@
+{
+  "$defs": {
+    "StorageVerification": {
+      "additionalProperties": false,
+      "properties": {
+        "active_payloads": {
+          "minimum": 0,
+          "title": "Active Payloads",
+          "type": "integer"
+        },
+        "expired_payloads": {
+          "minimum": 0,
+          "title": "Expired Payloads",
+          "type": "integer"
+        },
+        "first_broken_sequence": {
+          "minimum": 0,
+          "title": "First Broken Sequence",
+          "type": "integer"
+        },
+        "ledger_entries": {
+          "minimum": 0,
+          "title": "Ledger Entries",
+          "type": "integer"
+        },
+        "protected_evidence_blobs": {
+          "minimum": 0,
+          "title": "Protected Evidence Blobs",
+          "type": "integer"
+        },
+        "reason": {
+          "title": "Reason",
+          "type": "string"
+        },
+        "tenant_id": {
+          "title": "Tenant Id",
+          "type": "string"
+        },
+        "valid": {
+          "title": "Valid",
+          "type": "boolean"
+        }
+      },
+      "required": [
+        "tenant_id",
+        "valid",
+        "reason",
+        "first_broken_sequence",
+        "ledger_entries",
+        "active_payloads",
+        "expired_payloads",
+        "protected_evidence_blobs"
+      ],
+      "title": "StorageVerification",
+      "type": "object"
+    }
+  },
+  "additionalProperties": false,
+  "properties": {
+    "backup_id": {
+      "title": "Backup Id",
+      "type": "string"
+    },
+    "backup_path": {
+      "title": "Backup Path",
+      "type": "string"
+    },
+    "byte_length": {
+      "minimum": 1,
+      "title": "Byte Length",
+      "type": "integer"
+    },
+    "created_at": {
+      "format": "date-time",
+      "title": "Created At",
+      "type": "string"
+    },
+    "sha256": {
+      "pattern": "^[0-9a-f]{64}$",
+      "title": "Sha256",
+      "type": "string"
+    },
+    "tenant_verifications": {
+      "items": {
+        "$ref": "#/$defs/StorageVerification"
+      },
+      "title": "Tenant Verifications",
+      "type": "array"
+    }
+  },
+  "required": [
+    "backup_path",
+    "sha256",
+    "byte_length",
+    "tenant_verifications"
+  ],
+  "title": "BackupManifest",
+  "type": "object"
+}

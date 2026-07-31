@@ -1,0 +1,45 @@
+{
+  "additionalProperties": false,
+  "properties": {
+    "client_id": {
+      "maxLength": 256,
+      "pattern": "^client://[A-Za-z0-9_.@/-]+$",
+      "title": "Client Id",
+      "type": "string"
+    },
+    "enabled": {
+      "default": true,
+      "title": "Enabled",
+      "type": "boolean"
+    },
+    "scopes": {
+      "items": {
+        "type": "string"
+      },
+      "maxItems": 16,
+      "minItems": 1,
+      "title": "Scopes",
+      "type": "array",
+      "uniqueItems": true
+    },
+    "tenant_id": {
+      "maxLength": 128,
+      "minLength": 1,
+      "title": "Tenant Id",
+      "type": "string"
+    },
+    "token_env": {
+      "pattern": "^[A-Z][A-Z0-9_]{2,127}$",
+      "title": "Token Env",
+      "type": "string"
+    }
+  },
+  "required": [
+    "client_id",
+    "tenant_id",
+    "token_env",
+    "scopes"
+  ],
+  "title": "ExternalApiClientSpec",
+  "type": "object"
+}

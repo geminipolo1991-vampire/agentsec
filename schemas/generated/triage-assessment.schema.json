@@ -1,0 +1,184 @@
+{
+  "$defs": {
+    "RiskContribution": {
+      "additionalProperties": false,
+      "properties": {
+        "category": {
+          "title": "Category",
+          "type": "string"
+        },
+        "delta": {
+          "maximum": 100,
+          "minimum": -100,
+          "title": "Delta",
+          "type": "integer"
+        },
+        "evidence_refs": {
+          "items": {
+            "type": "string"
+          },
+          "minItems": 1,
+          "title": "Evidence Refs",
+          "type": "array"
+        },
+        "label": {
+          "title": "Label",
+          "type": "string"
+        },
+        "rationale": {
+          "title": "Rationale",
+          "type": "string"
+        }
+      },
+      "required": [
+        "category",
+        "label",
+        "delta",
+        "evidence_refs",
+        "rationale"
+      ],
+      "title": "RiskContribution",
+      "type": "object"
+    },
+    "Severity": {
+      "enum": [
+        "info",
+        "low",
+        "medium",
+        "high",
+        "critical"
+      ],
+      "title": "Severity",
+      "type": "string"
+    }
+  },
+  "additionalProperties": false,
+  "properties": {
+    "alert_id": {
+      "title": "Alert Id",
+      "type": "string"
+    },
+    "assessed_at": {
+      "format": "date-time",
+      "title": "Assessed At",
+      "type": "string"
+    },
+    "behavior_anomaly_score": {
+      "anyOf": [
+        {
+          "maximum": 100,
+          "minimum": 0,
+          "type": "integer"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Behavior Anomaly Score"
+    },
+    "behavior_assessment_id": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Behavior Assessment Id"
+    },
+    "behavior_drift_state": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Behavior Drift State"
+    },
+    "composite_risk_score": {
+      "anyOf": [
+        {
+          "maximum": 100,
+          "minimum": 0,
+          "type": "integer"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Composite Risk Score"
+    },
+    "contributions": {
+      "items": {
+        "$ref": "#/$defs/RiskContribution"
+      },
+      "title": "Contributions",
+      "type": "array"
+    },
+    "missing_context_warnings": {
+      "items": {
+        "type": "string"
+      },
+      "title": "Missing Context Warnings",
+      "type": "array"
+    },
+    "narrative": {
+      "title": "Narrative",
+      "type": "string"
+    },
+    "priority": {
+      "title": "Priority",
+      "type": "string"
+    },
+    "reasons": {
+      "items": {
+        "type": "string"
+      },
+      "title": "Reasons",
+      "type": "array"
+    },
+    "risk_score": {
+      "maximum": 100,
+      "minimum": 0,
+      "title": "Risk Score",
+      "type": "integer"
+    },
+    "route": {
+      "title": "Route",
+      "type": "string"
+    },
+    "score_version": {
+      "title": "Score Version",
+      "type": "string"
+    },
+    "severity": {
+      "$ref": "#/$defs/Severity"
+    },
+    "sla_minutes": {
+      "minimum": 0,
+      "title": "Sla Minutes",
+      "type": "integer"
+    }
+  },
+  "required": [
+    "alert_id",
+    "risk_score",
+    "severity",
+    "priority",
+    "reasons",
+    "score_version",
+    "contributions",
+    "sla_minutes",
+    "route",
+    "narrative"
+  ],
+  "title": "TriageAssessment",
+  "type": "object"
+}

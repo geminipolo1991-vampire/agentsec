@@ -1,0 +1,70 @@
+{
+  "$defs": {
+    "NotificationChannel": {
+      "enum": [
+        "on_call",
+        "ticket",
+        "email",
+        "messaging"
+      ],
+      "title": "NotificationChannel",
+      "type": "string"
+    }
+  },
+  "additionalProperties": false,
+  "properties": {
+    "body": {
+      "maxLength": 1024,
+      "minLength": 3,
+      "title": "Body",
+      "type": "string"
+    },
+    "channel": {
+      "$ref": "#/$defs/NotificationChannel"
+    },
+    "idempotency_key": {
+      "pattern": "^notify_[0-9a-f]{64}$",
+      "title": "Idempotency Key",
+      "type": "string"
+    },
+    "message_sha256": {
+      "pattern": "^[0-9a-f]{64}$",
+      "title": "Message Sha256",
+      "type": "string"
+    },
+    "notification_id": {
+      "pattern": "^ntf_[0-9a-f]{32}$",
+      "title": "Notification Id",
+      "type": "string"
+    },
+    "recipient": {
+      "pattern": "^analyst://[A-Za-z0-9_.@/-]+$",
+      "title": "Recipient",
+      "type": "string"
+    },
+    "subject": {
+      "maxLength": 256,
+      "minLength": 3,
+      "title": "Subject",
+      "type": "string"
+    },
+    "tenant_id": {
+      "maxLength": 128,
+      "minLength": 1,
+      "title": "Tenant Id",
+      "type": "string"
+    }
+  },
+  "required": [
+    "notification_id",
+    "tenant_id",
+    "channel",
+    "recipient",
+    "subject",
+    "body",
+    "idempotency_key",
+    "message_sha256"
+  ],
+  "title": "NotificationMessage",
+  "type": "object"
+}

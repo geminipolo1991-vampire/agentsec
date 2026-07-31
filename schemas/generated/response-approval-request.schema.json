@@ -1,0 +1,29 @@
+{
+  "additionalProperties": false,
+  "properties": {
+    "expected_version": {
+      "minimum": 1,
+      "title": "Expected Version",
+      "type": "integer"
+    },
+    "reason": {
+      "maxLength": 512,
+      "minLength": 3,
+      "title": "Reason",
+      "type": "string"
+    },
+    "ttl_minutes": {
+      "default": 15,
+      "maximum": 60,
+      "minimum": 1,
+      "title": "Ttl Minutes",
+      "type": "integer"
+    }
+  },
+  "required": [
+    "expected_version",
+    "reason"
+  ],
+  "title": "ResponseApprovalRequest",
+  "type": "object"
+}

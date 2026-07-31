@@ -1,0 +1,50 @@
+{
+  "additionalProperties": false,
+  "properties": {
+    "actor_id": {
+      "maxLength": 256,
+      "minLength": 3,
+      "title": "Actor Id",
+      "type": "string"
+    },
+    "allowed_connectors": {
+      "items": {
+        "type": "string"
+      },
+      "maxItems": 32,
+      "title": "Allowed Connectors",
+      "type": "array",
+      "uniqueItems": true
+    },
+    "allowed_input_fields": {
+      "items": {
+        "type": "string"
+      },
+      "maxItems": 15,
+      "title": "Allowed Input Fields",
+      "type": "array",
+      "uniqueItems": true
+    },
+    "permissions": {
+      "items": {
+        "type": "string"
+      },
+      "maxItems": 8,
+      "title": "Permissions",
+      "type": "array",
+      "uniqueItems": true
+    },
+    "tenant_id": {
+      "maxLength": 128,
+      "minLength": 1,
+      "title": "Tenant Id",
+      "type": "string"
+    }
+  },
+  "required": [
+    "tenant_id",
+    "actor_id"
+  ],
+  "title": "EnrichmentPrincipal",
+  "type": "object"
+}

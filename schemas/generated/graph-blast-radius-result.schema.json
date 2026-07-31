@@ -1,0 +1,93 @@
+{
+  "$defs": {
+    "ReachableNode": {
+      "additionalProperties": false,
+      "properties": {
+        "depth": {
+          "minimum": 0,
+          "title": "Depth",
+          "type": "integer"
+        },
+        "node_id": {
+          "title": "Node Id",
+          "type": "string"
+        },
+        "risk_score": {
+          "maximum": 100,
+          "minimum": 0,
+          "title": "Risk Score",
+          "type": "integer"
+        },
+        "via_edge_id": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Via Edge Id"
+        }
+      },
+      "required": [
+        "node_id",
+        "depth",
+        "risk_score"
+      ],
+      "title": "ReachableNode",
+      "type": "object"
+    }
+  },
+  "additionalProperties": false,
+  "properties": {
+    "as_of": {
+      "format": "date-time",
+      "title": "As Of",
+      "type": "string"
+    },
+    "high_risk_count": {
+      "minimum": 0,
+      "title": "High Risk Count",
+      "type": "integer"
+    },
+    "impacted_count": {
+      "minimum": 0,
+      "title": "Impacted Count",
+      "type": "integer"
+    },
+    "impacted_nodes": {
+      "items": {
+        "$ref": "#/$defs/ReachableNode"
+      },
+      "title": "Impacted Nodes",
+      "type": "array"
+    },
+    "maximum_risk_score": {
+      "maximum": 100,
+      "minimum": 0,
+      "title": "Maximum Risk Score",
+      "type": "integer"
+    },
+    "origin_node_id": {
+      "title": "Origin Node Id",
+      "type": "string"
+    },
+    "tenant_id": {
+      "title": "Tenant Id",
+      "type": "string"
+    }
+  },
+  "required": [
+    "tenant_id",
+    "origin_node_id",
+    "impacted_nodes",
+    "impacted_count",
+    "high_risk_count",
+    "maximum_risk_score",
+    "as_of"
+  ],
+  "title": "BlastRadiusResult",
+  "type": "object"
+}

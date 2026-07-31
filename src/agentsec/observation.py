@@ -2,12 +2,14 @@
 
 from __future__ import annotations
 
-from typing import List, Set
+from typing import TYPE_CHECKING, List, Set
 
 from pydantic import Field
 
 from .contracts import StrictModel
-from .synthetic import EffectObservation
+
+if TYPE_CHECKING:
+    from .synthetic import EffectObservation
 
 
 class SdkEffectReport(StrictModel):
@@ -72,4 +74,3 @@ class ObservationReconciler:
                 )
             )
         return findings
-

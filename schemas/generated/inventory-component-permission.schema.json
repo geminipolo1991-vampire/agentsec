@@ -1,0 +1,49 @@
+{
+  "$defs": {
+    "PermissionEffect": {
+      "enum": [
+        "allow",
+        "deny"
+      ],
+      "title": "PermissionEffect",
+      "type": "string"
+    }
+  },
+  "additionalProperties": false,
+  "properties": {
+    "approved": {
+      "default": false,
+      "title": "Approved",
+      "type": "boolean"
+    },
+    "effect": {
+      "$ref": "#/$defs/PermissionEffect",
+      "default": "allow"
+    },
+    "operation": {
+      "maxLength": 128,
+      "minLength": 1,
+      "title": "Operation",
+      "type": "string"
+    },
+    "resource_scope": {
+      "maxLength": 512,
+      "minLength": 1,
+      "title": "Resource Scope",
+      "type": "string"
+    },
+    "source_ref": {
+      "maxLength": 512,
+      "minLength": 1,
+      "title": "Source Ref",
+      "type": "string"
+    }
+  },
+  "required": [
+    "operation",
+    "resource_scope",
+    "source_ref"
+  ],
+  "title": "ComponentPermission",
+  "type": "object"
+}

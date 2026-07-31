@@ -1,0 +1,47 @@
+{
+  "schema_version": "1.0.0",
+  "allowed_input_fields": [
+    "event_ref",
+    "agent_ref",
+    "destination_ref",
+    "operation",
+    "resource_class",
+    "source_trust",
+    "data_classes"
+  ],
+  "max_workers": 8,
+  "circuit_failure_threshold": 3,
+  "circuit_cooldown_seconds": 60,
+  "connectors": [
+    {
+      "connector": {
+        "name": "asset_inventory",
+        "version": "1.0.0",
+        "description": "Live AI application and agent ownership metadata",
+        "required_fields": ["agent_ref"],
+        "allowed_fact_keys": ["known", "owner_ref", "asset_criticality", "approved_model_profile"],
+        "timeout_ms": 750,
+        "cache_ttl_seconds": 300,
+        "max_stale_seconds": 3600,
+        "mandatory": false
+      },
+      "endpoint": "https://inventory.example.invalid/v1/agentsec/enrich",
+      "bearer_token_env": "AGENTSEC_INVENTORY_CONNECTOR_TOKEN"
+    },
+    {
+      "connector": {
+        "name": "threat_reputation",
+        "version": "1.0.0",
+        "description": "Live privacy-safe destination reputation metadata",
+        "required_fields": ["destination_ref"],
+        "allowed_fact_keys": ["known", "risk_level", "category", "first_seen_days"],
+        "timeout_ms": 1000,
+        "cache_ttl_seconds": 600,
+        "max_stale_seconds": 7200,
+        "mandatory": false
+      },
+      "endpoint": "https://reputation.example.invalid/v1/agentsec/enrich",
+      "bearer_token_env": "AGENTSEC_REPUTATION_CONNECTOR_TOKEN"
+    }
+  ]
+}

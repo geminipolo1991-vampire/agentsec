@@ -1,0 +1,364 @@
+{
+  "$defs": {
+    "DecisionAction": {
+      "enum": [
+        "allow",
+        "allow_with_obligations",
+        "require_approval",
+        "deny"
+      ],
+      "title": "DecisionAction",
+      "type": "string"
+    },
+    "SimulationModeResult": {
+      "additionalProperties": false,
+      "properties": {
+        "detected_alert_count": {
+          "maximum": 128,
+          "minimum": 0,
+          "title": "Detected Alert Count",
+          "type": "integer"
+        },
+        "expectation_met": {
+          "title": "Expectation Met",
+          "type": "boolean"
+        },
+        "forbidden_effect_count": {
+          "maximum": 8,
+          "minimum": 0,
+          "title": "Forbidden Effect Count",
+          "type": "integer"
+        },
+        "protected": {
+          "title": "Protected",
+          "type": "boolean"
+        },
+        "steps": {
+          "items": {
+            "$ref": "#/$defs/SimulationStepResult"
+          },
+          "maxItems": 8,
+          "minItems": 1,
+          "title": "Steps",
+          "type": "array"
+        }
+      },
+      "required": [
+        "protected",
+        "steps",
+        "expectation_met",
+        "forbidden_effect_count",
+        "detected_alert_count"
+      ],
+      "title": "SimulationModeResult",
+      "type": "object"
+    },
+    "SimulationRunMode": {
+      "enum": [
+        "protected",
+        "control",
+        "comparison"
+      ],
+      "title": "SimulationRunMode",
+      "type": "string"
+    },
+    "SimulationSandboxReceipt": {
+      "additionalProperties": false,
+      "properties": {
+        "completed_modes": {
+          "maximum": 2,
+          "minimum": 1,
+          "title": "Completed Modes",
+          "type": "integer"
+        },
+        "completed_steps": {
+          "maximum": 16,
+          "minimum": 1,
+          "title": "Completed Steps",
+          "type": "integer"
+        },
+        "engine": {
+          "default": "agentsec-local-mock-sandbox",
+          "title": "Engine",
+          "type": "string"
+        },
+        "filesystem_enabled": {
+          "default": false,
+          "title": "Filesystem Enabled",
+          "type": "boolean"
+        },
+        "local_only": {
+          "default": true,
+          "title": "Local Only",
+          "type": "boolean"
+        },
+        "network_enabled": {
+          "default": false,
+          "title": "Network Enabled",
+          "type": "boolean"
+        },
+        "observed_effects": {
+          "maximum": 16,
+          "minimum": 0,
+          "title": "Observed Effects",
+          "type": "integer"
+        },
+        "receipt_sha256": {
+          "pattern": "^[0-9a-f]{64}$",
+          "title": "Receipt Sha256",
+          "type": "string"
+        },
+        "shell_enabled": {
+          "default": false,
+          "title": "Shell Enabled",
+          "type": "boolean"
+        }
+      },
+      "required": [
+        "completed_modes",
+        "completed_steps",
+        "observed_effects",
+        "receipt_sha256"
+      ],
+      "title": "SimulationSandboxReceipt",
+      "type": "object"
+    },
+    "SimulationStepResult": {
+      "additionalProperties": false,
+      "properties": {
+        "alert_ids": {
+          "items": {
+            "type": "string"
+          },
+          "maxItems": 32,
+          "title": "Alert Ids",
+          "type": "array"
+        },
+        "completed_operations": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Completed Operations",
+          "type": "array"
+        },
+        "effect_completed": {
+          "title": "Effect Completed",
+          "type": "boolean"
+        },
+        "expectation_met": {
+          "title": "Expectation Met",
+          "type": "boolean"
+        },
+        "expected_action": {
+          "$ref": "#/$defs/DecisionAction"
+        },
+        "expected_alert_types": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Expected Alert Types",
+          "type": "array"
+        },
+        "finding_ids": {
+          "items": {
+            "type": "string"
+          },
+          "maxItems": 32,
+          "title": "Finding Ids",
+          "type": "array"
+        },
+        "forbidden_effects_completed": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Forbidden Effects Completed",
+          "type": "array"
+        },
+        "ground_truth_passed": {
+          "title": "Ground Truth Passed",
+          "type": "boolean"
+        },
+        "observed_action": {
+          "title": "Observed Action",
+          "type": "string"
+        },
+        "observed_alert_types": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Observed Alert Types",
+          "type": "array"
+        },
+        "reasons": {
+          "items": {
+            "type": "string"
+          },
+          "maxItems": 16,
+          "title": "Reasons",
+          "type": "array"
+        },
+        "required_effects_missing": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Required Effects Missing",
+          "type": "array"
+        },
+        "sequence": {
+          "maximum": 8,
+          "minimum": 1,
+          "title": "Sequence",
+          "type": "integer"
+        },
+        "step_id": {
+          "title": "Step Id",
+          "type": "string"
+        }
+      },
+      "required": [
+        "step_id",
+        "sequence",
+        "expected_alert_types",
+        "observed_alert_types",
+        "expected_action",
+        "observed_action",
+        "effect_completed",
+        "completed_operations",
+        "forbidden_effects_completed",
+        "required_effects_missing",
+        "alert_ids",
+        "finding_ids",
+        "ground_truth_passed",
+        "expectation_met",
+        "reasons"
+      ],
+      "title": "SimulationStepResult",
+      "type": "object"
+    },
+    "SimulationVariant": {
+      "enum": [
+        "plain",
+        "japanese",
+        "spanish",
+        "unicode_confusable",
+        "zero_width",
+        "base64",
+        "mixed_obfuscation"
+      ],
+      "title": "SimulationVariant",
+      "type": "string"
+    }
+  },
+  "additionalProperties": false,
+  "properties": {
+    "completed_at": {
+      "format": "date-time",
+      "title": "Completed At",
+      "type": "string"
+    },
+    "mode": {
+      "$ref": "#/$defs/SimulationRunMode"
+    },
+    "passed": {
+      "title": "Passed",
+      "type": "boolean"
+    },
+    "record_sha256": {
+      "pattern": "^[0-9a-f]{64}$",
+      "title": "Record Sha256",
+      "type": "string"
+    },
+    "replay_of": {
+      "anyOf": [
+        {
+          "pattern": "^simrun_[0-9a-f]{32}$",
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Replay Of"
+    },
+    "request_id": {
+      "pattern": "^req_[A-Za-z0-9]{8,64}$",
+      "title": "Request Id",
+      "type": "string"
+    },
+    "results": {
+      "items": {
+        "$ref": "#/$defs/SimulationModeResult"
+      },
+      "maxItems": 2,
+      "minItems": 1,
+      "title": "Results",
+      "type": "array"
+    },
+    "run_id": {
+      "pattern": "^simrun_[0-9a-f]{32}$",
+      "title": "Run Id",
+      "type": "string"
+    },
+    "sandbox": {
+      "$ref": "#/$defs/SimulationSandboxReceipt"
+    },
+    "scenario_id": {
+      "pattern": "^sim_[a-z0-9_]{3,96}$",
+      "title": "Scenario Id",
+      "type": "string"
+    },
+    "scenario_sha256": {
+      "pattern": "^[0-9a-f]{64}$",
+      "title": "Scenario Sha256",
+      "type": "string"
+    },
+    "scenario_version": {
+      "pattern": "^[0-9]+\\.[0-9]+\\.[0-9]+$",
+      "title": "Scenario Version",
+      "type": "string"
+    },
+    "schema_version": {
+      "default": "1.0.0",
+      "title": "Schema Version",
+      "type": "string"
+    },
+    "started_at": {
+      "format": "date-time",
+      "title": "Started At",
+      "type": "string"
+    },
+    "tenant_id": {
+      "maxLength": 128,
+      "minLength": 1,
+      "title": "Tenant Id",
+      "type": "string"
+    },
+    "trusted_ground_truth": {
+      "title": "Trusted Ground Truth",
+      "type": "boolean"
+    },
+    "variant": {
+      "$ref": "#/$defs/SimulationVariant"
+    }
+  },
+  "required": [
+    "run_id",
+    "request_id",
+    "tenant_id",
+    "scenario_id",
+    "scenario_version",
+    "scenario_sha256",
+    "variant",
+    "mode",
+    "trusted_ground_truth",
+    "results",
+    "sandbox",
+    "passed",
+    "started_at",
+    "completed_at",
+    "record_sha256"
+  ],
+  "title": "SimulationRun",
+  "type": "object"
+}

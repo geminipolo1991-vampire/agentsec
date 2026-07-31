@@ -1,0 +1,64 @@
+{
+  "additionalProperties": false,
+  "properties": {
+    "calculated_at": {
+      "format": "date-time",
+      "title": "Calculated At",
+      "type": "string"
+    },
+    "component_count": {
+      "minimum": 1,
+      "title": "Component Count",
+      "type": "integer"
+    },
+    "component_id": {
+      "title": "Component Id",
+      "type": "string"
+    },
+    "high_risk_components": {
+      "minimum": 0,
+      "title": "High Risk Components",
+      "type": "integer"
+    },
+    "reasons": {
+      "items": {
+        "type": "string"
+      },
+      "title": "Reasons",
+      "type": "array"
+    },
+    "score": {
+      "maximum": 100,
+      "minimum": 0,
+      "title": "Score",
+      "type": "integer"
+    },
+    "tenant_id": {
+      "title": "Tenant Id",
+      "type": "string"
+    },
+    "unapproved_permissions": {
+      "minimum": 0,
+      "title": "Unapproved Permissions",
+      "type": "integer"
+    },
+    "unowned_components": {
+      "minimum": 0,
+      "title": "Unowned Components",
+      "type": "integer"
+    }
+  },
+  "required": [
+    "component_id",
+    "tenant_id",
+    "score",
+    "component_count",
+    "high_risk_components",
+    "unowned_components",
+    "unapproved_permissions",
+    "reasons",
+    "calculated_at"
+  ],
+  "title": "InventoryRiskRollup",
+  "type": "object"
+}

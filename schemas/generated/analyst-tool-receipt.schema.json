@@ -1,0 +1,76 @@
+{
+  "$defs": {
+    "AnalystRole": {
+      "enum": [
+        "triage",
+        "investigation",
+        "judge",
+        "escalation",
+        "response_advisor"
+      ],
+      "title": "AnalystRole",
+      "type": "string"
+    }
+  },
+  "additionalProperties": false,
+  "properties": {
+    "queried_at": {
+      "format": "date-time",
+      "title": "Queried At",
+      "type": "string"
+    },
+    "receipt_id": {
+      "title": "Receipt Id",
+      "type": "string"
+    },
+    "receipt_sha256": {
+      "pattern": "^[0-9a-f]{64}$",
+      "title": "Receipt Sha256",
+      "type": "string"
+    },
+    "requested_kinds": {
+      "items": {
+        "type": "string"
+      },
+      "maxItems": 16,
+      "title": "Requested Kinds",
+      "type": "array"
+    },
+    "result_count": {
+      "maximum": 64,
+      "minimum": 0,
+      "title": "Result Count",
+      "type": "integer"
+    },
+    "returned_evidence_ids": {
+      "items": {
+        "type": "string"
+      },
+      "maxItems": 64,
+      "title": "Returned Evidence Ids",
+      "type": "array"
+    },
+    "role": {
+      "$ref": "#/$defs/AnalystRole"
+    },
+    "run_id": {
+      "pattern": "^air_[0-9a-f]{32}$",
+      "title": "Run Id",
+      "type": "string"
+    },
+    "tool": {
+      "const": "evidence.query",
+      "default": "evidence.query",
+      "title": "Tool",
+      "type": "string"
+    }
+  },
+  "required": [
+    "run_id",
+    "role",
+    "result_count",
+    "receipt_sha256"
+  ],
+  "title": "AnalystToolReceipt",
+  "type": "object"
+}

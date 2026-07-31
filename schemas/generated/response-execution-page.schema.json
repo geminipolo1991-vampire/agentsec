@@ -1,0 +1,507 @@
+{
+  "$defs": {
+    "ExecutionMode": {
+      "enum": [
+        "dry_run",
+        "live"
+      ],
+      "title": "ExecutionMode",
+      "type": "string"
+    },
+    "ExecutionStatus": {
+      "enum": [
+        "dry_run_succeeded",
+        "awaiting_approval",
+        "approved",
+        "running",
+        "succeeded",
+        "failed",
+        "rollback_awaiting_approval",
+        "rollback_approved",
+        "rolling_back",
+        "rolled_back",
+        "rollback_failed"
+      ],
+      "title": "ExecutionStatus",
+      "type": "string"
+    },
+    "ResponseExecution": {
+      "additionalProperties": false,
+      "properties": {
+        "alert_id": {
+          "pattern": "^alr_[A-Za-z0-9]+$",
+          "title": "Alert Id",
+          "type": "string"
+        },
+        "approval_id": {
+          "anyOf": [
+            {
+              "pattern": "^rap_[0-9a-f]{32}$",
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Approval Id"
+        },
+        "audit_count": {
+          "default": 0,
+          "maximum": 2000,
+          "minimum": 0,
+          "title": "Audit Count",
+          "type": "integer"
+        },
+        "audit_head_sha256": {
+          "default": "0000000000000000000000000000000000000000000000000000000000000000",
+          "pattern": "^[0-9a-f]{64}$",
+          "title": "Audit Head Sha256",
+          "type": "string"
+        },
+        "case_id": {
+          "anyOf": [
+            {
+              "pattern": "^case_[0-9a-f]{32}$",
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Case Id"
+        },
+        "completed_at": {
+          "anyOf": [
+            {
+              "format": "date-time",
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Completed At"
+        },
+        "correlation_incident_id": {
+          "anyOf": [
+            {
+              "pattern": "^inc_[A-Za-z0-9]+$",
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Correlation Incident Id"
+        },
+        "created_at": {
+          "format": "date-time",
+          "title": "Created At",
+          "type": "string"
+        },
+        "execution_id": {
+          "pattern": "^rex_[0-9a-f]{32}$",
+          "title": "Execution Id",
+          "type": "string"
+        },
+        "finding_id": {
+          "pattern": "^fnd_[A-Za-z0-9]+$",
+          "title": "Finding Id",
+          "type": "string"
+        },
+        "kill_switch_version": {
+          "minimum": 1,
+          "title": "Kill Switch Version",
+          "type": "integer"
+        },
+        "live_eligible": {
+          "title": "Live Eligible",
+          "type": "boolean"
+        },
+        "live_requested_by": {
+          "anyOf": [
+            {
+              "pattern": "^(analyst|system)://[A-Za-z0-9_.@/-]+$",
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Live Requested By"
+        },
+        "mode": {
+          "$ref": "#/$defs/ExecutionMode"
+        },
+        "playbook_id": {
+          "pattern": "^playbook://[A-Za-z0-9_.@/-]+$",
+          "title": "Playbook Id",
+          "type": "string"
+        },
+        "playbook_sha256": {
+          "pattern": "^[0-9a-f]{64}$",
+          "title": "Playbook Sha256",
+          "type": "string"
+        },
+        "playbook_version": {
+          "minimum": 1,
+          "title": "Playbook Version",
+          "type": "integer"
+        },
+        "policy_sha256": {
+          "pattern": "^[0-9a-f]{64}$",
+          "title": "Policy Sha256",
+          "type": "string"
+        },
+        "policy_version": {
+          "maxLength": 128,
+          "minLength": 3,
+          "title": "Policy Version",
+          "type": "string"
+        },
+        "readiness_warnings": {
+          "items": {
+            "type": "string"
+          },
+          "maxItems": 32,
+          "title": "Readiness Warnings",
+          "type": "array"
+        },
+        "record_sha256": {
+          "pattern": "^[0-9a-f]{64}$",
+          "title": "Record Sha256",
+          "type": "string"
+        },
+        "requested_by": {
+          "pattern": "^(analyst|system)://[A-Za-z0-9_.@/-]+$",
+          "title": "Requested By",
+          "type": "string"
+        },
+        "rollback_approval_id": {
+          "anyOf": [
+            {
+              "pattern": "^rap_[0-9a-f]{32}$",
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Rollback Approval Id"
+        },
+        "rollback_requested_by": {
+          "anyOf": [
+            {
+              "pattern": "^(analyst|system)://[A-Za-z0-9_.@/-]+$",
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Rollback Requested By"
+        },
+        "schema_version": {
+          "default": "1.0.0",
+          "title": "Schema Version",
+          "type": "string"
+        },
+        "started_at": {
+          "anyOf": [
+            {
+              "format": "date-time",
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Started At"
+        },
+        "status": {
+          "$ref": "#/$defs/ExecutionStatus"
+        },
+        "steps": {
+          "items": {
+            "$ref": "#/$defs/ResponseStepPlan"
+          },
+          "maxItems": 12,
+          "minItems": 1,
+          "title": "Steps",
+          "type": "array"
+        },
+        "tenant_id": {
+          "maxLength": 128,
+          "minLength": 1,
+          "title": "Tenant Id",
+          "type": "string"
+        },
+        "updated_at": {
+          "format": "date-time",
+          "title": "Updated At",
+          "type": "string"
+        },
+        "version": {
+          "default": 1,
+          "minimum": 1,
+          "title": "Version",
+          "type": "integer"
+        }
+      },
+      "required": [
+        "tenant_id",
+        "finding_id",
+        "alert_id",
+        "playbook_id",
+        "playbook_version",
+        "playbook_sha256",
+        "policy_version",
+        "policy_sha256",
+        "mode",
+        "status",
+        "live_eligible",
+        "requested_by",
+        "kill_switch_version",
+        "steps",
+        "created_at",
+        "updated_at",
+        "record_sha256"
+      ],
+      "title": "ResponseExecution",
+      "type": "object"
+    },
+    "ResponseOperation": {
+      "enum": [
+        "session.quarantine",
+        "session.restore",
+        "agent.pause",
+        "agent.resume",
+        "identity.suspend",
+        "identity.restore",
+        "network.block_destination",
+        "network.unblock_destination",
+        "ticket.annotate"
+      ],
+      "title": "ResponseOperation",
+      "type": "string"
+    },
+    "ResponseStepPlan": {
+      "additionalProperties": false,
+      "properties": {
+        "attempt_count": {
+          "default": 0,
+          "maximum": 1000,
+          "minimum": 0,
+          "title": "Attempt Count",
+          "type": "integer"
+        },
+        "completed_at": {
+          "anyOf": [
+            {
+              "format": "date-time",
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Completed At"
+        },
+        "connector_id": {
+          "pattern": "^connector://[A-Za-z0-9_.@/-]+$",
+          "title": "Connector Id",
+          "type": "string"
+        },
+        "connector_ready": {
+          "title": "Connector Ready",
+          "type": "boolean"
+        },
+        "expected_state": {
+          "pattern": "^[a-z][a-z0-9_]{1,63}$",
+          "title": "Expected State",
+          "type": "string"
+        },
+        "last_error_code": {
+          "anyOf": [
+            {
+              "pattern": "^[a-z][a-z0-9_]{2,63}$",
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Last Error Code"
+        },
+        "name": {
+          "maxLength": 128,
+          "minLength": 3,
+          "title": "Name",
+          "type": "string"
+        },
+        "operation": {
+          "$ref": "#/$defs/ResponseOperation"
+        },
+        "provider_reference_sha256": {
+          "anyOf": [
+            {
+              "pattern": "^[0-9a-f]{64}$",
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Provider Reference Sha256"
+        },
+        "rollback_expected_state": {
+          "anyOf": [
+            {
+              "pattern": "^[a-z][a-z0-9_]{1,63}$",
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Rollback Expected State"
+        },
+        "rollback_operation": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/ResponseOperation"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        },
+        "started_at": {
+          "anyOf": [
+            {
+              "format": "date-time",
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Started At"
+        },
+        "status": {
+          "$ref": "#/$defs/StepStatus"
+        },
+        "step_id": {
+          "pattern": "^step://[A-Za-z0-9_.@/-]+$",
+          "title": "Step Id",
+          "type": "string"
+        },
+        "step_sha256": {
+          "pattern": "^[0-9a-f]{64}$",
+          "title": "Step Sha256",
+          "type": "string"
+        },
+        "target_ref": {
+          "pattern": "^(?:agent|session|resource|destination)_sha256:[0-9a-f]{24}$|^case_[0-9a-f]{32}$",
+          "title": "Target Ref",
+          "type": "string"
+        },
+        "timeout_seconds": {
+          "maximum": 30.0,
+          "minimum": 0.1,
+          "title": "Timeout Seconds",
+          "type": "number"
+        },
+        "verification_evidence_sha256": {
+          "anyOf": [
+            {
+              "pattern": "^[0-9a-f]{64}$",
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Verification Evidence Sha256"
+        }
+      },
+      "required": [
+        "step_id",
+        "name",
+        "operation",
+        "connector_id",
+        "target_ref",
+        "expected_state",
+        "timeout_seconds",
+        "connector_ready",
+        "status",
+        "step_sha256"
+      ],
+      "title": "ResponseStepPlan",
+      "type": "object"
+    },
+    "StepStatus": {
+      "enum": [
+        "dry_run_ready",
+        "dry_run_not_ready",
+        "pending",
+        "running",
+        "succeeded",
+        "failed",
+        "rolled_back",
+        "rollback_failed"
+      ],
+      "title": "StepStatus",
+      "type": "string"
+    }
+  },
+  "additionalProperties": false,
+  "properties": {
+    "count": {
+      "minimum": 0,
+      "title": "Count",
+      "type": "integer"
+    },
+    "executions": {
+      "items": {
+        "$ref": "#/$defs/ResponseExecution"
+      },
+      "title": "Executions",
+      "type": "array"
+    },
+    "limit": {
+      "maximum": 200,
+      "minimum": 1,
+      "title": "Limit",
+      "type": "integer"
+    },
+    "offset": {
+      "minimum": 0,
+      "title": "Offset",
+      "type": "integer"
+    }
+  },
+  "required": [
+    "executions",
+    "count",
+    "limit",
+    "offset"
+  ],
+  "title": "ResponseExecutionPage",
+  "type": "object"
+}

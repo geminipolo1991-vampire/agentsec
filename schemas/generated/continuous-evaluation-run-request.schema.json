@@ -1,0 +1,27 @@
+{
+  "additionalProperties": false,
+  "properties": {
+    "candidate_id": {
+      "pattern": "^[a-z][a-z0-9_-]{2,63}$",
+      "title": "Candidate Id",
+      "type": "string"
+    },
+    "dataset_version": {
+      "pattern": "^benchmark-[0-9]{4}\\.[0-9]{2}\\.[0-9]{2}\\.[0-9]+$",
+      "title": "Dataset Version",
+      "type": "string"
+    },
+    "request_id": {
+      "pattern": "^req_[A-Za-z0-9]{8,64}$",
+      "title": "Request Id",
+      "type": "string"
+    }
+  },
+  "required": [
+    "request_id",
+    "dataset_version",
+    "candidate_id"
+  ],
+  "title": "EvaluationRunRequest",
+  "type": "object"
+}

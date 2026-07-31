@@ -1,0 +1,98 @@
+{
+  "additionalProperties": false,
+  "properties": {
+    "agent_id": {
+      "maxLength": 128,
+      "minLength": 1,
+      "title": "Agent Id",
+      "type": "string"
+    },
+    "application_id": {
+      "maxLength": 128,
+      "minLength": 1,
+      "title": "Application Id",
+      "type": "string"
+    },
+    "collector_id": {
+      "maxLength": 128,
+      "minLength": 1,
+      "title": "Collector Id",
+      "type": "string"
+    },
+    "environment": {
+      "default": "unknown",
+      "maxLength": 64,
+      "minLength": 1,
+      "title": "Environment",
+      "type": "string"
+    },
+    "model_id": {
+      "anyOf": [
+        {
+          "maxLength": 256,
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Model Id"
+    },
+    "provider": {
+      "anyOf": [
+        {
+          "maxLength": 64,
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Provider"
+    },
+    "session_id": {
+      "maxLength": 128,
+      "minLength": 1,
+      "title": "Session Id",
+      "type": "string"
+    },
+    "source_id": {
+      "maxLength": 256,
+      "minLength": 1,
+      "title": "Source Id",
+      "type": "string"
+    },
+    "source_type": {
+      "maxLength": 64,
+      "minLength": 1,
+      "title": "Source Type",
+      "type": "string"
+    },
+    "tenant_id": {
+      "maxLength": 128,
+      "minLength": 1,
+      "title": "Tenant Id",
+      "type": "string"
+    },
+    "trace_id": {
+      "maxLength": 128,
+      "minLength": 1,
+      "title": "Trace Id",
+      "type": "string"
+    }
+  },
+  "required": [
+    "tenant_id",
+    "application_id",
+    "agent_id",
+    "session_id",
+    "trace_id",
+    "source_id",
+    "source_type",
+    "collector_id"
+  ],
+  "title": "TelemetryContext",
+  "type": "object"
+}

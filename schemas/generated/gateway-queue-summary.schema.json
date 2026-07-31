@@ -1,0 +1,45 @@
+{
+  "additionalProperties": false,
+  "properties": {
+    "capacity": {
+      "minimum": 1,
+      "title": "Capacity",
+      "type": "integer"
+    },
+    "dead_letter": {
+      "minimum": 0,
+      "title": "Dead Letter",
+      "type": "integer"
+    },
+    "pending": {
+      "minimum": 0,
+      "title": "Pending",
+      "type": "integer"
+    },
+    "processing": {
+      "minimum": 0,
+      "title": "Processing",
+      "type": "integer"
+    },
+    "reservations": {
+      "minimum": 0,
+      "title": "Reservations",
+      "type": "integer"
+    },
+    "succeeded": {
+      "minimum": 0,
+      "title": "Succeeded",
+      "type": "integer"
+    }
+  },
+  "required": [
+    "pending",
+    "processing",
+    "succeeded",
+    "dead_letter",
+    "reservations",
+    "capacity"
+  ],
+  "title": "QueueSummary",
+  "type": "object"
+}

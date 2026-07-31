@@ -1,0 +1,64 @@
+{
+  "$defs": {
+    "CaseReviewDecision": {
+      "enum": [
+        "approve",
+        "request_changes",
+        "escalate"
+      ],
+      "title": "CaseReviewDecision",
+      "type": "string"
+    }
+  },
+  "additionalProperties": false,
+  "properties": {
+    "case_id": {
+      "pattern": "^case_[0-9a-f]{32}$",
+      "title": "Case Id",
+      "type": "string"
+    },
+    "comment": {
+      "maxLength": 1024,
+      "minLength": 3,
+      "title": "Comment",
+      "type": "string"
+    },
+    "created_at": {
+      "format": "date-time",
+      "title": "Created At",
+      "type": "string"
+    },
+    "decision": {
+      "$ref": "#/$defs/CaseReviewDecision"
+    },
+    "review_id": {
+      "pattern": "^crv_[0-9a-f]{32}$",
+      "title": "Review Id",
+      "type": "string"
+    },
+    "review_sha256": {
+      "pattern": "^[0-9a-f]{64}$",
+      "title": "Review Sha256",
+      "type": "string"
+    },
+    "reviewer_id": {
+      "title": "Reviewer Id",
+      "type": "string"
+    },
+    "tenant_id": {
+      "title": "Tenant Id",
+      "type": "string"
+    }
+  },
+  "required": [
+    "case_id",
+    "tenant_id",
+    "decision",
+    "reviewer_id",
+    "comment",
+    "created_at",
+    "review_sha256"
+  ],
+  "title": "CaseReview",
+  "type": "object"
+}

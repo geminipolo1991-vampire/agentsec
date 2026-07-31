@@ -1,0 +1,1049 @@
+{
+  "$defs": {
+    "AccessReviewRecord": {
+      "additionalProperties": false,
+      "properties": {
+        "decision": {
+          "pattern": "^(certified|revoke_required)$",
+          "title": "Decision",
+          "type": "string"
+        },
+        "rationale_sha256": {
+          "pattern": "^[0-9a-f]{64}$",
+          "title": "Rationale Sha256",
+          "type": "string"
+        },
+        "record_sha256": {
+          "pattern": "^[0-9a-f]{64}$",
+          "title": "Record Sha256",
+          "type": "string"
+        },
+        "review_id": {
+          "pattern": "^access-review_[0-9a-f]{32}$",
+          "title": "Review Id",
+          "type": "string"
+        },
+        "reviewed_at": {
+          "format": "date-time",
+          "title": "Reviewed At",
+          "type": "string"
+        },
+        "reviewer_id": {
+          "title": "Reviewer Id",
+          "type": "string"
+        },
+        "roles": {
+          "items": {
+            "$ref": "#/$defs/HumanRole"
+          },
+          "title": "Roles",
+          "type": "array",
+          "uniqueItems": true
+        },
+        "schema_version": {
+          "default": "1.0.0",
+          "title": "Schema Version",
+          "type": "string"
+        },
+        "subject": {
+          "title": "Subject",
+          "type": "string"
+        },
+        "tenant_id": {
+          "title": "Tenant Id",
+          "type": "string"
+        }
+      },
+      "required": [
+        "review_id",
+        "tenant_id",
+        "subject",
+        "roles",
+        "decision",
+        "rationale_sha256",
+        "reviewer_id",
+        "reviewed_at",
+        "record_sha256"
+      ],
+      "title": "AccessReviewRecord",
+      "type": "object"
+    },
+    "AdministrationAuditCheckpoint": {
+      "additionalProperties": false,
+      "properties": {
+        "checkpoint_id": {
+          "pattern": "^admin-checkpoint_[0-9a-f]{32}$",
+          "title": "Checkpoint Id",
+          "type": "string"
+        },
+        "created_at": {
+          "format": "date-time",
+          "title": "Created At",
+          "type": "string"
+        },
+        "created_by": {
+          "title": "Created By",
+          "type": "string"
+        },
+        "current_sha256": {
+          "pattern": "^[0-9a-f]{64}$",
+          "title": "Current Sha256",
+          "type": "string"
+        },
+        "sequence": {
+          "minimum": 0,
+          "title": "Sequence",
+          "type": "integer"
+        },
+        "signature": {
+          "default": "",
+          "title": "Signature",
+          "type": "string"
+        },
+        "signature_algorithm": {
+          "default": "hmac-sha256-poc",
+          "title": "Signature Algorithm",
+          "type": "string"
+        },
+        "tenant_id": {
+          "title": "Tenant Id",
+          "type": "string"
+        }
+      },
+      "required": [
+        "checkpoint_id",
+        "tenant_id",
+        "sequence",
+        "current_sha256",
+        "created_at",
+        "created_by"
+      ],
+      "title": "AdministrationAuditCheckpoint",
+      "type": "object"
+    },
+    "AdministrationHealth": {
+      "additionalProperties": false,
+      "properties": {
+        "access_reviews": {
+          "minimum": 0,
+          "title": "Access Reviews",
+          "type": "integer"
+        },
+        "active_keys": {
+          "minimum": 0,
+          "title": "Active Keys",
+          "type": "integer"
+        },
+        "audit_entries": {
+          "minimum": 0,
+          "title": "Audit Entries",
+          "type": "integer"
+        },
+        "audit_valid": {
+          "title": "Audit Valid",
+          "type": "boolean"
+        },
+        "boundaries": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Boundaries",
+          "type": "array"
+        },
+        "calculated_at": {
+          "format": "date-time",
+          "title": "Calculated At",
+          "type": "string"
+        },
+        "distributed_ha_verified": {
+          "const": false,
+          "default": false,
+          "title": "Distributed Ha Verified",
+          "type": "boolean"
+        },
+        "external_idp_federated": {
+          "const": false,
+          "default": false,
+          "title": "External Idp Federated",
+          "type": "boolean"
+        },
+        "external_key_custody_verified": {
+          "const": false,
+          "default": false,
+          "title": "External Key Custody Verified",
+          "type": "boolean"
+        },
+        "geographic_residency_verified": {
+          "const": false,
+          "default": false,
+          "title": "Geographic Residency Verified",
+          "type": "boolean"
+        },
+        "identities": {
+          "minimum": 0,
+          "title": "Identities",
+          "type": "integer"
+        },
+        "latest_recovery_drill_passed": {
+          "title": "Latest Recovery Drill Passed",
+          "type": "boolean"
+        },
+        "latest_slos_passed": {
+          "title": "Latest Slos Passed",
+          "type": "boolean"
+        },
+        "latest_supply_chain_attestation_passed": {
+          "title": "Latest Supply Chain Attestation Passed",
+          "type": "boolean"
+        },
+        "legal_hold": {
+          "title": "Legal Hold",
+          "type": "boolean"
+        },
+        "local_identity_adapter": {
+          "const": true,
+          "default": true,
+          "title": "Local Identity Adapter",
+          "type": "boolean"
+        },
+        "production_ready": {
+          "const": false,
+          "default": false,
+          "title": "Production Ready",
+          "type": "boolean"
+        },
+        "schema_version": {
+          "default": "1.0.0",
+          "title": "Schema Version",
+          "type": "string"
+        },
+        "status": {
+          "pattern": "^(healthy|attention_required)$",
+          "title": "Status",
+          "type": "string"
+        },
+        "tenant_id": {
+          "title": "Tenant Id",
+          "type": "string"
+        },
+        "workloads": {
+          "minimum": 0,
+          "title": "Workloads",
+          "type": "integer"
+        }
+      },
+      "required": [
+        "tenant_id",
+        "status",
+        "identities",
+        "workloads",
+        "active_keys",
+        "access_reviews",
+        "audit_entries",
+        "audit_valid",
+        "latest_slos_passed",
+        "latest_recovery_drill_passed",
+        "latest_supply_chain_attestation_passed",
+        "legal_hold",
+        "boundaries",
+        "calculated_at"
+      ],
+      "title": "AdministrationHealth",
+      "type": "object"
+    },
+    "HumanIdentityRecord": {
+      "additionalProperties": false,
+      "properties": {
+        "created_at": {
+          "format": "date-time",
+          "title": "Created At",
+          "type": "string"
+        },
+        "display_name": {
+          "maxLength": 128,
+          "minLength": 2,
+          "title": "Display Name",
+          "type": "string"
+        },
+        "email_sha256": {
+          "pattern": "^[0-9a-f]{64}$",
+          "title": "Email Sha256",
+          "type": "string"
+        },
+        "enabled": {
+          "title": "Enabled",
+          "type": "boolean"
+        },
+        "granted_by": {
+          "title": "Granted By",
+          "type": "string"
+        },
+        "record_sha256": {
+          "pattern": "^[0-9a-f]{64}$",
+          "title": "Record Sha256",
+          "type": "string"
+        },
+        "roles": {
+          "items": {
+            "$ref": "#/$defs/HumanRole"
+          },
+          "maxItems": 6,
+          "minItems": 1,
+          "title": "Roles",
+          "type": "array",
+          "uniqueItems": true
+        },
+        "schema_version": {
+          "default": "1.0.0",
+          "title": "Schema Version",
+          "type": "string"
+        },
+        "subject": {
+          "pattern": "^analyst://[A-Za-z0-9_.@/-]+$",
+          "title": "Subject",
+          "type": "string"
+        },
+        "tenant_id": {
+          "title": "Tenant Id",
+          "type": "string"
+        },
+        "updated_at": {
+          "format": "date-time",
+          "title": "Updated At",
+          "type": "string"
+        },
+        "version": {
+          "minimum": 1,
+          "title": "Version",
+          "type": "integer"
+        }
+      },
+      "required": [
+        "tenant_id",
+        "subject",
+        "display_name",
+        "email_sha256",
+        "roles",
+        "enabled",
+        "granted_by",
+        "created_at",
+        "updated_at",
+        "version",
+        "record_sha256"
+      ],
+      "title": "HumanIdentityRecord",
+      "type": "object"
+    },
+    "HumanRole": {
+      "enum": [
+        "viewer",
+        "analyst",
+        "incident_commander",
+        "policy_owner",
+        "platform_administrator",
+        "security_auditor"
+      ],
+      "title": "HumanRole",
+      "type": "string"
+    },
+    "KeyState": {
+      "enum": [
+        "pending",
+        "active",
+        "retired",
+        "revoked"
+      ],
+      "title": "KeyState",
+      "type": "string"
+    },
+    "ManagedKeyRecord": {
+      "additionalProperties": false,
+      "properties": {
+        "approved_by": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Approved By"
+        },
+        "fingerprint": {
+          "pattern": "^[0-9a-f]{64}$",
+          "title": "Fingerprint",
+          "type": "string"
+        },
+        "key_id": {
+          "pattern": "^managed-key://[A-Za-z0-9_.@/-]+$",
+          "title": "Key Id",
+          "type": "string"
+        },
+        "previous_key_id": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Previous Key Id"
+        },
+        "provider_reference": {
+          "pattern": "^keyref://[A-Za-z0-9_.@/-]+$",
+          "title": "Provider Reference",
+          "type": "string"
+        },
+        "purpose": {
+          "pattern": "^(signing|encryption|connector|checkpoint)$",
+          "title": "Purpose",
+          "type": "string"
+        },
+        "record_sha256": {
+          "pattern": "^[0-9a-f]{64}$",
+          "title": "Record Sha256",
+          "type": "string"
+        },
+        "registered_by": {
+          "title": "Registered By",
+          "type": "string"
+        },
+        "rotation_due_at": {
+          "format": "date-time",
+          "title": "Rotation Due At",
+          "type": "string"
+        },
+        "schema_version": {
+          "default": "1.0.0",
+          "title": "Schema Version",
+          "type": "string"
+        },
+        "state": {
+          "$ref": "#/$defs/KeyState"
+        },
+        "tenant_id": {
+          "title": "Tenant Id",
+          "type": "string"
+        },
+        "updated_at": {
+          "format": "date-time",
+          "title": "Updated At",
+          "type": "string"
+        },
+        "version": {
+          "minimum": 1,
+          "title": "Version",
+          "type": "integer"
+        }
+      },
+      "required": [
+        "tenant_id",
+        "key_id",
+        "purpose",
+        "provider_reference",
+        "fingerprint",
+        "state",
+        "version",
+        "rotation_due_at",
+        "registered_by",
+        "updated_at",
+        "record_sha256"
+      ],
+      "title": "ManagedKeyRecord",
+      "type": "object"
+    },
+    "RecoveryDrillRecord": {
+      "additionalProperties": false,
+      "properties": {
+        "backup_created_at": {
+          "format": "date-time",
+          "title": "Backup Created At",
+          "type": "string"
+        },
+        "backup_manifest_sha256": {
+          "pattern": "^[0-9a-f]{64}$",
+          "title": "Backup Manifest Sha256",
+          "type": "string"
+        },
+        "drill_completed_at": {
+          "format": "date-time",
+          "title": "Drill Completed At",
+          "type": "string"
+        },
+        "drill_id": {
+          "pattern": "^recovery-drill_[0-9a-f]{32}$",
+          "title": "Drill Id",
+          "type": "string"
+        },
+        "integrity_verified": {
+          "title": "Integrity Verified",
+          "type": "boolean"
+        },
+        "observed_rpo_minutes": {
+          "minimum": 0,
+          "title": "Observed Rpo Minutes",
+          "type": "number"
+        },
+        "observed_rto_minutes": {
+          "minimum": 0,
+          "title": "Observed Rto Minutes",
+          "type": "number"
+        },
+        "passed": {
+          "title": "Passed",
+          "type": "boolean"
+        },
+        "performed_by": {
+          "title": "Performed By",
+          "type": "string"
+        },
+        "record_sha256": {
+          "pattern": "^[0-9a-f]{64}$",
+          "title": "Record Sha256",
+          "type": "string"
+        },
+        "restored_checkpoint_sha256": {
+          "pattern": "^[0-9a-f]{64}$",
+          "title": "Restored Checkpoint Sha256",
+          "type": "string"
+        },
+        "source_checkpoint_sha256": {
+          "pattern": "^[0-9a-f]{64}$",
+          "title": "Source Checkpoint Sha256",
+          "type": "string"
+        },
+        "target_rpo_minutes": {
+          "exclusiveMinimum": 0,
+          "title": "Target Rpo Minutes",
+          "type": "number"
+        },
+        "target_rto_minutes": {
+          "exclusiveMinimum": 0,
+          "title": "Target Rto Minutes",
+          "type": "number"
+        },
+        "tenant_id": {
+          "title": "Tenant Id",
+          "type": "string"
+        }
+      },
+      "required": [
+        "drill_id",
+        "tenant_id",
+        "backup_manifest_sha256",
+        "source_checkpoint_sha256",
+        "restored_checkpoint_sha256",
+        "backup_created_at",
+        "drill_completed_at",
+        "observed_rpo_minutes",
+        "observed_rto_minutes",
+        "target_rpo_minutes",
+        "target_rto_minutes",
+        "integrity_verified",
+        "passed",
+        "performed_by",
+        "record_sha256"
+      ],
+      "title": "RecoveryDrillRecord",
+      "type": "object"
+    },
+    "ServiceLevelMeasurement": {
+      "additionalProperties": false,
+      "properties": {
+        "error_budget_remaining": {
+          "maximum": 1,
+          "minimum": 0,
+          "title": "Error Budget Remaining",
+          "type": "number"
+        },
+        "measured_at": {
+          "format": "date-time",
+          "title": "Measured At",
+          "type": "string"
+        },
+        "measured_by": {
+          "title": "Measured By",
+          "type": "string"
+        },
+        "measurement_id": {
+          "pattern": "^slo-measurement_[0-9a-f]{32}$",
+          "title": "Measurement Id",
+          "type": "string"
+        },
+        "objective": {
+          "$ref": "#/$defs/ServiceLevelObjective"
+        },
+        "observed": {
+          "minimum": 0,
+          "title": "Observed",
+          "type": "number"
+        },
+        "passed": {
+          "title": "Passed",
+          "type": "boolean"
+        },
+        "record_sha256": {
+          "pattern": "^[0-9a-f]{64}$",
+          "title": "Record Sha256",
+          "type": "string"
+        },
+        "tenant_id": {
+          "title": "Tenant Id",
+          "type": "string"
+        }
+      },
+      "required": [
+        "measurement_id",
+        "tenant_id",
+        "objective",
+        "observed",
+        "passed",
+        "error_budget_remaining",
+        "measured_at",
+        "measured_by",
+        "record_sha256"
+      ],
+      "title": "ServiceLevelMeasurement",
+      "type": "object"
+    },
+    "ServiceLevelObjective": {
+      "additionalProperties": false,
+      "properties": {
+        "comparison": {
+          "pattern": "^(gte|lte)$",
+          "title": "Comparison",
+          "type": "string"
+        },
+        "metric": {
+          "pattern": "^(availability|latency_ms|durability|detector_lag_ms)$",
+          "title": "Metric",
+          "type": "string"
+        },
+        "name": {
+          "maxLength": 128,
+          "minLength": 3,
+          "title": "Name",
+          "type": "string"
+        },
+        "objective_id": {
+          "pattern": "^slo://[A-Za-z0-9_.@/-]+$",
+          "title": "Objective Id",
+          "type": "string"
+        },
+        "target": {
+          "exclusiveMinimum": 0,
+          "title": "Target",
+          "type": "number"
+        },
+        "window_minutes": {
+          "maximum": 525600,
+          "minimum": 1,
+          "title": "Window Minutes",
+          "type": "integer"
+        }
+      },
+      "required": [
+        "objective_id",
+        "name",
+        "metric",
+        "comparison",
+        "target",
+        "window_minutes"
+      ],
+      "title": "ServiceLevelObjective",
+      "type": "object"
+    },
+    "SupplyChainAttestation": {
+      "additionalProperties": false,
+      "properties": {
+        "artifact_sha256": {
+          "pattern": "^[0-9a-f]{64}$",
+          "title": "Artifact Sha256",
+          "type": "string"
+        },
+        "attestation_id": {
+          "pattern": "^attestation_[0-9a-f]{32}$",
+          "title": "Attestation Id",
+          "type": "string"
+        },
+        "builder_id": {
+          "title": "Builder Id",
+          "type": "string"
+        },
+        "dependency_scan_passed": {
+          "title": "Dependency Scan Passed",
+          "type": "boolean"
+        },
+        "passed": {
+          "title": "Passed",
+          "type": "boolean"
+        },
+        "provenance_sha256": {
+          "pattern": "^[0-9a-f]{64}$",
+          "title": "Provenance Sha256",
+          "type": "string"
+        },
+        "record_sha256": {
+          "pattern": "^[0-9a-f]{64}$",
+          "title": "Record Sha256",
+          "type": "string"
+        },
+        "release_id": {
+          "maxLength": 128,
+          "minLength": 3,
+          "title": "Release Id",
+          "type": "string"
+        },
+        "sbom_sha256": {
+          "pattern": "^[0-9a-f]{64}$",
+          "title": "Sbom Sha256",
+          "type": "string"
+        },
+        "secret_scan_passed": {
+          "title": "Secret Scan Passed",
+          "type": "boolean"
+        },
+        "signature_verified": {
+          "title": "Signature Verified",
+          "type": "boolean"
+        },
+        "tenant_id": {
+          "title": "Tenant Id",
+          "type": "string"
+        },
+        "verified_at": {
+          "format": "date-time",
+          "title": "Verified At",
+          "type": "string"
+        },
+        "verifier_id": {
+          "title": "Verifier Id",
+          "type": "string"
+        }
+      },
+      "required": [
+        "attestation_id",
+        "tenant_id",
+        "release_id",
+        "artifact_sha256",
+        "sbom_sha256",
+        "provenance_sha256",
+        "dependency_scan_passed",
+        "secret_scan_passed",
+        "signature_verified",
+        "builder_id",
+        "verifier_id",
+        "verified_at",
+        "passed",
+        "record_sha256"
+      ],
+      "title": "SupplyChainAttestation",
+      "type": "object"
+    },
+    "TenantSecurityPolicy": {
+      "additionalProperties": false,
+      "properties": {
+        "allowed_processing_regions": {
+          "items": {
+            "type": "string"
+          },
+          "maxItems": 16,
+          "minItems": 1,
+          "title": "Allowed Processing Regions",
+          "type": "array",
+          "uniqueItems": true
+        },
+        "display_name": {
+          "maxLength": 128,
+          "minLength": 2,
+          "title": "Display Name",
+          "type": "string"
+        },
+        "encryption_required": {
+          "default": true,
+          "title": "Encryption Required",
+          "type": "boolean"
+        },
+        "evidence_retention_days": {
+          "maximum": 36500,
+          "minimum": 1,
+          "title": "Evidence Retention Days",
+          "type": "integer"
+        },
+        "legal_hold": {
+          "default": false,
+          "title": "Legal Hold",
+          "type": "boolean"
+        },
+        "managed_key_reference": {
+          "pattern": "^keyref://[A-Za-z0-9_.@/-]+$",
+          "title": "Managed Key Reference",
+          "type": "string"
+        },
+        "policy_version": {
+          "minimum": 1,
+          "title": "Policy Version",
+          "type": "integer"
+        },
+        "record_sha256": {
+          "pattern": "^[0-9a-f]{64}$",
+          "title": "Record Sha256",
+          "type": "string"
+        },
+        "residency_region": {
+          "pattern": "^[a-z]{2}-[a-z]+-[0-9]+$",
+          "title": "Residency Region",
+          "type": "string"
+        },
+        "retention_days": {
+          "maximum": 36500,
+          "minimum": 1,
+          "title": "Retention Days",
+          "type": "integer"
+        },
+        "schema_version": {
+          "default": "1.0.0",
+          "title": "Schema Version",
+          "type": "string"
+        },
+        "status": {
+          "pattern": "^(active|suspended)$",
+          "title": "Status",
+          "type": "string"
+        },
+        "tenant_id": {
+          "maxLength": 128,
+          "minLength": 1,
+          "title": "Tenant Id",
+          "type": "string"
+        },
+        "updated_at": {
+          "format": "date-time",
+          "title": "Updated At",
+          "type": "string"
+        },
+        "updated_by": {
+          "title": "Updated By",
+          "type": "string"
+        }
+      },
+      "required": [
+        "tenant_id",
+        "display_name",
+        "status",
+        "residency_region",
+        "allowed_processing_regions",
+        "retention_days",
+        "evidence_retention_days",
+        "managed_key_reference",
+        "policy_version",
+        "updated_by",
+        "updated_at",
+        "record_sha256"
+      ],
+      "title": "TenantSecurityPolicy",
+      "type": "object"
+    },
+    "WorkloadIdentityRecord": {
+      "additionalProperties": false,
+      "properties": {
+        "credential_fingerprint": {
+          "pattern": "^[0-9a-f]{64}$",
+          "title": "Credential Fingerprint",
+          "type": "string"
+        },
+        "credential_reference": {
+          "pattern": "^credentialref://[A-Za-z0-9_.@/-]+$",
+          "title": "Credential Reference",
+          "type": "string"
+        },
+        "display_name": {
+          "maxLength": 128,
+          "minLength": 2,
+          "title": "Display Name",
+          "type": "string"
+        },
+        "expires_at": {
+          "format": "date-time",
+          "title": "Expires At",
+          "type": "string"
+        },
+        "issued_at": {
+          "format": "date-time",
+          "title": "Issued At",
+          "type": "string"
+        },
+        "record_sha256": {
+          "pattern": "^[0-9a-f]{64}$",
+          "title": "Record Sha256",
+          "type": "string"
+        },
+        "revoked_at": {
+          "anyOf": [
+            {
+              "format": "date-time",
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Revoked At"
+        },
+        "rotated_at": {
+          "anyOf": [
+            {
+              "format": "date-time",
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Rotated At"
+        },
+        "schema_version": {
+          "default": "1.0.0",
+          "title": "Schema Version",
+          "type": "string"
+        },
+        "scopes": {
+          "items": {
+            "type": "string"
+          },
+          "maxItems": 64,
+          "minItems": 1,
+          "title": "Scopes",
+          "type": "array",
+          "uniqueItems": true
+        },
+        "tenant_id": {
+          "title": "Tenant Id",
+          "type": "string"
+        },
+        "updated_by": {
+          "title": "Updated By",
+          "type": "string"
+        },
+        "version": {
+          "minimum": 1,
+          "title": "Version",
+          "type": "integer"
+        },
+        "workload_id": {
+          "pattern": "^workload://[A-Za-z0-9_.@/-]+$",
+          "title": "Workload Id",
+          "type": "string"
+        }
+      },
+      "required": [
+        "tenant_id",
+        "workload_id",
+        "display_name",
+        "credential_reference",
+        "credential_fingerprint",
+        "scopes",
+        "issued_at",
+        "expires_at",
+        "version",
+        "updated_by",
+        "record_sha256"
+      ],
+      "title": "WorkloadIdentityRecord",
+      "type": "object"
+    }
+  },
+  "additionalProperties": false,
+  "properties": {
+    "access_reviews": {
+      "items": {
+        "$ref": "#/$defs/AccessReviewRecord"
+      },
+      "title": "Access Reviews",
+      "type": "array"
+    },
+    "health": {
+      "$ref": "#/$defs/AdministrationHealth"
+    },
+    "identities": {
+      "items": {
+        "$ref": "#/$defs/HumanIdentityRecord"
+      },
+      "title": "Identities",
+      "type": "array"
+    },
+    "keys": {
+      "items": {
+        "$ref": "#/$defs/ManagedKeyRecord"
+      },
+      "title": "Keys",
+      "type": "array"
+    },
+    "latest_audit_checkpoint": {
+      "anyOf": [
+        {
+          "$ref": "#/$defs/AdministrationAuditCheckpoint"
+        },
+        {
+          "type": "null"
+        }
+      ]
+    },
+    "recovery_drills": {
+      "items": {
+        "$ref": "#/$defs/RecoveryDrillRecord"
+      },
+      "title": "Recovery Drills",
+      "type": "array"
+    },
+    "schema_version": {
+      "default": "1.0.0",
+      "title": "Schema Version",
+      "type": "string"
+    },
+    "slo_measurements": {
+      "items": {
+        "$ref": "#/$defs/ServiceLevelMeasurement"
+      },
+      "title": "Slo Measurements",
+      "type": "array"
+    },
+    "supply_chain_attestations": {
+      "items": {
+        "$ref": "#/$defs/SupplyChainAttestation"
+      },
+      "title": "Supply Chain Attestations",
+      "type": "array"
+    },
+    "tenant": {
+      "$ref": "#/$defs/TenantSecurityPolicy"
+    },
+    "workloads": {
+      "items": {
+        "$ref": "#/$defs/WorkloadIdentityRecord"
+      },
+      "title": "Workloads",
+      "type": "array"
+    }
+  },
+  "required": [
+    "tenant",
+    "identities",
+    "workloads",
+    "keys",
+    "access_reviews",
+    "slo_measurements",
+    "recovery_drills",
+    "supply_chain_attestations",
+    "latest_audit_checkpoint",
+    "health"
+  ],
+  "title": "AdministrationSnapshot",
+  "type": "object"
+}

@@ -1,0 +1,102 @@
+{
+  "$defs": {
+    "ExternalApiCapability": {
+      "additionalProperties": false,
+      "properties": {
+        "contract_version": {
+          "pattern": "^\\d+\\.\\d+\\.\\d+$",
+          "title": "Contract Version",
+          "type": "string"
+        },
+        "methods": {
+          "items": {
+            "type": "string"
+          },
+          "maxItems": 8,
+          "minItems": 1,
+          "title": "Methods",
+          "type": "array"
+        },
+        "paths": {
+          "items": {
+            "type": "string"
+          },
+          "maxItems": 16,
+          "minItems": 1,
+          "title": "Paths",
+          "type": "array"
+        },
+        "resource": {
+          "pattern": "^[a-z][a-z_]+$",
+          "title": "Resource",
+          "type": "string"
+        }
+      },
+      "required": [
+        "resource",
+        "methods",
+        "paths",
+        "contract_version"
+      ],
+      "title": "ExternalApiCapability",
+      "type": "object"
+    },
+    "IntegrationKind": {
+      "enum": [
+        "splunk_hec",
+        "elastic_bulk",
+        "signed_webhook",
+        "syslog_tls",
+        "cef_tls",
+        "otlp_http_json"
+      ],
+      "title": "IntegrationKind",
+      "type": "string"
+    }
+  },
+  "additionalProperties": false,
+  "properties": {
+    "api_version": {
+      "default": "v1",
+      "title": "Api Version",
+      "type": "string"
+    },
+    "authentication": {
+      "items": {
+        "type": "string"
+      },
+      "title": "Authentication",
+      "type": "array"
+    },
+    "capabilities": {
+      "items": {
+        "$ref": "#/$defs/ExternalApiCapability"
+      },
+      "title": "Capabilities",
+      "type": "array"
+    },
+    "export_formats": {
+      "items": {
+        "$ref": "#/$defs/IntegrationKind"
+      },
+      "title": "Export Formats",
+      "type": "array"
+    },
+    "raw_content_exported": {
+      "default": false,
+      "title": "Raw Content Exported",
+      "type": "boolean"
+    },
+    "schema_version": {
+      "default": "1.0.0",
+      "title": "Schema Version",
+      "type": "string"
+    }
+  },
+  "required": [
+    "capabilities",
+    "export_formats"
+  ],
+  "title": "ExternalApiCapabilities",
+  "type": "object"
+}

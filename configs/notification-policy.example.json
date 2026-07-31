@@ -1,0 +1,153 @@
+{
+  "schema_version": "1.0.0",
+  "policy_version": "notification-policy-2026-07-24.1",
+  "destinations": [
+    {
+      "destination_id": "destination://on-call/primary",
+      "name": "Primary on-call paging gateway",
+      "channel": "on_call",
+      "endpoint": "https://pager.example.invalid/v1/agentsec",
+      "allowed_hosts": ["pager.example.invalid"],
+      "credential_env": "AGENTSEC_ON_CALL_CONNECTOR_TOKEN",
+      "provider_ack_required": true,
+      "enabled": true
+    },
+    {
+      "destination_id": "destination://ticket/primary",
+      "name": "Primary incident ticket gateway",
+      "channel": "ticket",
+      "endpoint": "https://tickets.example.invalid/v1/agentsec",
+      "allowed_hosts": ["tickets.example.invalid"],
+      "credential_env": "AGENTSEC_TICKET_CONNECTOR_TOKEN",
+      "provider_ack_required": true,
+      "enabled": true
+    },
+    {
+      "destination_id": "destination://email/security",
+      "name": "Security email gateway",
+      "channel": "email",
+      "endpoint": "https://email.example.invalid/v1/agentsec",
+      "allowed_hosts": ["email.example.invalid"],
+      "credential_env": "AGENTSEC_EMAIL_CONNECTOR_TOKEN",
+      "provider_ack_required": false,
+      "enabled": true
+    },
+    {
+      "destination_id": "destination://messaging/soc",
+      "name": "SOC messaging gateway",
+      "channel": "messaging",
+      "endpoint": "https://messages.example.invalid/v1/agentsec",
+      "allowed_hosts": ["messages.example.invalid"],
+      "credential_env": "AGENTSEC_MESSAGE_CONNECTOR_TOKEN",
+      "provider_ack_required": true,
+      "enabled": true
+    }
+  ],
+  "schedules": [
+    {
+      "schedule_id": "schedule://soc/primary",
+      "name": "Primary SOC on-call rotation",
+      "timezone_name": "Asia/Tokyo",
+      "starts_at": "2026-07-24T00:00:00Z",
+      "rotation_minutes": 720,
+      "member_ids": ["analyst://primary-on-call", "analyst://backup-on-call"],
+      "version": 1
+    }
+  ],
+  "templates": [
+    {
+      "template_id": "template://on-call/critical",
+      "name": "Critical on-call page",
+      "channel": "on_call",
+      "subject_template": "[{priority}] {alert_type} requires acknowledgment",
+      "body_template": "Finding {finding_id}; case {case_id}; decision {decision}; routed owner {on_call_actor}.",
+      "version": 1
+    },
+    {
+      "template_id": "template://ticket/critical",
+      "name": "Critical incident ticket",
+      "channel": "ticket",
+      "subject_template": "[{priority}] {alert_type} requires immediate investigation",
+      "body_template": "AgentSec blocked {decision}. Case {case_id}; finding {finding_id}; correlated incident {correlation_incident_id}; routed owner {on_call_actor}.",
+      "version": 1
+    },
+    {
+      "template_id": "template://email/security",
+      "name": "Security escalation email",
+      "channel": "email",
+      "subject_template": "[{priority}] AgentSec {escalation_level}",
+      "body_template": "Alert {alert_type} is in queue {queue}. Case {case_id}; finding {finding_id}; owner {on_call_actor}.",
+      "version": 1
+    },
+    {
+      "template_id": "template://messaging/soc",
+      "name": "SOC escalation message",
+      "channel": "messaging",
+      "subject_template": "[{priority}] AgentSec escalation",
+      "body_template": "{alert_type} / {decision} / {queue}. Case {case_id}; owner {on_call_actor}.",
+      "version": 1
+    },
+    {
+      "template_id": "template://ticket/review",
+      "name": "Security approval ticket",
+      "channel": "ticket",
+      "subject_template": "[{priority}] Approval review for {alert_type}",
+      "body_template": "Action remains held for approval. Case {case_id}; finding {finding_id}; queue {queue}; owner {on_call_actor}.",
+      "version": 1
+    }
+  ],
+  "routes": [
+    {
+      "route_id": "route://soc/critical",
+      "name": "Critical incident page",
+      "priorities": ["P0"],
+      "escalation_levels": ["incident_page"],
+      "alert_types": [],
+      "destination_templates": {
+        "destination://on-call/primary": "template://on-call/critical",
+        "destination://ticket/primary": "template://ticket/critical",
+        "destination://email/security": "template://email/security",
+        "destination://messaging/soc": "template://messaging/soc"
+      },
+      "on_call_schedule_id": "schedule://soc/primary",
+      "acknowledgment_minutes": 5,
+      "max_attempts": 5,
+      "retry_base_seconds": 30,
+      "enabled": true
+    },
+    {
+      "route_id": "route://soc/urgent",
+      "name": "Urgent SOC escalation",
+      "priorities": ["P0", "P1", "P2", "P3"],
+      "escalation_levels": ["soc_urgent"],
+      "alert_types": [],
+      "destination_templates": {
+        "destination://on-call/primary": "template://on-call/critical",
+        "destination://ticket/primary": "template://ticket/critical",
+        "destination://messaging/soc": "template://messaging/soc"
+      },
+      "on_call_schedule_id": "schedule://soc/primary",
+      "acknowledgment_minutes": 15,
+      "max_attempts": 5,
+      "retry_base_seconds": 60,
+      "enabled": true
+    },
+    {
+      "route_id": "route://soc/review",
+      "name": "Security approval review",
+      "priorities": ["P0", "P1", "P2", "P3"],
+      "escalation_levels": ["review_queue"],
+      "alert_types": [],
+      "destination_templates": {
+        "destination://ticket/primary": "template://ticket/review",
+        "destination://email/security": "template://email/security"
+      },
+      "on_call_schedule_id": "schedule://soc/primary",
+      "acknowledgment_minutes": 30,
+      "max_attempts": 5,
+      "retry_base_seconds": 60,
+      "enabled": true
+    }
+  ],
+  "policy_sha256": "0000000000000000000000000000000000000000000000000000000000000000"
+}

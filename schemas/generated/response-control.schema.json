@@ -1,0 +1,52 @@
+{
+  "additionalProperties": false,
+  "properties": {
+    "changed_at": {
+      "format": "date-time",
+      "title": "Changed At",
+      "type": "string"
+    },
+    "changed_by": {
+      "pattern": "^(analyst|system)://[A-Za-z0-9_.@/-]+$",
+      "title": "Changed By",
+      "type": "string"
+    },
+    "control_sha256": {
+      "pattern": "^[0-9a-f]{64}$",
+      "title": "Control Sha256",
+      "type": "string"
+    },
+    "kill_switch_active": {
+      "title": "Kill Switch Active",
+      "type": "boolean"
+    },
+    "reason": {
+      "maxLength": 512,
+      "minLength": 3,
+      "title": "Reason",
+      "type": "string"
+    },
+    "tenant_id": {
+      "maxLength": 128,
+      "minLength": 1,
+      "title": "Tenant Id",
+      "type": "string"
+    },
+    "version": {
+      "minimum": 1,
+      "title": "Version",
+      "type": "integer"
+    }
+  },
+  "required": [
+    "tenant_id",
+    "kill_switch_active",
+    "version",
+    "changed_by",
+    "reason",
+    "changed_at",
+    "control_sha256"
+  ],
+  "title": "ResponseControl",
+  "type": "object"
+}

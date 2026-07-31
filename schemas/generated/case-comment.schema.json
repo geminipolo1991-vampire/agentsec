@@ -1,0 +1,50 @@
+{
+  "additionalProperties": false,
+  "properties": {
+    "actor_id": {
+      "pattern": "^(analyst|system|workload)://[A-Za-z0-9_.@/-]+$",
+      "title": "Actor Id",
+      "type": "string"
+    },
+    "body": {
+      "maxLength": 2048,
+      "minLength": 1,
+      "title": "Body",
+      "type": "string"
+    },
+    "case_id": {
+      "pattern": "^case_[0-9a-f]{32}$",
+      "title": "Case Id",
+      "type": "string"
+    },
+    "comment_id": {
+      "pattern": "^cmt_[0-9a-f]{32}$",
+      "title": "Comment Id",
+      "type": "string"
+    },
+    "comment_sha256": {
+      "pattern": "^[0-9a-f]{64}$",
+      "title": "Comment Sha256",
+      "type": "string"
+    },
+    "created_at": {
+      "format": "date-time",
+      "title": "Created At",
+      "type": "string"
+    },
+    "tenant_id": {
+      "title": "Tenant Id",
+      "type": "string"
+    }
+  },
+  "required": [
+    "case_id",
+    "tenant_id",
+    "actor_id",
+    "body",
+    "created_at",
+    "comment_sha256"
+  ],
+  "title": "CaseComment",
+  "type": "object"
+}

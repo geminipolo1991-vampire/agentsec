@@ -1,0 +1,74 @@
+{
+  "additionalProperties": false,
+  "properties": {
+    "calibrated_confidence": {
+      "maximum": 1.0,
+      "minimum": 0.0,
+      "title": "Calibrated Confidence",
+      "type": "number"
+    },
+    "cited_evidence_ids": {
+      "items": {
+        "type": "string"
+      },
+      "maxItems": 32,
+      "title": "Cited Evidence Ids",
+      "type": "array"
+    },
+    "claimed_confidence": {
+      "maximum": 1.0,
+      "minimum": 0.0,
+      "title": "Claimed Confidence",
+      "type": "number"
+    },
+    "eligible_to_tighten": {
+      "title": "Eligible To Tighten",
+      "type": "boolean"
+    },
+    "human_gate_required": {
+      "title": "Human Gate Required",
+      "type": "boolean"
+    },
+    "policy_version": {
+      "maxLength": 64,
+      "minLength": 1,
+      "title": "Policy Version",
+      "type": "string"
+    },
+    "reason_codes": {
+      "items": {
+        "type": "string"
+      },
+      "maxItems": 16,
+      "title": "Reason Codes",
+      "type": "array"
+    },
+    "status": {
+      "enum": [
+        "valid",
+        "human_review",
+        "rejected"
+      ],
+      "title": "Status",
+      "type": "string"
+    },
+    "unknown_evidence_ids": {
+      "items": {
+        "type": "string"
+      },
+      "maxItems": 32,
+      "title": "Unknown Evidence Ids",
+      "type": "array"
+    }
+  },
+  "required": [
+    "policy_version",
+    "status",
+    "claimed_confidence",
+    "calibrated_confidence",
+    "human_gate_required",
+    "eligible_to_tighten"
+  ],
+  "title": "ModelVerdictValidation",
+  "type": "object"
+}

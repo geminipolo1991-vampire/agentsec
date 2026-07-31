@@ -1,0 +1,57 @@
+{
+  "$defs": {
+    "RelationshipType": {
+      "enum": [
+        "contains",
+        "uses_model",
+        "uses_tool",
+        "accesses"
+      ],
+      "title": "RelationshipType",
+      "type": "string"
+    }
+  },
+  "additionalProperties": false,
+  "properties": {
+    "first_seen_at": {
+      "format": "date-time",
+      "title": "First Seen At",
+      "type": "string"
+    },
+    "last_seen_at": {
+      "format": "date-time",
+      "title": "Last Seen At",
+      "type": "string"
+    },
+    "relationship": {
+      "$ref": "#/$defs/RelationshipType"
+    },
+    "source_component_id": {
+      "title": "Source Component Id",
+      "type": "string"
+    },
+    "source_ref": {
+      "title": "Source Ref",
+      "type": "string"
+    },
+    "target_component_id": {
+      "title": "Target Component Id",
+      "type": "string"
+    },
+    "tenant_id": {
+      "title": "Tenant Id",
+      "type": "string"
+    }
+  },
+  "required": [
+    "tenant_id",
+    "source_component_id",
+    "relationship",
+    "target_component_id",
+    "source_ref",
+    "first_seen_at",
+    "last_seen_at"
+  ],
+  "title": "InventoryRelationship",
+  "type": "object"
+}

@@ -1,0 +1,113 @@
+{
+  "$defs": {
+    "IncidentSummary": {
+      "additionalProperties": false,
+      "properties": {
+        "agent_id": {
+          "title": "Agent Id",
+          "type": "string"
+        },
+        "alert_type": {
+          "title": "Alert Type",
+          "type": "string"
+        },
+        "created_at": {
+          "title": "Created At",
+          "type": "string"
+        },
+        "decision": {
+          "title": "Decision",
+          "type": "string"
+        },
+        "detail_availability": {
+          "enum": [
+            "complete",
+            "summary_only"
+          ],
+          "title": "Detail Availability",
+          "type": "string"
+        },
+        "effect_status": {
+          "title": "Effect Status",
+          "type": "string"
+        },
+        "event_id": {
+          "title": "Event Id",
+          "type": "string"
+        },
+        "finding_id": {
+          "title": "Finding Id",
+          "type": "string"
+        },
+        "flow_id": {
+          "title": "Flow Id",
+          "type": "string"
+        },
+        "priority": {
+          "title": "Priority",
+          "type": "string"
+        },
+        "severity": {
+          "title": "Severity",
+          "type": "string"
+        },
+        "status": {
+          "title": "Status",
+          "type": "string"
+        },
+        "title": {
+          "title": "Title",
+          "type": "string"
+        },
+        "updated_at": {
+          "title": "Updated At",
+          "type": "string"
+        }
+      },
+      "required": [
+        "finding_id",
+        "event_id",
+        "flow_id",
+        "alert_type",
+        "title",
+        "agent_id",
+        "severity",
+        "priority",
+        "status",
+        "decision",
+        "effect_status",
+        "created_at",
+        "updated_at",
+        "detail_availability"
+      ],
+      "title": "IncidentSummary",
+      "type": "object"
+    }
+  },
+  "additionalProperties": false,
+  "properties": {
+    "count": {
+      "minimum": 0,
+      "title": "Count",
+      "type": "integer"
+    },
+    "incidents": {
+      "items": {
+        "$ref": "#/$defs/IncidentSummary"
+      },
+      "title": "Incidents",
+      "type": "array"
+    },
+    "schema_version": {
+      "default": "2.0.0",
+      "title": "Schema Version",
+      "type": "string"
+    }
+  },
+  "required": [
+    "incidents",
+    "count"
+  ],
+  "title": "IncidentListResponse",
+  "type": "object"
+}

@@ -1,0 +1,216 @@
+{
+  "$defs": {
+    "CaseExecutionStatus": {
+      "enum": [
+        "completed",
+        "invalid_output",
+        "error"
+      ],
+      "title": "CaseExecutionStatus",
+      "type": "string"
+    },
+    "DecisionAction": {
+      "enum": [
+        "allow",
+        "allow_with_obligations",
+        "require_approval",
+        "deny"
+      ],
+      "title": "DecisionAction",
+      "type": "string"
+    },
+    "Severity": {
+      "enum": [
+        "info",
+        "low",
+        "medium",
+        "high",
+        "critical"
+      ],
+      "title": "Severity",
+      "type": "string"
+    },
+    "SimulationVariant": {
+      "enum": [
+        "plain",
+        "japanese",
+        "spanish",
+        "unicode_confusable",
+        "zero_width",
+        "base64",
+        "mixed_obfuscation"
+      ],
+      "title": "SimulationVariant",
+      "type": "string"
+    }
+  },
+  "additionalProperties": false,
+  "properties": {
+    "abstained": {
+      "title": "Abstained",
+      "type": "boolean"
+    },
+    "case_id": {
+      "title": "Case Id",
+      "type": "string"
+    },
+    "cited_evidence_refs": {
+      "items": {
+        "type": "string"
+      },
+      "title": "Cited Evidence Refs",
+      "type": "array"
+    },
+    "confidence": {
+      "maximum": 1.0,
+      "minimum": 0.0,
+      "title": "Confidence",
+      "type": "number"
+    },
+    "dataset_split": {
+      "title": "Dataset Split",
+      "type": "string"
+    },
+    "effect_allowed": {
+      "title": "Effect Allowed",
+      "type": "boolean"
+    },
+    "enforced_action": {
+      "$ref": "#/$defs/DecisionAction"
+    },
+    "error_code": {
+      "anyOf": [
+        {
+          "pattern": "^[a-z][a-z0-9_]{2,63}$",
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Error Code"
+    },
+    "evidence_valid": {
+      "title": "Evidence Valid",
+      "type": "boolean"
+    },
+    "expected_action": {
+      "$ref": "#/$defs/DecisionAction"
+    },
+    "expected_alert_types": {
+      "items": {
+        "type": "string"
+      },
+      "title": "Expected Alert Types",
+      "type": "array"
+    },
+    "expected_severity": {
+      "anyOf": [
+        {
+          "$ref": "#/$defs/Severity"
+        },
+        {
+          "type": "null"
+        }
+      ]
+    },
+    "forbidden_effect_completed": {
+      "title": "Forbidden Effect Completed",
+      "type": "boolean"
+    },
+    "latency_ms": {
+      "maximum": 300000,
+      "minimum": 0,
+      "title": "Latency Ms",
+      "type": "integer"
+    },
+    "model_completed": {
+      "title": "Model Completed",
+      "type": "boolean"
+    },
+    "model_invoked": {
+      "title": "Model Invoked",
+      "type": "boolean"
+    },
+    "outcome_correct": {
+      "title": "Outcome Correct",
+      "type": "boolean"
+    },
+    "predicted_alert_types": {
+      "items": {
+        "type": "string"
+      },
+      "title": "Predicted Alert Types",
+      "type": "array"
+    },
+    "predicted_severity": {
+      "anyOf": [
+        {
+          "$ref": "#/$defs/Severity"
+        },
+        {
+          "type": "null"
+        }
+      ]
+    },
+    "proposed_action": {
+      "$ref": "#/$defs/DecisionAction"
+    },
+    "required_benign_effect_completed": {
+      "title": "Required Benign Effect Completed",
+      "type": "boolean"
+    },
+    "result_sha256": {
+      "pattern": "^[0-9a-f]{64}$",
+      "title": "Result Sha256",
+      "type": "string"
+    },
+    "status": {
+      "$ref": "#/$defs/CaseExecutionStatus"
+    },
+    "unknown_evidence_refs": {
+      "items": {
+        "type": "string"
+      },
+      "title": "Unknown Evidence Refs",
+      "type": "array"
+    },
+    "use_case": {
+      "title": "Use Case",
+      "type": "string"
+    },
+    "variant": {
+      "$ref": "#/$defs/SimulationVariant"
+    }
+  },
+  "required": [
+    "case_id",
+    "use_case",
+    "dataset_split",
+    "variant",
+    "status",
+    "expected_alert_types",
+    "predicted_alert_types",
+    "expected_severity",
+    "predicted_severity",
+    "expected_action",
+    "proposed_action",
+    "enforced_action",
+    "effect_allowed",
+    "forbidden_effect_completed",
+    "required_benign_effect_completed",
+    "evidence_valid",
+    "cited_evidence_refs",
+    "unknown_evidence_refs",
+    "model_invoked",
+    "model_completed",
+    "abstained",
+    "confidence",
+    "outcome_correct",
+    "latency_ms",
+    "result_sha256"
+  ],
+  "title": "EvaluationCaseResult",
+  "type": "object"
+}

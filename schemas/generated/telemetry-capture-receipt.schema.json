@@ -1,0 +1,53 @@
+{
+  "$defs": {
+    "CaptureStatus": {
+      "enum": [
+        "accepted",
+        "duplicate",
+        "rejected"
+      ],
+      "title": "CaptureStatus",
+      "type": "string"
+    }
+  },
+  "additionalProperties": false,
+  "properties": {
+    "event_id": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Event Id"
+    },
+    "observed_at": {
+      "format": "date-time",
+      "title": "Observed At",
+      "type": "string"
+    },
+    "reason_codes": {
+      "items": {
+        "type": "string"
+      },
+      "title": "Reason Codes",
+      "type": "array"
+    },
+    "source_key": {
+      "title": "Source Key",
+      "type": "string"
+    },
+    "status": {
+      "$ref": "#/$defs/CaptureStatus"
+    }
+  },
+  "required": [
+    "status",
+    "source_key"
+  ],
+  "title": "CaptureReceipt",
+  "type": "object"
+}

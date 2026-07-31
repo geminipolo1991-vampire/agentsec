@@ -1,0 +1,33 @@
+{
+  "additionalProperties": false,
+  "properties": {
+    "action": {
+      "pattern": "^[a-z][a-z0-9_.-]{2,63}$",
+      "title": "Action",
+      "type": "string"
+    },
+    "actor_id": {
+      "title": "Actor Id",
+      "type": "string"
+    },
+    "at": {
+      "format": "date-time",
+      "title": "At",
+      "type": "string"
+    },
+    "reason": {
+      "maxLength": 512,
+      "minLength": 3,
+      "title": "Reason",
+      "type": "string"
+    }
+  },
+  "required": [
+    "action",
+    "actor_id",
+    "reason",
+    "at"
+  ],
+  "title": "CorrelationAuditEntry",
+  "type": "object"
+}

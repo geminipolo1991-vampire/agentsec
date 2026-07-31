@@ -1,0 +1,130 @@
+{
+  "additionalProperties": false,
+  "properties": {
+    "access_reviews": {
+      "minimum": 0,
+      "title": "Access Reviews",
+      "type": "integer"
+    },
+    "active_keys": {
+      "minimum": 0,
+      "title": "Active Keys",
+      "type": "integer"
+    },
+    "audit_entries": {
+      "minimum": 0,
+      "title": "Audit Entries",
+      "type": "integer"
+    },
+    "audit_valid": {
+      "title": "Audit Valid",
+      "type": "boolean"
+    },
+    "boundaries": {
+      "items": {
+        "type": "string"
+      },
+      "title": "Boundaries",
+      "type": "array"
+    },
+    "calculated_at": {
+      "format": "date-time",
+      "title": "Calculated At",
+      "type": "string"
+    },
+    "distributed_ha_verified": {
+      "const": false,
+      "default": false,
+      "title": "Distributed Ha Verified",
+      "type": "boolean"
+    },
+    "external_idp_federated": {
+      "const": false,
+      "default": false,
+      "title": "External Idp Federated",
+      "type": "boolean"
+    },
+    "external_key_custody_verified": {
+      "const": false,
+      "default": false,
+      "title": "External Key Custody Verified",
+      "type": "boolean"
+    },
+    "geographic_residency_verified": {
+      "const": false,
+      "default": false,
+      "title": "Geographic Residency Verified",
+      "type": "boolean"
+    },
+    "identities": {
+      "minimum": 0,
+      "title": "Identities",
+      "type": "integer"
+    },
+    "latest_recovery_drill_passed": {
+      "title": "Latest Recovery Drill Passed",
+      "type": "boolean"
+    },
+    "latest_slos_passed": {
+      "title": "Latest Slos Passed",
+      "type": "boolean"
+    },
+    "latest_supply_chain_attestation_passed": {
+      "title": "Latest Supply Chain Attestation Passed",
+      "type": "boolean"
+    },
+    "legal_hold": {
+      "title": "Legal Hold",
+      "type": "boolean"
+    },
+    "local_identity_adapter": {
+      "const": true,
+      "default": true,
+      "title": "Local Identity Adapter",
+      "type": "boolean"
+    },
+    "production_ready": {
+      "const": false,
+      "default": false,
+      "title": "Production Ready",
+      "type": "boolean"
+    },
+    "schema_version": {
+      "default": "1.0.0",
+      "title": "Schema Version",
+      "type": "string"
+    },
+    "status": {
+      "pattern": "^(healthy|attention_required)$",
+      "title": "Status",
+      "type": "string"
+    },
+    "tenant_id": {
+      "title": "Tenant Id",
+      "type": "string"
+    },
+    "workloads": {
+      "minimum": 0,
+      "title": "Workloads",
+      "type": "integer"
+    }
+  },
+  "required": [
+    "tenant_id",
+    "status",
+    "identities",
+    "workloads",
+    "active_keys",
+    "access_reviews",
+    "audit_entries",
+    "audit_valid",
+    "latest_slos_passed",
+    "latest_recovery_drill_passed",
+    "latest_supply_chain_attestation_passed",
+    "legal_hold",
+    "boundaries",
+    "calculated_at"
+  ],
+  "title": "AdministrationHealth",
+  "type": "object"
+}

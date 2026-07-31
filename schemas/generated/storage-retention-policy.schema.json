@@ -1,0 +1,44 @@
+{
+  "$defs": {
+    "RecordType": {
+      "enum": [
+        "event",
+        "evidence",
+        "entity",
+        "alert",
+        "finding",
+        "incident",
+        "investigation",
+        "judgment",
+        "action"
+      ],
+      "title": "RecordType",
+      "type": "string"
+    }
+  },
+  "additionalProperties": false,
+  "properties": {
+    "policy_id": {
+      "maxLength": 128,
+      "minLength": 1,
+      "title": "Policy Id",
+      "type": "string"
+    },
+    "retention_days": {
+      "additionalProperties": {
+        "type": "integer"
+      },
+      "propertyNames": {
+        "$ref": "#/$defs/RecordType"
+      },
+      "title": "Retention Days",
+      "type": "object"
+    }
+  },
+  "required": [
+    "policy_id",
+    "retention_days"
+  ],
+  "title": "RetentionPolicy",
+  "type": "object"
+}

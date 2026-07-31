@@ -1,0 +1,151 @@
+{
+  "additionalProperties": false,
+  "properties": {
+    "abstention_rate": {
+      "maximum": 1.0,
+      "minimum": 0.0,
+      "title": "Abstention Rate",
+      "type": "number"
+    },
+    "alert_precision": {
+      "maximum": 1.0,
+      "minimum": 0.0,
+      "title": "Alert Precision",
+      "type": "number"
+    },
+    "attack_cases": {
+      "minimum": 0,
+      "title": "Attack Cases",
+      "type": "integer"
+    },
+    "benign_cases": {
+      "minimum": 0,
+      "title": "Benign Cases",
+      "type": "integer"
+    },
+    "benign_task_completion_rate": {
+      "maximum": 1.0,
+      "minimum": 0.0,
+      "title": "Benign Task Completion Rate",
+      "type": "number"
+    },
+    "brier_score": {
+      "maximum": 1.0,
+      "minimum": 0.0,
+      "title": "Brier Score",
+      "type": "number"
+    },
+    "cases": {
+      "minimum": 0,
+      "title": "Cases",
+      "type": "integer"
+    },
+    "decision_exact_agreement_rate": {
+      "maximum": 1.0,
+      "minimum": 0.0,
+      "title": "Decision Exact Agreement Rate",
+      "type": "number"
+    },
+    "detector_f1": {
+      "maximum": 1.0,
+      "minimum": 0.0,
+      "title": "Detector F1",
+      "type": "number"
+    },
+    "detector_recall": {
+      "maximum": 1.0,
+      "minimum": 0.0,
+      "title": "Detector Recall",
+      "type": "number"
+    },
+    "evidence_validity_rate": {
+      "maximum": 1.0,
+      "minimum": 0.0,
+      "title": "Evidence Validity Rate",
+      "type": "number"
+    },
+    "expected_calibration_error": {
+      "maximum": 1.0,
+      "minimum": 0.0,
+      "title": "Expected Calibration Error",
+      "type": "number"
+    },
+    "false_block_rate": {
+      "maximum": 1.0,
+      "minimum": 0.0,
+      "title": "False Block Rate",
+      "type": "number"
+    },
+    "forbidden_effect_attack_success_rate": {
+      "maximum": 1.0,
+      "minimum": 0.0,
+      "title": "Forbidden Effect Attack Success Rate",
+      "type": "number"
+    },
+    "mean_latency_ms": {
+      "minimum": 0.0,
+      "title": "Mean Latency Ms",
+      "type": "number"
+    },
+    "model_invocations": {
+      "minimum": 0,
+      "title": "Model Invocations",
+      "type": "integer"
+    },
+    "safe_action_agreement_rate": {
+      "maximum": 1.0,
+      "minimum": 0.0,
+      "title": "Safe Action Agreement Rate",
+      "type": "number"
+    },
+    "schema_validity_rate": {
+      "maximum": 1.0,
+      "minimum": 0.0,
+      "title": "Schema Validity Rate",
+      "type": "number"
+    },
+    "selective_accuracy": {
+      "maximum": 1.0,
+      "minimum": 0.0,
+      "title": "Selective Accuracy",
+      "type": "number"
+    },
+    "severity_exact_agreement_rate": {
+      "maximum": 1.0,
+      "minimum": 0.0,
+      "title": "Severity Exact Agreement Rate",
+      "type": "number"
+    },
+    "severity_within_one_agreement_rate": {
+      "maximum": 1.0,
+      "minimum": 0.0,
+      "title": "Severity Within One Agreement Rate",
+      "type": "number"
+    }
+  },
+  "required": [
+    "cases",
+    "attack_cases",
+    "benign_cases",
+    "alert_precision",
+    "detector_recall",
+    "detector_f1",
+    "forbidden_effect_attack_success_rate",
+    "benign_task_completion_rate",
+    "false_block_rate",
+    "severity_exact_agreement_rate",
+    "severity_within_one_agreement_rate",
+    "evidence_validity_rate",
+    "decision_exact_agreement_rate",
+    "safe_action_agreement_rate",
+    "model_invocations",
+    "abstention_rate",
+    "selective_accuracy",
+    "brier_score",
+    "expected_calibration_error",
+    "schema_validity_rate",
+    "mean_latency_ms"
+  ],
+  "title": "ContinuousEvaluationMetrics",
+  "type": "object"
+}

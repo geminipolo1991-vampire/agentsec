@@ -1,0 +1,33 @@
+{
+  "schema_version": "1.0.0",
+  "policy_version": "agentsec-external-api-2026-07-24.1",
+  "clients": [
+    {
+      "client_id": "client://soc-siem-reader",
+      "tenant_id": "tenant-lab",
+      "token_env": "AGENTSEC_EXTERNAL_SIEM_TOKEN",
+      "scopes": [
+        "external:capabilities",
+        "external:events:read",
+        "external:search",
+        "external:entities:read",
+        "external:rules:read",
+        "external:findings:read",
+        "external:incidents:read",
+        "external:integrations:read"
+      ],
+      "enabled": true
+    },
+    {
+      "client_id": "client://integration-operator",
+      "tenant_id": "tenant-lab",
+      "token_env": "AGENTSEC_EXTERNAL_OPERATOR_TOKEN",
+      "scopes": [
+        "external:capabilities",
+        "external:integrations:read",
+        "external:integrations:operate"
+      ],
+      "enabled": true
+    }
+  ]
+}

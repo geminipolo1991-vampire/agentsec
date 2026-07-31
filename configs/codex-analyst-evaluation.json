@@ -1,0 +1,45 @@
+{
+  "schema_version": "1.0.0",
+  "provider": "codex",
+  "model_id": "codex-interactive-session",
+  "recording_id": "codex-analyst-2026-07-24-loop-14",
+  "roles": {
+    "triage": {
+      "summary": "The recorded evidence supports {priority} handling; deterministic action {deterministic_action} remains authoritative while context gaps stay visible.",
+      "confidence": 0.94,
+      "reason_codes": ["CODEX_RECORDED_TRIAGE", "EVIDENCE_BOUND"],
+      "uncertainties": ["Metadata cannot by itself prove real-world compromise."]
+    },
+    "investigation": {
+      "summary": "The bounded investigation connects detector, enrichment, and risk evidence without treating any embedded evidence text as instructions.",
+      "hypothesis": "The observed AI-agent behavior is consistent with the detected security condition; independent evidence should confirm scope before broader containment.",
+      "confidence": 0.91,
+      "reason_codes": ["CODEX_RECORDED_INVESTIGATION", "ALTERNATIVES_CONSIDERED"],
+      "uncertainties": ["Only the supplied metadata evidence was reviewed."]
+    },
+    "judge": {
+      "summary": "The cited evidence supports preserving deterministic action {deterministic_action}; this recorded judgment has no executive authority.",
+      "confidence": 0.96,
+      "reason_codes": ["CODEX_RECORDED_JUDGE", "DETERMINISTIC_AUTHORITY_PRESERVED"],
+      "uncertainties": ["Semantic confidence does not replace policy validation."]
+    },
+    "escalation": {
+      "summary": "Escalation should follow the recorded {priority} route and retain the evidence manifest for human review.",
+      "confidence": 0.9,
+      "reason_codes": ["CODEX_RECORDED_ESCALATION", "HUMAN_REVIEW_ROUTE"],
+      "uncertainties": ["Team availability and business ownership are not model evidence."],
+      "escalation_advice": "Use the deterministic priority, queue, and SLA; page a human for P0/P1 or any role disagreement."
+    },
+    "response_advisor": {
+      "summary": "Response advice is read-only: preserve the deterministic control, validate scope, and prefer reversible human-approved containment.",
+      "confidence": 0.9,
+      "reason_codes": ["CODEX_RECORDED_RESPONSE_ADVICE", "NO_TOOL_AUTHORITY"],
+      "uncertainties": ["No response connector state or rollback proof was supplied."],
+      "response_advice": [
+        "Preserve the recorded block or approval hold.",
+        "Ask a human owner to validate affected agent, session, and destination scope.",
+        "Use only certified reversible playbooks after explicit approval."
+      ]
+    }
+  }
+}

@@ -1,0 +1,652 @@
+{
+  "$defs": {
+    "AgentEvent": {
+      "additionalProperties": false,
+      "description": "Metadata-only observation of a proposed AI-agent effect.",
+      "properties": {
+        "agent_id": {
+          "maxLength": 128,
+          "minLength": 1,
+          "title": "Agent Id",
+          "type": "string"
+        },
+        "approval_present": {
+          "default": false,
+          "title": "Approval Present",
+          "type": "boolean"
+        },
+        "attributes": {
+          "additionalProperties": {
+            "type": "string"
+          },
+          "title": "Attributes",
+          "type": "object"
+        },
+        "authority_operations": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Authority Operations",
+          "type": "array",
+          "uniqueItems": true
+        },
+        "data_classes": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Data Classes",
+          "type": "array",
+          "uniqueItems": true
+        },
+        "declared_tool_schema_digest": {
+          "anyOf": [
+            {
+              "maxLength": 128,
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Declared Tool Schema Digest"
+        },
+        "destination": {
+          "anyOf": [
+            {
+              "maxLength": 512,
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Destination"
+        },
+        "event_id": {
+          "maxLength": 128,
+          "minLength": 5,
+          "title": "Event Id",
+          "type": "string"
+        },
+        "flow_id": {
+          "maxLength": 128,
+          "minLength": 1,
+          "title": "Flow Id",
+          "type": "string"
+        },
+        "indicators": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Indicators",
+          "type": "array",
+          "uniqueItems": true
+        },
+        "is_effectful": {
+          "default": true,
+          "title": "Is Effectful",
+          "type": "boolean"
+        },
+        "observed_tool_schema_digest": {
+          "anyOf": [
+            {
+              "maxLength": 128,
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Observed Tool Schema Digest"
+        },
+        "occurred_at": {
+          "format": "date-time",
+          "title": "Occurred At",
+          "type": "string"
+        },
+        "operation": {
+          "maxLength": 128,
+          "minLength": 1,
+          "title": "Operation",
+          "type": "string"
+        },
+        "resource": {
+          "maxLength": 512,
+          "minLength": 1,
+          "title": "Resource",
+          "type": "string"
+        },
+        "schema_version": {
+          "default": "1.0.0",
+          "title": "Schema Version",
+          "type": "string"
+        },
+        "source_id": {
+          "maxLength": 256,
+          "minLength": 1,
+          "title": "Source Id",
+          "type": "string"
+        },
+        "source_trust": {
+          "$ref": "#/$defs/TrustClass"
+        },
+        "source_type": {
+          "maxLength": 64,
+          "minLength": 1,
+          "title": "Source Type",
+          "type": "string"
+        },
+        "tenant_id": {
+          "maxLength": 128,
+          "minLength": 1,
+          "title": "Tenant Id",
+          "type": "string"
+        },
+        "tool_name": {
+          "anyOf": [
+            {
+              "maxLength": 128,
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Tool Name"
+        }
+      },
+      "required": [
+        "tenant_id",
+        "flow_id",
+        "agent_id",
+        "operation",
+        "resource",
+        "source_type",
+        "source_id",
+        "source_trust"
+      ],
+      "title": "AgentEvent",
+      "type": "object"
+    },
+    "DecisionAction": {
+      "enum": [
+        "allow",
+        "allow_with_obligations",
+        "require_approval",
+        "deny"
+      ],
+      "title": "DecisionAction",
+      "type": "string"
+    },
+    "ScenarioGroundTruth": {
+      "additionalProperties": false,
+      "properties": {
+        "expected_alert_types": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Expected Alert Types",
+          "type": "array",
+          "uniqueItems": true
+        },
+        "expected_protected_action": {
+          "$ref": "#/$defs/DecisionAction"
+        },
+        "forbidden_completed_operations": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Forbidden Completed Operations",
+          "type": "array",
+          "uniqueItems": true
+        },
+        "required_completed_operations": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Required Completed Operations",
+          "type": "array",
+          "uniqueItems": true
+        }
+      },
+      "required": [
+        "expected_protected_action"
+      ],
+      "title": "ScenarioGroundTruth",
+      "type": "object"
+    },
+    "SimulationHealth": {
+      "additionalProperties": false,
+      "properties": {
+        "audit_valid": {
+          "title": "Audit Valid",
+          "type": "boolean"
+        },
+        "calculated_at": {
+          "format": "date-time",
+          "title": "Calculated At",
+          "type": "string"
+        },
+        "failed_runs": {
+          "minimum": 0,
+          "title": "Failed Runs",
+          "type": "integer"
+        },
+        "imported_unreviewed": {
+          "minimum": 0,
+          "title": "Imported Unreviewed",
+          "type": "integer"
+        },
+        "network_enabled": {
+          "default": false,
+          "title": "Network Enabled",
+          "type": "boolean"
+        },
+        "passed_runs": {
+          "minimum": 0,
+          "title": "Passed Runs",
+          "type": "integer"
+        },
+        "raw_content_retained": {
+          "default": false,
+          "title": "Raw Content Retained",
+          "type": "boolean"
+        },
+        "runs": {
+          "minimum": 0,
+          "title": "Runs",
+          "type": "integer"
+        },
+        "sandbox": {
+          "default": "mock_effects_only",
+          "title": "Sandbox",
+          "type": "string"
+        },
+        "scenarios": {
+          "minimum": 0,
+          "title": "Scenarios",
+          "type": "integer"
+        },
+        "schema_version": {
+          "default": "1.0.0",
+          "title": "Schema Version",
+          "type": "string"
+        },
+        "status": {
+          "pattern": "^(healthy|degraded)$",
+          "title": "Status",
+          "type": "string"
+        },
+        "tenant_id": {
+          "title": "Tenant Id",
+          "type": "string"
+        },
+        "trusted_scenarios": {
+          "minimum": 0,
+          "title": "Trusted Scenarios",
+          "type": "integer"
+        }
+      },
+      "required": [
+        "status",
+        "tenant_id",
+        "scenarios",
+        "trusted_scenarios",
+        "imported_unreviewed",
+        "runs",
+        "passed_runs",
+        "failed_runs",
+        "audit_valid"
+      ],
+      "title": "SimulationHealth",
+      "type": "object"
+    },
+    "SimulationScenario": {
+      "additionalProperties": false,
+      "properties": {
+        "attack": {
+          "title": "Attack",
+          "type": "boolean"
+        },
+        "created_at": {
+          "format": "date-time",
+          "title": "Created At",
+          "type": "string"
+        },
+        "created_by": {
+          "maxLength": 256,
+          "title": "Created By",
+          "type": "string"
+        },
+        "dataset_split": {
+          "pattern": "^(development|validation|holdout)$",
+          "title": "Dataset Split",
+          "type": "string"
+        },
+        "description": {
+          "maxLength": 1024,
+          "minLength": 3,
+          "title": "Description",
+          "type": "string"
+        },
+        "framework_mappings": {
+          "items": {
+            "type": "string"
+          },
+          "maxItems": 32,
+          "minItems": 1,
+          "title": "Framework Mappings",
+          "type": "array"
+        },
+        "name": {
+          "maxLength": 256,
+          "minLength": 3,
+          "title": "Name",
+          "type": "string"
+        },
+        "parent_scenario_id": {
+          "anyOf": [
+            {
+              "pattern": "^sim_[a-z0-9_]{3,96}$",
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Parent Scenario Id"
+        },
+        "parent_version": {
+          "anyOf": [
+            {
+              "pattern": "^[0-9]+\\.[0-9]+\\.[0-9]+$",
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Parent Version"
+        },
+        "record_sha256": {
+          "pattern": "^[0-9a-f]{64}$",
+          "title": "Record Sha256",
+          "type": "string"
+        },
+        "scenario_id": {
+          "pattern": "^sim_[a-z0-9_]{3,96}$",
+          "title": "Scenario Id",
+          "type": "string"
+        },
+        "schema_version": {
+          "default": "1.0.0",
+          "title": "Schema Version",
+          "type": "string"
+        },
+        "source": {
+          "$ref": "#/$defs/SimulationScenarioSource"
+        },
+        "steps": {
+          "items": {
+            "$ref": "#/$defs/SimulationScenarioStep"
+          },
+          "maxItems": 8,
+          "minItems": 1,
+          "title": "Steps",
+          "type": "array"
+        },
+        "tags": {
+          "items": {
+            "type": "string"
+          },
+          "maxItems": 32,
+          "title": "Tags",
+          "type": "array"
+        },
+        "tenant_id": {
+          "maxLength": 128,
+          "minLength": 1,
+          "title": "Tenant Id",
+          "type": "string"
+        },
+        "trusted_ground_truth": {
+          "title": "Trusted Ground Truth",
+          "type": "boolean"
+        },
+        "variant": {
+          "$ref": "#/$defs/SimulationVariant"
+        },
+        "version": {
+          "pattern": "^[0-9]+\\.[0-9]+\\.[0-9]+$",
+          "title": "Version",
+          "type": "string"
+        }
+      },
+      "required": [
+        "scenario_id",
+        "version",
+        "name",
+        "description",
+        "attack",
+        "dataset_split",
+        "framework_mappings",
+        "variant",
+        "steps",
+        "tenant_id",
+        "source",
+        "trusted_ground_truth",
+        "created_by",
+        "created_at",
+        "record_sha256"
+      ],
+      "title": "SimulationScenario",
+      "type": "object"
+    },
+    "SimulationScenarioPage": {
+      "additionalProperties": false,
+      "properties": {
+        "count": {
+          "maximum": 200,
+          "minimum": 0,
+          "title": "Count",
+          "type": "integer"
+        },
+        "scenarios": {
+          "items": {
+            "$ref": "#/$defs/SimulationScenario"
+          },
+          "maxItems": 200,
+          "title": "Scenarios",
+          "type": "array"
+        },
+        "schema_version": {
+          "default": "1.0.0",
+          "title": "Schema Version",
+          "type": "string"
+        },
+        "total": {
+          "minimum": 0,
+          "title": "Total",
+          "type": "integer"
+        }
+      },
+      "required": [
+        "scenarios",
+        "count",
+        "total"
+      ],
+      "title": "SimulationScenarioPage",
+      "type": "object"
+    },
+    "SimulationScenarioSource": {
+      "enum": [
+        "built_in",
+        "derived",
+        "imported"
+      ],
+      "title": "SimulationScenarioSource",
+      "type": "string"
+    },
+    "SimulationScenarioStep": {
+      "additionalProperties": false,
+      "properties": {
+        "attack_stage": {
+          "pattern": "^[a-z][a-z0-9_]{2,63}$",
+          "title": "Attack Stage",
+          "type": "string"
+        },
+        "event": {
+          "$ref": "#/$defs/AgentEvent"
+        },
+        "ground_truth": {
+          "$ref": "#/$defs/ScenarioGroundTruth"
+        },
+        "sequence": {
+          "maximum": 8,
+          "minimum": 1,
+          "title": "Sequence",
+          "type": "integer"
+        },
+        "step_id": {
+          "pattern": "^step_[a-z0-9_]{3,64}$",
+          "title": "Step Id",
+          "type": "string"
+        },
+        "stimulus_sha256": {
+          "pattern": "^[0-9a-f]{64}$",
+          "title": "Stimulus Sha256",
+          "type": "string"
+        },
+        "title": {
+          "maxLength": 256,
+          "minLength": 3,
+          "title": "Title",
+          "type": "string"
+        }
+      },
+      "required": [
+        "step_id",
+        "sequence",
+        "title",
+        "attack_stage",
+        "event",
+        "ground_truth",
+        "stimulus_sha256"
+      ],
+      "title": "SimulationScenarioStep",
+      "type": "object"
+    },
+    "SimulationVariant": {
+      "enum": [
+        "plain",
+        "japanese",
+        "spanish",
+        "unicode_confusable",
+        "zero_width",
+        "base64",
+        "mixed_obfuscation"
+      ],
+      "title": "SimulationVariant",
+      "type": "string"
+    },
+    "SimulationVariantProfile": {
+      "additionalProperties": false,
+      "properties": {
+        "locale": {
+          "pattern": "^[a-z]{2}(?:-[A-Z]{2})?$",
+          "title": "Locale",
+          "type": "string"
+        },
+        "normalized_signal_required": {
+          "default": true,
+          "title": "Normalized Signal Required",
+          "type": "boolean"
+        },
+        "qualification_boundary": {
+          "maxLength": 512,
+          "minLength": 3,
+          "title": "Qualification Boundary",
+          "type": "string"
+        },
+        "raw_content_retained": {
+          "default": false,
+          "title": "Raw Content Retained",
+          "type": "boolean"
+        },
+        "transformations": {
+          "items": {
+            "type": "string"
+          },
+          "maxItems": 8,
+          "title": "Transformations",
+          "type": "array"
+        },
+        "variant": {
+          "$ref": "#/$defs/SimulationVariant"
+        }
+      },
+      "required": [
+        "variant",
+        "locale",
+        "transformations",
+        "qualification_boundary"
+      ],
+      "title": "SimulationVariantProfile",
+      "type": "object"
+    },
+    "TrustClass": {
+      "enum": [
+        "trusted-control",
+        "authenticated-user",
+        "internal-data",
+        "external-untrusted",
+        "suspected-adversarial",
+        "unknown"
+      ],
+      "title": "TrustClass",
+      "type": "string"
+    }
+  },
+  "additionalProperties": false,
+  "properties": {
+    "health": {
+      "$ref": "#/$defs/SimulationHealth"
+    },
+    "safety_invariants": {
+      "items": {
+        "type": "string"
+      },
+      "title": "Safety Invariants",
+      "type": "array"
+    },
+    "scenarios": {
+      "$ref": "#/$defs/SimulationScenarioPage"
+    },
+    "schema_version": {
+      "default": "1.0.0",
+      "title": "Schema Version",
+      "type": "string"
+    },
+    "variants": {
+      "items": {
+        "$ref": "#/$defs/SimulationVariantProfile"
+      },
+      "title": "Variants",
+      "type": "array"
+    }
+  },
+  "required": [
+    "health",
+    "variants",
+    "scenarios",
+    "safety_invariants"
+  ],
+  "title": "SimulationCatalog",
+  "type": "object"
+}

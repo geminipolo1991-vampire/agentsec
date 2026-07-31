@@ -1,0 +1,22 @@
+{
+  "additionalProperties": false,
+  "properties": {
+    "expected_version": {
+      "minimum": 1,
+      "title": "Expected Version",
+      "type": "integer"
+    },
+    "note": {
+      "maxLength": 512,
+      "minLength": 3,
+      "title": "Note",
+      "type": "string"
+    }
+  },
+  "required": [
+    "expected_version",
+    "note"
+  ],
+  "title": "NotificationAcknowledgeRequest",
+  "type": "object"
+}

@@ -1,0 +1,87 @@
+{
+  "$defs": {
+    "AnalystClaimOperator": {
+      "enum": [
+        "equals",
+        "contains",
+        "exists"
+      ],
+      "title": "AnalystClaimOperator",
+      "type": "string"
+    }
+  },
+  "additionalProperties": false,
+  "description": "A bounded, machine-checkable assertion made by one analyst role.",
+  "properties": {
+    "claim_id": {
+      "pattern": "^acm_[0-9a-f]{32}$",
+      "title": "Claim Id",
+      "type": "string"
+    },
+    "evidence_ids": {
+      "items": {
+        "type": "string"
+      },
+      "maxItems": 16,
+      "minItems": 1,
+      "title": "Evidence Ids",
+      "type": "array"
+    },
+    "expected_value": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "boolean"
+        },
+        {
+          "type": "integer"
+        },
+        {
+          "type": "number"
+        },
+        {
+          "items": {
+            "type": "string"
+          },
+          "type": "array"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Expected Value"
+    },
+    "fact_key": {
+      "pattern": "^[a-z][a-z0-9_]{1,63}$",
+      "title": "Fact Key",
+      "type": "string"
+    },
+    "operator": {
+      "$ref": "#/$defs/AnalystClaimOperator"
+    },
+    "statement": {
+      "maxLength": 512,
+      "minLength": 3,
+      "title": "Statement",
+      "type": "string"
+    },
+    "subject": {
+      "maxLength": 128,
+      "minLength": 1,
+      "title": "Subject",
+      "type": "string"
+    }
+  },
+  "required": [
+    "statement",
+    "subject",
+    "fact_key",
+    "operator",
+    "evidence_ids"
+  ],
+  "title": "AnalystClaim",
+  "type": "object"
+}

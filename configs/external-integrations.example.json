@@ -1,0 +1,74 @@
+{
+  "schema_version": "1.0.0",
+  "policy_version": "agentsec-external-2026-07-24.1",
+  "tenant_id": "tenant-lab",
+  "destinations": [
+    {
+      "destination_id": "integration://splunk-primary",
+      "name": "Splunk HEC with indexer acknowledgment",
+      "kind": "splunk_hec",
+      "endpoint": "https://splunk.invalid:8088/services/collector/event",
+      "allowed_hosts": ["splunk.invalid"],
+      "credential_env": "AGENTSEC_SPLUNK_HEC_TOKEN",
+      "index": "agentsec",
+      "sourcetype": "agentsec:finding",
+      "indexer_ack": true,
+      "enabled": false,
+      "max_attempts": 5,
+      "retry_base_seconds": 10
+    },
+    {
+      "destination_id": "integration://elastic-primary",
+      "name": "Elastic Security bulk index",
+      "kind": "elastic_bulk",
+      "endpoint": "https://elastic.invalid:9243/_bulk",
+      "allowed_hosts": ["elastic.invalid"],
+      "credential_env": "AGENTSEC_ELASTIC_API_KEY",
+      "index": "agentsec-findings",
+      "enabled": false,
+      "max_attempts": 5,
+      "retry_base_seconds": 10
+    },
+    {
+      "destination_id": "integration://signed-webhook",
+      "name": "Signed SOC webhook",
+      "kind": "signed_webhook",
+      "endpoint": "https://webhook.invalid/v1/agentsec/events",
+      "allowed_hosts": ["webhook.invalid"],
+      "credential_env": "AGENTSEC_WEBHOOK_SIGNING_SECRET",
+      "enabled": false,
+      "max_attempts": 5,
+      "retry_base_seconds": 10
+    },
+    {
+      "destination_id": "integration://syslog-tls",
+      "name": "RFC 5424 syslog over TLS",
+      "kind": "syslog_tls",
+      "endpoint": "tls://syslog.invalid:6514",
+      "allowed_hosts": ["syslog.invalid"],
+      "enabled": false,
+      "max_attempts": 5,
+      "retry_base_seconds": 10
+    },
+    {
+      "destination_id": "integration://cef-tls",
+      "name": "ArcSight CEF over TLS",
+      "kind": "cef_tls",
+      "endpoint": "tls://cef.invalid:6514",
+      "allowed_hosts": ["cef.invalid"],
+      "enabled": false,
+      "max_attempts": 5,
+      "retry_base_seconds": 10
+    },
+    {
+      "destination_id": "integration://otlp-logs",
+      "name": "OpenTelemetry logs OTLP HTTP JSON",
+      "kind": "otlp_http_json",
+      "endpoint": "https://otel.invalid:4318/v1/logs",
+      "allowed_hosts": ["otel.invalid"],
+      "enabled": false,
+      "max_attempts": 5,
+      "retry_base_seconds": 10
+    }
+  ]
+}

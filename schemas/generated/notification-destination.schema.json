@@ -1,0 +1,71 @@
+{
+  "$defs": {
+    "NotificationChannel": {
+      "enum": [
+        "on_call",
+        "ticket",
+        "email",
+        "messaging"
+      ],
+      "title": "NotificationChannel",
+      "type": "string"
+    }
+  },
+  "additionalProperties": false,
+  "properties": {
+    "allowed_hosts": {
+      "items": {
+        "type": "string"
+      },
+      "maxItems": 16,
+      "minItems": 1,
+      "title": "Allowed Hosts",
+      "type": "array"
+    },
+    "channel": {
+      "$ref": "#/$defs/NotificationChannel"
+    },
+    "credential_env": {
+      "pattern": "^[A-Z][A-Z0-9_]{2,127}$",
+      "title": "Credential Env",
+      "type": "string"
+    },
+    "destination_id": {
+      "pattern": "^destination://[A-Za-z0-9_.@/-]+$",
+      "title": "Destination Id",
+      "type": "string"
+    },
+    "enabled": {
+      "default": true,
+      "title": "Enabled",
+      "type": "boolean"
+    },
+    "endpoint": {
+      "maxLength": 512,
+      "minLength": 12,
+      "title": "Endpoint",
+      "type": "string"
+    },
+    "name": {
+      "maxLength": 128,
+      "minLength": 3,
+      "title": "Name",
+      "type": "string"
+    },
+    "provider_ack_required": {
+      "default": false,
+      "title": "Provider Ack Required",
+      "type": "boolean"
+    }
+  },
+  "required": [
+    "destination_id",
+    "name",
+    "channel",
+    "endpoint",
+    "allowed_hosts",
+    "credential_env"
+  ],
+  "title": "NotificationDestination",
+  "type": "object"
+}

@@ -1,0 +1,47 @@
+{
+  "additionalProperties": false,
+  "properties": {
+    "comparison": {
+      "pattern": "^(gte|lte)$",
+      "title": "Comparison",
+      "type": "string"
+    },
+    "metric": {
+      "pattern": "^(availability|latency_ms|durability|detector_lag_ms)$",
+      "title": "Metric",
+      "type": "string"
+    },
+    "name": {
+      "maxLength": 128,
+      "minLength": 3,
+      "title": "Name",
+      "type": "string"
+    },
+    "objective_id": {
+      "pattern": "^slo://[A-Za-z0-9_.@/-]+$",
+      "title": "Objective Id",
+      "type": "string"
+    },
+    "target": {
+      "exclusiveMinimum": 0,
+      "title": "Target",
+      "type": "number"
+    },
+    "window_minutes": {
+      "maximum": 525600,
+      "minimum": 1,
+      "title": "Window Minutes",
+      "type": "integer"
+    }
+  },
+  "required": [
+    "objective_id",
+    "name",
+    "metric",
+    "comparison",
+    "target",
+    "window_minutes"
+  ],
+  "title": "ServiceLevelObjective",
+  "type": "object"
+}

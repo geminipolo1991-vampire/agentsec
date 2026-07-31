@@ -1,0 +1,104 @@
+{
+  "$defs": {
+    "PostureExceptionStatus": {
+      "enum": [
+        "active",
+        "expired",
+        "revoked"
+      ],
+      "title": "PostureExceptionStatus",
+      "type": "string"
+    }
+  },
+  "additionalProperties": false,
+  "properties": {
+    "approved_by": {
+      "title": "Approved By",
+      "type": "string"
+    },
+    "created_at": {
+      "format": "date-time",
+      "title": "Created At",
+      "type": "string"
+    },
+    "exception_id": {
+      "pattern": "^pste_[A-Za-z0-9]+$",
+      "title": "Exception Id",
+      "type": "string"
+    },
+    "expires_at": {
+      "format": "date-time",
+      "title": "Expires At",
+      "type": "string"
+    },
+    "finding_id": {
+      "title": "Finding Id",
+      "type": "string"
+    },
+    "owner_ref": {
+      "title": "Owner Ref",
+      "type": "string"
+    },
+    "reason": {
+      "title": "Reason",
+      "type": "string"
+    },
+    "revoke_reason": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Revoke Reason"
+    },
+    "revoked_at": {
+      "anyOf": [
+        {
+          "format": "date-time",
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Revoked At"
+    },
+    "revoked_by": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Revoked By"
+    },
+    "status": {
+      "$ref": "#/$defs/PostureExceptionStatus"
+    },
+    "tenant_id": {
+      "title": "Tenant Id",
+      "type": "string"
+    }
+  },
+  "required": [
+    "exception_id",
+    "tenant_id",
+    "finding_id",
+    "reason",
+    "owner_ref",
+    "approved_by",
+    "status",
+    "created_at",
+    "expires_at"
+  ],
+  "title": "PostureException",
+  "type": "object"
+}

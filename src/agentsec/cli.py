@@ -12,7 +12,7 @@ from .pipeline import SecurityPipeline
 from .contracts import AiMode
 from .reasoning import RecordedCodexReasoner
 from .evaluation import EvaluationMode, EvaluationRunner
-from .service import AuthorizationApplication, serve
+from .service import application_from_environment, serve
 from .runtime import build_pipeline_from_environment
 from .scenarios import forge_scenarios
 from .synthetic import ControlledToolGateway, SyntheticSocWorkflow, forge_scenario_definitions
@@ -199,7 +199,7 @@ def main(argv: Optional[List[str]] = None) -> int:
             host=args.host,
             port=args.port,
             bearer_token=token,
-            application=AuthorizationApplication(build_pipeline_from_environment()),
+            application=application_from_environment(build_pipeline_from_environment()),
         )
         return 0
     raise AssertionError("unreachable")

@@ -1,0 +1,338 @@
+{
+  "$defs": {
+    "DecisionAction": {
+      "enum": [
+        "allow",
+        "allow_with_obligations",
+        "require_approval",
+        "deny"
+      ],
+      "title": "DecisionAction",
+      "type": "string"
+    },
+    "DetectionExecutionMode": {
+      "enum": [
+        "streaming",
+        "scheduled",
+        "both"
+      ],
+      "title": "DetectionExecutionMode",
+      "type": "string"
+    },
+    "DetectionExecutionRecord": {
+      "additionalProperties": false,
+      "properties": {
+        "alert_ids": {
+          "items": {
+            "type": "string"
+          },
+          "maxItems": 256,
+          "title": "Alert Ids",
+          "type": "array"
+        },
+        "completed_at": {
+          "format": "date-time",
+          "title": "Completed At",
+          "type": "string"
+        },
+        "duration_ms": {
+          "minimum": 0,
+          "title": "Duration Ms",
+          "type": "integer"
+        },
+        "error_code": {
+          "anyOf": [
+            {
+              "maxLength": 128,
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Error Code"
+        },
+        "evaluated_event_count": {
+          "maximum": 10000,
+          "minimum": 0,
+          "title": "Evaluated Event Count",
+          "type": "integer"
+        },
+        "execution_id": {
+          "pattern": "^dexe_[A-Za-z0-9]+$",
+          "title": "Execution Id",
+          "type": "string"
+        },
+        "matched_event_ids": {
+          "items": {
+            "type": "string"
+          },
+          "maxItems": 256,
+          "title": "Matched Event Ids",
+          "type": "array"
+        },
+        "mode": {
+          "$ref": "#/$defs/DetectionExecutionMode"
+        },
+        "rule_id": {
+          "title": "Rule Id",
+          "type": "string"
+        },
+        "rule_version": {
+          "title": "Rule Version",
+          "type": "string"
+        },
+        "started_at": {
+          "format": "date-time",
+          "title": "Started At",
+          "type": "string"
+        },
+        "status": {
+          "$ref": "#/$defs/DetectionExecutionStatus"
+        },
+        "tenant_id": {
+          "title": "Tenant Id",
+          "type": "string"
+        }
+      },
+      "required": [
+        "execution_id",
+        "tenant_id",
+        "rule_id",
+        "rule_version",
+        "mode",
+        "status",
+        "evaluated_event_count",
+        "duration_ms",
+        "started_at",
+        "completed_at"
+      ],
+      "title": "DetectionExecutionRecord",
+      "type": "object"
+    },
+    "DetectionExecutionStatus": {
+      "enum": [
+        "matched",
+        "no_match",
+        "error"
+      ],
+      "title": "DetectionExecutionStatus",
+      "type": "string"
+    },
+    "SecurityAlert": {
+      "additionalProperties": false,
+      "properties": {
+        "agent_id": {
+          "title": "Agent Id",
+          "type": "string"
+        },
+        "alert_id": {
+          "title": "Alert Id",
+          "type": "string"
+        },
+        "alert_type": {
+          "title": "Alert Type",
+          "type": "string"
+        },
+        "confidence": {
+          "maximum": 1.0,
+          "minimum": 0.0,
+          "title": "Confidence",
+          "type": "number"
+        },
+        "destination": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Destination"
+        },
+        "detected_at": {
+          "format": "date-time",
+          "title": "Detected At",
+          "type": "string"
+        },
+        "detector_id": {
+          "title": "Detector Id",
+          "type": "string"
+        },
+        "event_id": {
+          "title": "Event Id",
+          "type": "string"
+        },
+        "evidence": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Evidence",
+          "type": "array"
+        },
+        "fingerprint": {
+          "title": "Fingerprint",
+          "type": "string"
+        },
+        "flow_id": {
+          "title": "Flow Id",
+          "type": "string"
+        },
+        "framework_mappings": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Framework Mappings",
+          "type": "array"
+        },
+        "operation": {
+          "title": "Operation",
+          "type": "string"
+        },
+        "reason_codes": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Reason Codes",
+          "type": "array"
+        },
+        "recommended_action": {
+          "$ref": "#/$defs/DecisionAction"
+        },
+        "resource": {
+          "title": "Resource",
+          "type": "string"
+        },
+        "rule_version": {
+          "default": "1.0.0",
+          "title": "Rule Version",
+          "type": "string"
+        },
+        "schema_version": {
+          "default": "1.0.0",
+          "title": "Schema Version",
+          "type": "string"
+        },
+        "severity": {
+          "$ref": "#/$defs/Severity"
+        },
+        "source_trust": {
+          "$ref": "#/$defs/TrustClass"
+        },
+        "tenant_id": {
+          "title": "Tenant Id",
+          "type": "string"
+        },
+        "title": {
+          "title": "Title",
+          "type": "string"
+        }
+      },
+      "required": [
+        "fingerprint",
+        "event_id",
+        "tenant_id",
+        "flow_id",
+        "agent_id",
+        "alert_type",
+        "title",
+        "severity",
+        "confidence",
+        "source_trust",
+        "operation",
+        "resource",
+        "detector_id",
+        "reason_codes",
+        "evidence",
+        "recommended_action"
+      ],
+      "title": "SecurityAlert",
+      "type": "object"
+    },
+    "Severity": {
+      "enum": [
+        "info",
+        "low",
+        "medium",
+        "high",
+        "critical"
+      ],
+      "title": "Severity",
+      "type": "string"
+    },
+    "TrustClass": {
+      "enum": [
+        "trusted-control",
+        "authenticated-user",
+        "internal-data",
+        "external-untrusted",
+        "suspected-adversarial",
+        "unknown"
+      ],
+      "title": "TrustClass",
+      "type": "string"
+    }
+  },
+  "additionalProperties": false,
+  "properties": {
+    "alerts": {
+      "items": {
+        "$ref": "#/$defs/SecurityAlert"
+      },
+      "maxItems": 10000,
+      "title": "Alerts",
+      "type": "array"
+    },
+    "completed_at": {
+      "format": "date-time",
+      "title": "Completed At",
+      "type": "string"
+    },
+    "errors": {
+      "items": {
+        "type": "string"
+      },
+      "maxItems": 512,
+      "title": "Errors",
+      "type": "array"
+    },
+    "evaluated_event_count": {
+      "maximum": 10000,
+      "minimum": 0,
+      "title": "Evaluated Event Count",
+      "type": "integer"
+    },
+    "executions": {
+      "items": {
+        "$ref": "#/$defs/DetectionExecutionRecord"
+      },
+      "maxItems": 512,
+      "title": "Executions",
+      "type": "array"
+    },
+    "mode": {
+      "$ref": "#/$defs/DetectionExecutionMode"
+    },
+    "started_at": {
+      "format": "date-time",
+      "title": "Started At",
+      "type": "string"
+    },
+    "tenant_id": {
+      "title": "Tenant Id",
+      "type": "string"
+    }
+  },
+  "required": [
+    "tenant_id",
+    "mode",
+    "evaluated_event_count",
+    "started_at",
+    "completed_at"
+  ],
+  "title": "DetectionBatchResult",
+  "type": "object"
+}

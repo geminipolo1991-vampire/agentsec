@@ -1,0 +1,58 @@
+{
+  "$defs": {
+    "NotificationChannel": {
+      "enum": [
+        "on_call",
+        "ticket",
+        "email",
+        "messaging"
+      ],
+      "title": "NotificationChannel",
+      "type": "string"
+    }
+  },
+  "additionalProperties": false,
+  "properties": {
+    "body_template": {
+      "maxLength": 1024,
+      "minLength": 3,
+      "title": "Body Template",
+      "type": "string"
+    },
+    "channel": {
+      "$ref": "#/$defs/NotificationChannel"
+    },
+    "name": {
+      "maxLength": 128,
+      "minLength": 3,
+      "title": "Name",
+      "type": "string"
+    },
+    "subject_template": {
+      "maxLength": 256,
+      "minLength": 3,
+      "title": "Subject Template",
+      "type": "string"
+    },
+    "template_id": {
+      "pattern": "^template://[A-Za-z0-9_.@/-]+$",
+      "title": "Template Id",
+      "type": "string"
+    },
+    "version": {
+      "minimum": 1,
+      "title": "Version",
+      "type": "integer"
+    }
+  },
+  "required": [
+    "template_id",
+    "name",
+    "channel",
+    "subject_template",
+    "body_template",
+    "version"
+  ],
+  "title": "NotificationTemplate",
+  "type": "object"
+}

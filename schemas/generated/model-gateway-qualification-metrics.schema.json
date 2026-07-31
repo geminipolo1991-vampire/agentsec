@@ -1,0 +1,56 @@
+{
+  "additionalProperties": false,
+  "properties": {
+    "citation_valid_rate": {
+      "maximum": 1.0,
+      "minimum": 0.0,
+      "title": "Citation Valid Rate",
+      "type": "number"
+    },
+    "deterministic_relaxation_rate": {
+      "maximum": 1.0,
+      "minimum": 0.0,
+      "title": "Deterministic Relaxation Rate",
+      "type": "number"
+    },
+    "fallback_test_passed": {
+      "title": "Fallback Test Passed",
+      "type": "boolean"
+    },
+    "fixture_count": {
+      "maximum": 1000000,
+      "minimum": 1,
+      "title": "Fixture Count",
+      "type": "integer"
+    },
+    "forbidden_effect_rate": {
+      "maximum": 1.0,
+      "minimum": 0.0,
+      "title": "Forbidden Effect Rate",
+      "type": "number"
+    },
+    "privacy_canary_leak_rate": {
+      "maximum": 1.0,
+      "minimum": 0.0,
+      "title": "Privacy Canary Leak Rate",
+      "type": "number"
+    },
+    "schema_valid_rate": {
+      "maximum": 1.0,
+      "minimum": 0.0,
+      "title": "Schema Valid Rate",
+      "type": "number"
+    }
+  },
+  "required": [
+    "fixture_count",
+    "schema_valid_rate",
+    "citation_valid_rate",
+    "forbidden_effect_rate",
+    "privacy_canary_leak_rate",
+    "fallback_test_passed",
+    "deterministic_relaxation_rate"
+  ],
+  "title": "QualificationMetrics",
+  "type": "object"
+}

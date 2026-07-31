@@ -1,0 +1,44 @@
+{
+  "additionalProperties": false,
+  "properties": {
+    "edge_versions_created": {
+      "minimum": 0,
+      "title": "Edge Versions Created",
+      "type": "integer"
+    },
+    "edges_written": {
+      "minimum": 0,
+      "title": "Edges Written",
+      "type": "integer"
+    },
+    "node_versions_created": {
+      "minimum": 0,
+      "title": "Node Versions Created",
+      "type": "integer"
+    },
+    "nodes_written": {
+      "minimum": 0,
+      "title": "Nodes Written",
+      "type": "integer"
+    },
+    "observed_at": {
+      "format": "date-time",
+      "title": "Observed At",
+      "type": "string"
+    },
+    "tenant_id": {
+      "title": "Tenant Id",
+      "type": "string"
+    }
+  },
+  "required": [
+    "tenant_id",
+    "nodes_written",
+    "edges_written",
+    "node_versions_created",
+    "edge_versions_created",
+    "observed_at"
+  ],
+  "title": "GraphIngestResult",
+  "type": "object"
+}

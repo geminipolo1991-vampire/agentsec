@@ -1,0 +1,79 @@
+{
+  "$defs": {
+    "CaseRelationshipKind": {
+      "enum": [
+        "related",
+        "parent",
+        "child",
+        "duplicate",
+        "blocks"
+      ],
+      "title": "CaseRelationshipKind",
+      "type": "string"
+    }
+  },
+  "additionalProperties": false,
+  "properties": {
+    "case_id": {
+      "pattern": "^case_[0-9a-f]{32}$",
+      "title": "Case Id",
+      "type": "string"
+    },
+    "created_at": {
+      "format": "date-time",
+      "title": "Created At",
+      "type": "string"
+    },
+    "created_by": {
+      "title": "Created By",
+      "type": "string"
+    },
+    "kind": {
+      "$ref": "#/$defs/CaseRelationshipKind"
+    },
+    "reason": {
+      "maxLength": 512,
+      "minLength": 10,
+      "title": "Reason",
+      "type": "string"
+    },
+    "relationship_id": {
+      "pattern": "^crl_[0-9a-f]{32}$",
+      "title": "Relationship Id",
+      "type": "string"
+    },
+    "relationship_sha256": {
+      "pattern": "^[0-9a-f]{64}$",
+      "title": "Relationship Sha256",
+      "type": "string"
+    },
+    "target_id": {
+      "maxLength": 128,
+      "minLength": 5,
+      "title": "Target Id",
+      "type": "string"
+    },
+    "target_type": {
+      "pattern": "^(case|finding|incident)$",
+      "title": "Target Type",
+      "type": "string"
+    },
+    "tenant_id": {
+      "title": "Tenant Id",
+      "type": "string"
+    }
+  },
+  "required": [
+    "case_id",
+    "tenant_id",
+    "kind",
+    "target_type",
+    "target_id",
+    "reason",
+    "created_by",
+    "created_at",
+    "relationship_sha256"
+  ],
+  "title": "CaseRelationship",
+  "type": "object"
+}

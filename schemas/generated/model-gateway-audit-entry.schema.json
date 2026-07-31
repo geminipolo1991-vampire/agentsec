@@ -1,0 +1,47 @@
+{
+  "additionalProperties": false,
+  "properties": {
+    "action": {
+      "title": "Action",
+      "type": "string"
+    },
+    "actor_id": {
+      "title": "Actor Id",
+      "type": "string"
+    },
+    "details_sha256": {
+      "pattern": "^[0-9a-f]{64}$",
+      "title": "Details Sha256",
+      "type": "string"
+    },
+    "occurred_at": {
+      "format": "date-time",
+      "title": "Occurred At",
+      "type": "string"
+    },
+    "sequence": {
+      "minimum": 1,
+      "title": "Sequence",
+      "type": "integer"
+    },
+    "subject": {
+      "title": "Subject",
+      "type": "string"
+    },
+    "tenant_id": {
+      "title": "Tenant Id",
+      "type": "string"
+    }
+  },
+  "required": [
+    "sequence",
+    "tenant_id",
+    "actor_id",
+    "action",
+    "subject",
+    "details_sha256",
+    "occurred_at"
+  ],
+  "title": "ModelGatewayAuditEntry",
+  "type": "object"
+}

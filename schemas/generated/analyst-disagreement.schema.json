@@ -1,0 +1,91 @@
+{
+  "$defs": {
+    "AnalystDisagreementKind": {
+      "enum": [
+        "relaxation_rejected",
+        "tightening_proposed",
+        "cross_role_conflict",
+        "abstention",
+        "role_unavailable"
+      ],
+      "title": "AnalystDisagreementKind",
+      "type": "string"
+    },
+    "DecisionAction": {
+      "enum": [
+        "allow",
+        "allow_with_obligations",
+        "require_approval",
+        "deny"
+      ],
+      "title": "DecisionAction",
+      "type": "string"
+    }
+  },
+  "additionalProperties": false,
+  "properties": {
+    "disagreement_id": {
+      "title": "Disagreement Id",
+      "type": "string"
+    },
+    "evidence_ids": {
+      "items": {
+        "type": "string"
+      },
+      "maxItems": 16,
+      "title": "Evidence Ids",
+      "type": "array"
+    },
+    "kind": {
+      "$ref": "#/$defs/AnalystDisagreementKind"
+    },
+    "left": {
+      "maxLength": 128,
+      "minLength": 1,
+      "title": "Left",
+      "type": "string"
+    },
+    "left_action": {
+      "anyOf": [
+        {
+          "$ref": "#/$defs/DecisionAction"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null
+    },
+    "rationale": {
+      "maxLength": 512,
+      "minLength": 3,
+      "title": "Rationale",
+      "type": "string"
+    },
+    "right": {
+      "maxLength": 128,
+      "minLength": 1,
+      "title": "Right",
+      "type": "string"
+    },
+    "right_action": {
+      "anyOf": [
+        {
+          "$ref": "#/$defs/DecisionAction"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null
+    }
+  },
+  "required": [
+    "kind",
+    "left",
+    "right",
+    "rationale"
+  ],
+  "title": "AnalystDisagreement",
+  "type": "object"
+}

@@ -1,0 +1,40 @@
+{
+  "$defs": {
+    "IncidentTransitionAction": {
+      "enum": [
+        "acknowledge",
+        "start_investigation",
+        "mark_contained",
+        "close"
+      ],
+      "title": "IncidentTransitionAction",
+      "type": "string"
+    }
+  },
+  "additionalProperties": false,
+  "properties": {
+    "action": {
+      "$ref": "#/$defs/IncidentTransitionAction"
+    },
+    "actor": {
+      "maxLength": 128,
+      "minLength": 3,
+      "pattern": "^(analyst|system)://[A-Za-z0-9_.@/-]+$",
+      "title": "Actor",
+      "type": "string"
+    },
+    "reason": {
+      "maxLength": 256,
+      "minLength": 3,
+      "title": "Reason",
+      "type": "string"
+    }
+  },
+  "required": [
+    "action",
+    "actor",
+    "reason"
+  ],
+  "title": "IncidentTransitionRequest",
+  "type": "object"
+}

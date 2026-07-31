@@ -1,0 +1,232 @@
+{
+  "$defs": {
+    "DeliveryStatus": {
+      "enum": [
+        "pending",
+        "in_flight",
+        "retry_scheduled",
+        "ack_pending",
+        "delivered",
+        "acknowledged",
+        "dead_letter"
+      ],
+      "title": "DeliveryStatus",
+      "type": "string"
+    },
+    "NotificationChannel": {
+      "enum": [
+        "on_call",
+        "ticket",
+        "email",
+        "messaging"
+      ],
+      "title": "NotificationChannel",
+      "type": "string"
+    }
+  },
+  "additionalProperties": false,
+  "properties": {
+    "accepted_at": {
+      "anyOf": [
+        {
+          "format": "date-time",
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Accepted At"
+    },
+    "acknowledged_at": {
+      "anyOf": [
+        {
+          "format": "date-time",
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Acknowledged At"
+    },
+    "attempts": {
+      "default": 0,
+      "maximum": 1000,
+      "minimum": 0,
+      "title": "Attempts",
+      "type": "integer"
+    },
+    "body": {
+      "maxLength": 1024,
+      "minLength": 3,
+      "title": "Body",
+      "type": "string"
+    },
+    "channel": {
+      "$ref": "#/$defs/NotificationChannel"
+    },
+    "created_at": {
+      "format": "date-time",
+      "title": "Created At",
+      "type": "string"
+    },
+    "delivery_id": {
+      "pattern": "^ndv_[0-9a-f]{32}$",
+      "title": "Delivery Id",
+      "type": "string"
+    },
+    "delivery_sha256": {
+      "pattern": "^[0-9a-f]{64}$",
+      "title": "Delivery Sha256",
+      "type": "string"
+    },
+    "destination_id": {
+      "pattern": "^destination://[A-Za-z0-9_.@/-]+$",
+      "title": "Destination Id",
+      "type": "string"
+    },
+    "idempotency_key": {
+      "pattern": "^notify_[0-9a-f]{64}$",
+      "title": "Idempotency Key",
+      "type": "string"
+    },
+    "last_error_code": {
+      "anyOf": [
+        {
+          "pattern": "^[a-z][a-z0-9_]{2,63}$",
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Last Error Code"
+    },
+    "max_attempts": {
+      "maximum": 20,
+      "minimum": 1,
+      "title": "Max Attempts",
+      "type": "integer"
+    },
+    "message_sha256": {
+      "pattern": "^[0-9a-f]{64}$",
+      "title": "Message Sha256",
+      "type": "string"
+    },
+    "next_attempt_at": {
+      "format": "date-time",
+      "title": "Next Attempt At",
+      "type": "string"
+    },
+    "notification_id": {
+      "pattern": "^ntf_[0-9a-f]{32}$",
+      "title": "Notification Id",
+      "type": "string"
+    },
+    "provider_ack_required": {
+      "title": "Provider Ack Required",
+      "type": "boolean"
+    },
+    "provider_receipt_sha256": {
+      "anyOf": [
+        {
+          "pattern": "^[0-9a-f]{64}$",
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Provider Receipt Sha256"
+    },
+    "provider_reference_sha256": {
+      "anyOf": [
+        {
+          "pattern": "^[0-9a-f]{64}$",
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Provider Reference Sha256"
+    },
+    "recipient": {
+      "pattern": "^analyst://[A-Za-z0-9_.@/-]+$",
+      "title": "Recipient",
+      "type": "string"
+    },
+    "redrive_count": {
+      "default": 0,
+      "maximum": 5,
+      "minimum": 0,
+      "title": "Redrive Count",
+      "type": "integer"
+    },
+    "retry_base_seconds": {
+      "maximum": 3600,
+      "minimum": 1,
+      "title": "Retry Base Seconds",
+      "type": "integer"
+    },
+    "status": {
+      "$ref": "#/$defs/DeliveryStatus",
+      "default": "pending"
+    },
+    "subject": {
+      "maxLength": 256,
+      "minLength": 3,
+      "title": "Subject",
+      "type": "string"
+    },
+    "template_id": {
+      "pattern": "^template://[A-Za-z0-9_.@/-]+$",
+      "title": "Template Id",
+      "type": "string"
+    },
+    "template_version": {
+      "minimum": 1,
+      "title": "Template Version",
+      "type": "integer"
+    },
+    "tenant_id": {
+      "maxLength": 128,
+      "minLength": 1,
+      "title": "Tenant Id",
+      "type": "string"
+    },
+    "updated_at": {
+      "format": "date-time",
+      "title": "Updated At",
+      "type": "string"
+    }
+  },
+  "required": [
+    "notification_id",
+    "tenant_id",
+    "destination_id",
+    "channel",
+    "template_id",
+    "template_version",
+    "recipient",
+    "subject",
+    "body",
+    "idempotency_key",
+    "message_sha256",
+    "provider_ack_required",
+    "max_attempts",
+    "retry_base_seconds",
+    "next_attempt_at",
+    "created_at",
+    "updated_at",
+    "delivery_sha256"
+  ],
+  "title": "NotificationDelivery",
+  "type": "object"
+}

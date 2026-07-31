@@ -1,0 +1,151 @@
+{
+  "$defs": {
+    "DetectionRuleHealth": {
+      "additionalProperties": false,
+      "properties": {
+        "error_count": {
+          "minimum": 0,
+          "title": "Error Count",
+          "type": "integer"
+        },
+        "evaluation_count": {
+          "minimum": 0,
+          "title": "Evaluation Count",
+          "type": "integer"
+        },
+        "last_error_code": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "title": "Last Error Code"
+        },
+        "last_evaluated_at": {
+          "anyOf": [
+            {
+              "format": "date-time",
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "title": "Last Evaluated At"
+        },
+        "match_count": {
+          "minimum": 0,
+          "title": "Match Count",
+          "type": "integer"
+        },
+        "rule_id": {
+          "title": "Rule Id",
+          "type": "string"
+        },
+        "rule_version": {
+          "title": "Rule Version",
+          "type": "string"
+        },
+        "tenant_id": {
+          "title": "Tenant Id",
+          "type": "string"
+        }
+      },
+      "required": [
+        "tenant_id",
+        "rule_id",
+        "rule_version",
+        "evaluation_count",
+        "match_count",
+        "error_count",
+        "last_evaluated_at",
+        "last_error_code"
+      ],
+      "title": "DetectionRuleHealth",
+      "type": "object"
+    }
+  },
+  "additionalProperties": false,
+  "properties": {
+    "approved": {
+      "minimum": 0,
+      "title": "Approved",
+      "type": "integer"
+    },
+    "calculated_at": {
+      "format": "date-time",
+      "title": "Calculated At",
+      "type": "string"
+    },
+    "draft": {
+      "minimum": 0,
+      "title": "Draft",
+      "type": "integer"
+    },
+    "in_review": {
+      "minimum": 0,
+      "title": "In Review",
+      "type": "integer"
+    },
+    "published": {
+      "minimum": 0,
+      "title": "Published",
+      "type": "integer"
+    },
+    "rejected": {
+      "minimum": 0,
+      "title": "Rejected",
+      "type": "integer"
+    },
+    "retired": {
+      "minimum": 0,
+      "title": "Retired",
+      "type": "integer"
+    },
+    "rule_health": {
+      "items": {
+        "$ref": "#/$defs/DetectionRuleHealth"
+      },
+      "title": "Rule Health",
+      "type": "array"
+    },
+    "shadow": {
+      "minimum": 0,
+      "title": "Shadow",
+      "type": "integer"
+    },
+    "tenant_id": {
+      "title": "Tenant Id",
+      "type": "string"
+    },
+    "total_content": {
+      "minimum": 0,
+      "title": "Total Content",
+      "type": "integer"
+    },
+    "validation_failures": {
+      "minimum": 0,
+      "title": "Validation Failures",
+      "type": "integer"
+    }
+  },
+  "required": [
+    "tenant_id",
+    "total_content",
+    "draft",
+    "in_review",
+    "approved",
+    "shadow",
+    "published",
+    "rejected",
+    "retired",
+    "validation_failures",
+    "rule_health",
+    "calculated_at"
+  ],
+  "title": "ContentHealthSummary",
+  "type": "object"
+}

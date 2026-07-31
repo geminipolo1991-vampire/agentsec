@@ -1,0 +1,294 @@
+{
+  "$defs": {
+    "CaseSlaState": {
+      "enum": [
+        "on_track",
+        "at_risk",
+        "breached",
+        "met"
+      ],
+      "title": "CaseSlaState",
+      "type": "string"
+    },
+    "CaseStatus": {
+      "enum": [
+        "open",
+        "investigating",
+        "pending_review",
+        "resolved",
+        "closed"
+      ],
+      "title": "CaseStatus",
+      "type": "string"
+    }
+  },
+  "additionalProperties": false,
+  "properties": {
+    "acknowledged_at": {
+      "anyOf": [
+        {
+          "format": "date-time",
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Acknowledged At"
+    },
+    "acknowledgment_due_at": {
+      "format": "date-time",
+      "title": "Acknowledgment Due At",
+      "type": "string"
+    },
+    "approved_at": {
+      "anyOf": [
+        {
+          "format": "date-time",
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Approved At"
+    },
+    "approved_by": {
+      "anyOf": [
+        {
+          "maxLength": 256,
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Approved By"
+    },
+    "assigned_to": {
+      "anyOf": [
+        {
+          "maxLength": 256,
+          "pattern": "^(analyst|system|workload)://[A-Za-z0-9_.@/-]+$",
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Assigned To"
+    },
+    "audit_count": {
+      "default": 0,
+      "maximum": 1000,
+      "minimum": 0,
+      "title": "Audit Count",
+      "type": "integer"
+    },
+    "audit_head_sha256": {
+      "default": "0000000000000000000000000000000000000000000000000000000000000000",
+      "pattern": "^[0-9a-f]{64}$",
+      "title": "Audit Head Sha256",
+      "type": "string"
+    },
+    "case_id": {
+      "pattern": "^case_[0-9a-f]{32}$",
+      "title": "Case Id",
+      "type": "string"
+    },
+    "closed_at": {
+      "anyOf": [
+        {
+          "format": "date-time",
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Closed At"
+    },
+    "closed_by": {
+      "anyOf": [
+        {
+          "maxLength": 256,
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Closed By"
+    },
+    "correlation_incident_ids": {
+      "items": {
+        "type": "string"
+      },
+      "maxItems": 32,
+      "title": "Correlation Incident Ids",
+      "type": "array"
+    },
+    "created_at": {
+      "format": "date-time",
+      "title": "Created At",
+      "type": "string"
+    },
+    "due_at": {
+      "format": "date-time",
+      "title": "Due At",
+      "type": "string"
+    },
+    "finding_ids": {
+      "items": {
+        "type": "string"
+      },
+      "maxItems": 128,
+      "minItems": 1,
+      "title": "Finding Ids",
+      "type": "array"
+    },
+    "policy_version": {
+      "default": "case-management-2026-07-24.1",
+      "title": "Policy Version",
+      "type": "string"
+    },
+    "priority": {
+      "pattern": "^P[0-3]$",
+      "title": "Priority",
+      "type": "string"
+    },
+    "queue": {
+      "anyOf": [
+        {
+          "maxLength": 128,
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Queue"
+    },
+    "record_sha256": {
+      "pattern": "^[0-9a-f]{64}$",
+      "title": "Record Sha256",
+      "type": "string"
+    },
+    "resolution_requested_at": {
+      "anyOf": [
+        {
+          "format": "date-time",
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Resolution Requested At"
+    },
+    "resolution_requested_by": {
+      "anyOf": [
+        {
+          "maxLength": 256,
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Resolution Requested By"
+    },
+    "schema_version": {
+      "default": "1.0.0",
+      "title": "Schema Version",
+      "type": "string"
+    },
+    "severity": {
+      "pattern": "^(info|low|medium|high|critical)$",
+      "title": "Severity",
+      "type": "string"
+    },
+    "sla_minutes": {
+      "maximum": 43200,
+      "minimum": 1,
+      "title": "Sla Minutes",
+      "type": "integer"
+    },
+    "sla_state": {
+      "$ref": "#/$defs/CaseSlaState",
+      "default": "on_track"
+    },
+    "status": {
+      "$ref": "#/$defs/CaseStatus",
+      "default": "open"
+    },
+    "summary": {
+      "maxLength": 512,
+      "minLength": 3,
+      "title": "Summary",
+      "type": "string"
+    },
+    "team_id": {
+      "anyOf": [
+        {
+          "maxLength": 256,
+          "pattern": "^team://[A-Za-z0-9_.@/-]+$",
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Team Id"
+    },
+    "tenant_id": {
+      "maxLength": 128,
+      "minLength": 1,
+      "title": "Tenant Id",
+      "type": "string"
+    },
+    "title": {
+      "maxLength": 256,
+      "minLength": 3,
+      "title": "Title",
+      "type": "string"
+    },
+    "updated_at": {
+      "format": "date-time",
+      "title": "Updated At",
+      "type": "string"
+    },
+    "version": {
+      "default": 1,
+      "minimum": 1,
+      "title": "Version",
+      "type": "integer"
+    }
+  },
+  "required": [
+    "tenant_id",
+    "title",
+    "summary",
+    "finding_ids",
+    "priority",
+    "severity",
+    "sla_minutes",
+    "acknowledgment_due_at",
+    "due_at",
+    "created_at",
+    "updated_at",
+    "record_sha256"
+  ],
+  "title": "CaseRecord",
+  "type": "object"
+}

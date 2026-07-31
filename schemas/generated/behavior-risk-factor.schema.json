@@ -1,0 +1,67 @@
+{
+  "additionalProperties": false,
+  "properties": {
+    "contribution": {
+      "maximum": 100,
+      "minimum": 0,
+      "title": "Contribution",
+      "type": "integer"
+    },
+    "entity_ref": {
+      "maxLength": 128,
+      "minLength": 8,
+      "title": "Entity Ref",
+      "type": "string"
+    },
+    "evidence_refs": {
+      "items": {
+        "type": "string"
+      },
+      "maxItems": 16,
+      "minItems": 1,
+      "title": "Evidence Refs",
+      "type": "array"
+    },
+    "expected": {
+      "maxLength": 512,
+      "minLength": 1,
+      "title": "Expected",
+      "type": "string"
+    },
+    "factor": {
+      "pattern": "^[a-z][a-z0-9_]{2,63}$",
+      "title": "Factor",
+      "type": "string"
+    },
+    "observed": {
+      "maxLength": 256,
+      "minLength": 1,
+      "title": "Observed",
+      "type": "string"
+    },
+    "probability": {
+      "maximum": 1.0,
+      "minimum": 0.0,
+      "title": "Probability",
+      "type": "number"
+    },
+    "rationale": {
+      "maxLength": 512,
+      "minLength": 3,
+      "title": "Rationale",
+      "type": "string"
+    }
+  },
+  "required": [
+    "factor",
+    "entity_ref",
+    "observed",
+    "expected",
+    "probability",
+    "contribution",
+    "evidence_refs",
+    "rationale"
+  ],
+  "title": "BehaviorRiskFactor",
+  "type": "object"
+}

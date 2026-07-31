@@ -1,0 +1,49 @@
+{
+  "additionalProperties": false,
+  "properties": {
+    "ack_pending": {
+      "maximum": 100,
+      "minimum": 0,
+      "title": "Ack Pending",
+      "type": "integer"
+    },
+    "dead_lettered": {
+      "maximum": 100,
+      "minimum": 0,
+      "title": "Dead Lettered",
+      "type": "integer"
+    },
+    "delivered": {
+      "maximum": 100,
+      "minimum": 0,
+      "title": "Delivered",
+      "type": "integer"
+    },
+    "processed": {
+      "maximum": 100,
+      "minimum": 0,
+      "title": "Processed",
+      "type": "integer"
+    },
+    "retried": {
+      "maximum": 100,
+      "minimum": 0,
+      "title": "Retried",
+      "type": "integer"
+    },
+    "schema_version": {
+      "default": "1.0.0",
+      "title": "Schema Version",
+      "type": "string"
+    }
+  },
+  "required": [
+    "processed",
+    "delivered",
+    "ack_pending",
+    "retried",
+    "dead_lettered"
+  ],
+  "title": "IntegrationProcessResult",
+  "type": "object"
+}

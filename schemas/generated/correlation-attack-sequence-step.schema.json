@@ -1,0 +1,60 @@
+{
+  "$defs": {
+    "AttackStage": {
+      "enum": [
+        "initial_access",
+        "execution",
+        "persistence",
+        "privilege_escalation",
+        "discovery",
+        "collection",
+        "exfiltration",
+        "impact",
+        "anomalous_behavior"
+      ],
+      "title": "AttackStage",
+      "type": "string"
+    }
+  },
+  "additionalProperties": false,
+  "properties": {
+    "event_id": {
+      "title": "Event Id",
+      "type": "string"
+    },
+    "evidence_refs": {
+      "items": {
+        "type": "string"
+      },
+      "title": "Evidence Refs",
+      "type": "array"
+    },
+    "finding_id": {
+      "title": "Finding Id",
+      "type": "string"
+    },
+    "occurred_at": {
+      "format": "date-time",
+      "title": "Occurred At",
+      "type": "string"
+    },
+    "order": {
+      "minimum": 1,
+      "title": "Order",
+      "type": "integer"
+    },
+    "stage": {
+      "$ref": "#/$defs/AttackStage"
+    }
+  },
+  "required": [
+    "order",
+    "stage",
+    "finding_id",
+    "event_id",
+    "occurred_at",
+    "evidence_refs"
+  ],
+  "title": "AttackSequenceStep",
+  "type": "object"
+}

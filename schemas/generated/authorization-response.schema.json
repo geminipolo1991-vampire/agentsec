@@ -1,5 +1,629 @@
 {
   "$defs": {
+    "AiAnalystRun": {
+      "additionalProperties": false,
+      "properties": {
+        "advisory_action": {
+          "$ref": "#/$defs/DecisionAction"
+        },
+        "alert_id": {
+          "maxLength": 128,
+          "minLength": 5,
+          "title": "Alert Id",
+          "type": "string"
+        },
+        "completed_at": {
+          "format": "date-time",
+          "title": "Completed At",
+          "type": "string"
+        },
+        "deterministic_action": {
+          "$ref": "#/$defs/DecisionAction"
+        },
+        "disagreements": {
+          "items": {
+            "$ref": "#/$defs/AnalystDisagreement"
+          },
+          "maxItems": 32,
+          "title": "Disagreements",
+          "type": "array"
+        },
+        "evidence_manifest_sha256": {
+          "pattern": "^[0-9a-f]{64}$",
+          "title": "Evidence Manifest Sha256",
+          "type": "string"
+        },
+        "executive_authority": {
+          "const": false,
+          "default": false,
+          "title": "Executive Authority",
+          "type": "boolean"
+        },
+        "finding_id": {
+          "maxLength": 128,
+          "minLength": 5,
+          "title": "Finding Id",
+          "type": "string"
+        },
+        "human_review_required": {
+          "title": "Human Review Required",
+          "type": "boolean"
+        },
+        "model_id": {
+          "maxLength": 128,
+          "minLength": 1,
+          "title": "Model Id",
+          "type": "string"
+        },
+        "policy_version": {
+          "maxLength": 64,
+          "minLength": 1,
+          "title": "Policy Version",
+          "type": "string"
+        },
+        "provider": {
+          "maxLength": 64,
+          "minLength": 1,
+          "title": "Provider",
+          "type": "string"
+        },
+        "recording_id": {
+          "anyOf": [
+            {
+              "maxLength": 128,
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Recording Id"
+        },
+        "role_results": {
+          "items": {
+            "$ref": "#/$defs/AnalystRoleResult"
+          },
+          "maxItems": 5,
+          "minItems": 5,
+          "title": "Role Results",
+          "type": "array"
+        },
+        "run_id": {
+          "pattern": "^air_[0-9a-f]{32}$",
+          "title": "Run Id",
+          "type": "string"
+        },
+        "run_sha256": {
+          "pattern": "^[0-9a-f]{64}$",
+          "title": "Run Sha256",
+          "type": "string"
+        },
+        "schema_version": {
+          "default": "1.0.0",
+          "title": "Schema Version",
+          "type": "string"
+        },
+        "started_at": {
+          "format": "date-time",
+          "title": "Started At",
+          "type": "string"
+        },
+        "status": {
+          "$ref": "#/$defs/AnalystRunStatus"
+        },
+        "tenant_id": {
+          "maxLength": 128,
+          "minLength": 1,
+          "title": "Tenant Id",
+          "type": "string"
+        },
+        "tool_receipts": {
+          "items": {
+            "$ref": "#/$defs/AnalystToolReceipt"
+          },
+          "maxItems": 5,
+          "minItems": 5,
+          "title": "Tool Receipts",
+          "type": "array"
+        },
+        "validation": {
+          "$ref": "#/$defs/JudgmentValidationReport"
+        }
+      },
+      "required": [
+        "tenant_id",
+        "alert_id",
+        "finding_id",
+        "status",
+        "provider",
+        "model_id",
+        "policy_version",
+        "deterministic_action",
+        "advisory_action",
+        "human_review_required",
+        "role_results",
+        "tool_receipts",
+        "validation",
+        "evidence_manifest_sha256",
+        "started_at",
+        "completed_at",
+        "run_sha256"
+      ],
+      "title": "AiAnalystRun",
+      "type": "object"
+    },
+    "AnalystAlternative": {
+      "additionalProperties": false,
+      "properties": {
+        "evidence_ids": {
+          "items": {
+            "type": "string"
+          },
+          "maxItems": 16,
+          "title": "Evidence Ids",
+          "type": "array"
+        },
+        "rationale": {
+          "maxLength": 512,
+          "minLength": 3,
+          "title": "Rationale",
+          "type": "string"
+        },
+        "recommended_action": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/DecisionAction"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        },
+        "title": {
+          "maxLength": 128,
+          "minLength": 3,
+          "title": "Title",
+          "type": "string"
+        }
+      },
+      "required": [
+        "title",
+        "rationale"
+      ],
+      "title": "AnalystAlternative",
+      "type": "object"
+    },
+    "AnalystClaim": {
+      "additionalProperties": false,
+      "description": "A bounded, machine-checkable assertion made by one analyst role.",
+      "properties": {
+        "claim_id": {
+          "pattern": "^acm_[0-9a-f]{32}$",
+          "title": "Claim Id",
+          "type": "string"
+        },
+        "evidence_ids": {
+          "items": {
+            "type": "string"
+          },
+          "maxItems": 16,
+          "minItems": 1,
+          "title": "Evidence Ids",
+          "type": "array"
+        },
+        "expected_value": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "boolean"
+            },
+            {
+              "type": "integer"
+            },
+            {
+              "type": "number"
+            },
+            {
+              "items": {
+                "type": "string"
+              },
+              "type": "array"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Expected Value"
+        },
+        "fact_key": {
+          "pattern": "^[a-z][a-z0-9_]{1,63}$",
+          "title": "Fact Key",
+          "type": "string"
+        },
+        "operator": {
+          "$ref": "#/$defs/AnalystClaimOperator"
+        },
+        "statement": {
+          "maxLength": 512,
+          "minLength": 3,
+          "title": "Statement",
+          "type": "string"
+        },
+        "subject": {
+          "maxLength": 128,
+          "minLength": 1,
+          "title": "Subject",
+          "type": "string"
+        }
+      },
+      "required": [
+        "statement",
+        "subject",
+        "fact_key",
+        "operator",
+        "evidence_ids"
+      ],
+      "title": "AnalystClaim",
+      "type": "object"
+    },
+    "AnalystClaimOperator": {
+      "enum": [
+        "equals",
+        "contains",
+        "exists"
+      ],
+      "title": "AnalystClaimOperator",
+      "type": "string"
+    },
+    "AnalystDisagreement": {
+      "additionalProperties": false,
+      "properties": {
+        "disagreement_id": {
+          "title": "Disagreement Id",
+          "type": "string"
+        },
+        "evidence_ids": {
+          "items": {
+            "type": "string"
+          },
+          "maxItems": 16,
+          "title": "Evidence Ids",
+          "type": "array"
+        },
+        "kind": {
+          "$ref": "#/$defs/AnalystDisagreementKind"
+        },
+        "left": {
+          "maxLength": 128,
+          "minLength": 1,
+          "title": "Left",
+          "type": "string"
+        },
+        "left_action": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/DecisionAction"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        },
+        "rationale": {
+          "maxLength": 512,
+          "minLength": 3,
+          "title": "Rationale",
+          "type": "string"
+        },
+        "right": {
+          "maxLength": 128,
+          "minLength": 1,
+          "title": "Right",
+          "type": "string"
+        },
+        "right_action": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/DecisionAction"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        }
+      },
+      "required": [
+        "kind",
+        "left",
+        "right",
+        "rationale"
+      ],
+      "title": "AnalystDisagreement",
+      "type": "object"
+    },
+    "AnalystDisagreementKind": {
+      "enum": [
+        "relaxation_rejected",
+        "tightening_proposed",
+        "cross_role_conflict",
+        "abstention",
+        "role_unavailable"
+      ],
+      "title": "AnalystDisagreementKind",
+      "type": "string"
+    },
+    "AnalystRole": {
+      "enum": [
+        "triage",
+        "investigation",
+        "judge",
+        "escalation",
+        "response_advisor"
+      ],
+      "title": "AnalystRole",
+      "type": "string"
+    },
+    "AnalystRoleResult": {
+      "additionalProperties": false,
+      "properties": {
+        "abstention_reason": {
+          "anyOf": [
+            {
+              "maxLength": 512,
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Abstention Reason"
+        },
+        "alternatives": {
+          "items": {
+            "$ref": "#/$defs/AnalystAlternative"
+          },
+          "maxItems": 5,
+          "title": "Alternatives",
+          "type": "array"
+        },
+        "claims": {
+          "items": {
+            "$ref": "#/$defs/AnalystClaim"
+          },
+          "maxItems": 16,
+          "title": "Claims",
+          "type": "array"
+        },
+        "completed_at": {
+          "format": "date-time",
+          "title": "Completed At",
+          "type": "string"
+        },
+        "confidence": {
+          "anyOf": [
+            {
+              "maximum": 1.0,
+              "minimum": 0.0,
+              "type": "number"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Confidence"
+        },
+        "escalation_advice": {
+          "anyOf": [
+            {
+              "maxLength": 256,
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Escalation Advice"
+        },
+        "evidence_ids": {
+          "items": {
+            "type": "string"
+          },
+          "maxItems": 32,
+          "title": "Evidence Ids",
+          "type": "array"
+        },
+        "hypothesis": {
+          "anyOf": [
+            {
+              "maxLength": 1024,
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Hypothesis"
+        },
+        "latency_ms": {
+          "default": 0,
+          "maximum": 60000,
+          "minimum": 0,
+          "title": "Latency Ms",
+          "type": "integer"
+        },
+        "model_id": {
+          "maxLength": 128,
+          "minLength": 1,
+          "title": "Model Id",
+          "type": "string"
+        },
+        "provider": {
+          "maxLength": 64,
+          "minLength": 1,
+          "title": "Provider",
+          "type": "string"
+        },
+        "reason_codes": {
+          "items": {
+            "type": "string"
+          },
+          "maxItems": 32,
+          "title": "Reason Codes",
+          "type": "array"
+        },
+        "recommended_action": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/DecisionAction"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        },
+        "response_advice": {
+          "items": {
+            "type": "string"
+          },
+          "maxItems": 8,
+          "title": "Response Advice",
+          "type": "array"
+        },
+        "role": {
+          "$ref": "#/$defs/AnalystRole"
+        },
+        "schema_version": {
+          "default": "1.0.0",
+          "title": "Schema Version",
+          "type": "string"
+        },
+        "status": {
+          "$ref": "#/$defs/AnalystRoleStatus"
+        },
+        "summary": {
+          "anyOf": [
+            {
+              "maxLength": 1024,
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Summary"
+        },
+        "uncertainties": {
+          "items": {
+            "type": "string"
+          },
+          "maxItems": 16,
+          "title": "Uncertainties",
+          "type": "array"
+        }
+      },
+      "required": [
+        "role",
+        "status",
+        "provider",
+        "model_id"
+      ],
+      "title": "AnalystRoleResult",
+      "type": "object"
+    },
+    "AnalystRoleStatus": {
+      "enum": [
+        "completed",
+        "abstained",
+        "unavailable"
+      ],
+      "title": "AnalystRoleStatus",
+      "type": "string"
+    },
+    "AnalystRunStatus": {
+      "enum": [
+        "completed",
+        "partial",
+        "abstained"
+      ],
+      "title": "AnalystRunStatus",
+      "type": "string"
+    },
+    "AnalystToolReceipt": {
+      "additionalProperties": false,
+      "properties": {
+        "queried_at": {
+          "format": "date-time",
+          "title": "Queried At",
+          "type": "string"
+        },
+        "receipt_id": {
+          "title": "Receipt Id",
+          "type": "string"
+        },
+        "receipt_sha256": {
+          "pattern": "^[0-9a-f]{64}$",
+          "title": "Receipt Sha256",
+          "type": "string"
+        },
+        "requested_kinds": {
+          "items": {
+            "type": "string"
+          },
+          "maxItems": 16,
+          "title": "Requested Kinds",
+          "type": "array"
+        },
+        "result_count": {
+          "maximum": 64,
+          "minimum": 0,
+          "title": "Result Count",
+          "type": "integer"
+        },
+        "returned_evidence_ids": {
+          "items": {
+            "type": "string"
+          },
+          "maxItems": 64,
+          "title": "Returned Evidence Ids",
+          "type": "array"
+        },
+        "role": {
+          "$ref": "#/$defs/AnalystRole"
+        },
+        "run_id": {
+          "pattern": "^air_[0-9a-f]{32}$",
+          "title": "Run Id",
+          "type": "string"
+        },
+        "tool": {
+          "const": "evidence.query",
+          "default": "evidence.query",
+          "title": "Tool",
+          "type": "string"
+        }
+      },
+      "required": [
+        "run_id",
+        "role",
+        "result_count",
+        "receipt_sha256"
+      ],
+      "title": "AnalystToolReceipt",
+      "type": "object"
+    },
     "AuthorizationAlertSummary": {
       "additionalProperties": false,
       "properties": {
@@ -39,70 +663,102 @@
       "title": "AuthorizationAlertSummary",
       "type": "object"
     },
-    "IncidentAlertDetail": {
+    "ClaimValidationResult": {
       "additionalProperties": false,
       "properties": {
-        "alert_id": {
-          "title": "Alert Id",
-          "type": "string"
-        },
-        "alert_type": {
-          "title": "Alert Type",
-          "type": "string"
-        },
-        "confidence": {
-          "title": "Confidence",
+        "calibrated_confidence": {
+          "maximum": 1.0,
+          "minimum": 0.0,
+          "title": "Calibrated Confidence",
           "type": "number"
         },
-        "detector_id": {
-          "title": "Detector Id",
+        "claim_id": {
+          "pattern": "^acm_[0-9a-f]{32}$",
+          "title": "Claim Id",
           "type": "string"
         },
-        "event_id": {
-          "title": "Event Id",
-          "type": "string"
+        "claimed_confidence": {
+          "maximum": 1.0,
+          "minimum": 0.0,
+          "title": "Claimed Confidence",
+          "type": "number"
         },
-        "evidence": {
+        "conflicting_evidence_ids": {
           "items": {
             "type": "string"
           },
-          "title": "Evidence",
+          "maxItems": 16,
+          "title": "Conflicting Evidence Ids",
+          "type": "array"
+        },
+        "evidence_ids": {
+          "items": {
+            "type": "string"
+          },
+          "maxItems": 16,
+          "title": "Evidence Ids",
+          "type": "array"
+        },
+        "independent_sources": {
+          "maximum": 16,
+          "minimum": 0,
+          "title": "Independent Sources",
+          "type": "integer"
+        },
+        "matched_evidence_ids": {
+          "items": {
+            "type": "string"
+          },
+          "maxItems": 16,
+          "title": "Matched Evidence Ids",
           "type": "array"
         },
         "reason_codes": {
           "items": {
             "type": "string"
           },
+          "maxItems": 16,
           "title": "Reason Codes",
           "type": "array"
         },
-        "recommended_action": {
-          "title": "Recommended Action",
-          "type": "string"
+        "role": {
+          "$ref": "#/$defs/AnalystRole"
         },
-        "severity": {
-          "title": "Severity",
-          "type": "string"
-        },
-        "title": {
-          "title": "Title",
-          "type": "string"
+        "status": {
+          "$ref": "#/$defs/ClaimValidationStatus"
         }
       },
       "required": [
-        "alert_id",
-        "event_id",
-        "alert_type",
-        "title",
-        "severity",
-        "confidence",
-        "detector_id",
-        "reason_codes",
-        "recommended_action",
-        "evidence"
+        "claim_id",
+        "role",
+        "status",
+        "independent_sources",
+        "claimed_confidence",
+        "calibrated_confidence"
       ],
-      "title": "IncidentAlertDetail",
+      "title": "ClaimValidationResult",
       "type": "object"
+    },
+    "ClaimValidationStatus": {
+      "enum": [
+        "verified",
+        "partial",
+        "unsupported",
+        "contradicted",
+        "rejected"
+      ],
+      "title": "ClaimValidationStatus",
+      "type": "string"
+    },
+    "DecisionAction": {
+      "enum": [
+        "allow",
+        "allow_with_obligations",
+        "require_approval",
+        "deny"
+      ],
+      "title": "DecisionAction",
+      "type": "string"
     },
     "IncidentAuditEntry": {
       "additionalProperties": false,
@@ -149,48 +805,137 @@
       "additionalProperties": false,
       "properties": {
         "alert": {
-          "$ref": "#/$defs/IncidentAlertDetail"
+          "anyOf": [
+            {
+              "$ref": "#/$defs/IncidentDetectionDetail"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
         },
         "alert_type": {
           "title": "Alert Type",
           "type": "string"
         },
+        "analyst_run": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/AiAnalystRun"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        },
         "detail_availability": {
-          "default": "complete",
+          "enum": [
+            "complete",
+            "summary_only"
+          ],
           "title": "Detail Availability",
           "type": "string"
         },
+        "detection": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/IncidentDetectionDetail"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        },
         "enrichment": {
-          "items": {
-            "$ref": "#/$defs/IncidentEnrichmentFact"
-          },
-          "title": "Enrichment",
-          "type": "array"
+          "anyOf": [
+            {
+              "$ref": "#/$defs/IncidentEnrichmentDetail"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
         },
         "escalation": {
-          "$ref": "#/$defs/IncidentEscalationDetail"
+          "anyOf": [
+            {
+              "$ref": "#/$defs/IncidentEscalationDetail"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
         },
         "event_context": {
-          "$ref": "#/$defs/IncidentEventContext"
+          "anyOf": [
+            {
+              "$ref": "#/$defs/IncidentEventContext"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
         },
         "finding": {
-          "$ref": "#/$defs/IncidentFindingDetail"
+          "anyOf": [
+            {
+              "$ref": "#/$defs/IncidentFindingDetail"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
         },
         "incident_id": {
           "title": "Incident Id",
           "type": "string"
         },
         "ingestion": {
-          "$ref": "#/$defs/IncidentIngestionDetail"
+          "anyOf": [
+            {
+              "$ref": "#/$defs/IncidentIngestionDetail"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
         },
         "judgment": {
-          "$ref": "#/$defs/IncidentJudgmentDetail"
+          "anyOf": [
+            {
+              "$ref": "#/$defs/IncidentJudgmentDetail"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
         },
-        "redaction": {
-          "$ref": "#/$defs/IncidentRedaction"
+        "privacy": {
+          "$ref": "#/$defs/IncidentPrivacy"
+        },
+        "recorded_at": {
+          "title": "Recorded At",
+          "type": "string"
         },
         "response": {
-          "$ref": "#/$defs/IncidentResponseDetail"
+          "anyOf": [
+            {
+              "$ref": "#/$defs/IncidentResponseDetail"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
         },
         "risk_contributions": {
           "items": {
@@ -200,9 +945,12 @@
           "type": "array"
         },
         "schema_version": {
-          "default": "1.0.0",
+          "default": "2.0.0",
           "title": "Schema Version",
           "type": "string"
+        },
+        "summary": {
+          "$ref": "#/$defs/IncidentSummary"
         },
         "timeline": {
           "items": {
@@ -212,50 +960,290 @@
           "type": "array"
         },
         "trace_mode": {
-          "default": "authoritative",
           "title": "Trace Mode",
           "type": "string"
         },
         "triage": {
-          "$ref": "#/$defs/IncidentTriageDetail"
+          "anyOf": [
+            {
+              "$ref": "#/$defs/IncidentTriageDetail"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
         },
         "validation": {
-          "$ref": "#/$defs/IncidentValidation"
+          "anyOf": [
+            {
+              "$ref": "#/$defs/IncidentValidation"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
         }
       },
       "required": [
+        "trace_mode",
+        "detail_availability",
         "incident_id",
         "alert_type",
-        "event_context",
-        "alert",
-        "ingestion",
-        "triage",
-        "risk_contributions",
-        "enrichment",
-        "judgment",
-        "escalation",
-        "response",
-        "finding",
-        "timeline",
-        "validation",
-        "redaction"
+        "summary",
+        "privacy",
+        "recorded_at"
       ],
       "title": "IncidentDetail",
       "type": "object"
     },
-    "IncidentEnrichmentFact": {
+    "IncidentDetectionDetail": {
       "additionalProperties": false,
       "properties": {
-        "evidence": {
-          "title": "Evidence",
+        "alert_id": {
+          "title": "Alert Id",
           "type": "string"
         },
-        "impact": {
-          "title": "Impact",
+        "alert_type": {
+          "title": "Alert Type",
           "type": "string"
         },
-        "kind": {
-          "title": "Kind",
+        "confidence": {
+          "title": "Confidence",
+          "type": "number"
+        },
+        "detected_at": {
+          "title": "Detected At",
+          "type": "string"
+        },
+        "detector_id": {
+          "title": "Detector Id",
+          "type": "string"
+        },
+        "event_id": {
+          "title": "Event Id",
+          "type": "string"
+        },
+        "evidence_refs": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Evidence Refs",
+          "type": "array"
+        },
+        "reason_codes": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Reason Codes",
+          "type": "array"
+        },
+        "recommended_action": {
+          "title": "Recommended Action",
+          "type": "string"
+        },
+        "rule_version": {
+          "title": "Rule Version",
+          "type": "string"
+        },
+        "severity": {
+          "title": "Severity",
+          "type": "string"
+        },
+        "title": {
+          "title": "Title",
+          "type": "string"
+        }
+      },
+      "required": [
+        "alert_id",
+        "event_id",
+        "alert_type",
+        "title",
+        "severity",
+        "confidence",
+        "detector_id",
+        "rule_version",
+        "reason_codes",
+        "recommended_action",
+        "evidence_refs",
+        "detected_at"
+      ],
+      "title": "IncidentDetectionDetail",
+      "type": "object"
+    },
+    "IncidentEnrichmentDetail": {
+      "additionalProperties": false,
+      "properties": {
+        "cache_hits": {
+          "minimum": 0,
+          "title": "Cache Hits",
+          "type": "integer"
+        },
+        "completed_sources": {
+          "title": "Completed Sources",
+          "type": "integer"
+        },
+        "connector_sources": {
+          "minimum": 0,
+          "title": "Connector Sources",
+          "type": "integer"
+        },
+        "mandatory_context_complete": {
+          "title": "Mandatory Context Complete",
+          "type": "boolean"
+        },
+        "observed_at": {
+          "title": "Observed At",
+          "type": "string"
+        },
+        "policy_digest": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Policy Digest"
+        },
+        "snapshot_id": {
+          "title": "Snapshot Id",
+          "type": "string"
+        },
+        "sources": {
+          "items": {
+            "$ref": "#/$defs/IncidentEnrichmentResult"
+          },
+          "title": "Sources",
+          "type": "array"
+        },
+        "stale_fallbacks": {
+          "minimum": 0,
+          "title": "Stale Fallbacks",
+          "type": "integer"
+        },
+        "status": {
+          "title": "Status",
+          "type": "string"
+        },
+        "timed_out_sources": {
+          "minimum": 0,
+          "title": "Timed Out Sources",
+          "type": "integer"
+        },
+        "total_sources": {
+          "title": "Total Sources",
+          "type": "integer"
+        },
+        "warnings": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Warnings",
+          "type": "array"
+        }
+      },
+      "required": [
+        "snapshot_id",
+        "status",
+        "observed_at",
+        "completed_sources",
+        "total_sources",
+        "mandatory_context_complete",
+        "warnings",
+        "connector_sources",
+        "cache_hits",
+        "stale_fallbacks",
+        "timed_out_sources",
+        "sources"
+      ],
+      "title": "IncidentEnrichmentDetail",
+      "type": "object"
+    },
+    "IncidentEnrichmentResult": {
+      "additionalProperties": false,
+      "properties": {
+        "affects_triage": {
+          "title": "Affects Triage",
+          "type": "boolean"
+        },
+        "cache_status": {
+          "title": "Cache Status",
+          "type": "string"
+        },
+        "confidence": {
+          "maximum": 1.0,
+          "minimum": 0.0,
+          "title": "Confidence",
+          "type": "number"
+        },
+        "connector_version": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Connector Version"
+        },
+        "evidence_refs": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Evidence Refs",
+          "type": "array"
+        },
+        "expires_at": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Expires At"
+        },
+        "facts": {
+          "additionalProperties": true,
+          "title": "Facts",
+          "type": "object"
+        },
+        "failure_effect": {
+          "title": "Failure Effect",
+          "type": "string"
+        },
+        "freshness_seconds": {
+          "anyOf": [
+            {
+              "minimum": 0,
+              "type": "integer"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Freshness Seconds"
+        },
+        "latency_ms": {
+          "title": "Latency Ms",
+          "type": "integer"
+        },
+        "observed_at": {
+          "title": "Observed At",
+          "type": "string"
+        },
+        "policy_decision": {
+          "title": "Policy Decision",
           "type": "string"
         },
         "source": {
@@ -265,21 +1253,22 @@
         "status": {
           "title": "Status",
           "type": "string"
-        },
-        "value": {
-          "title": "Value",
-          "type": "string"
         }
       },
       "required": [
-        "kind",
-        "status",
-        "value",
-        "evidence",
         "source",
-        "impact"
+        "status",
+        "observed_at",
+        "confidence",
+        "facts",
+        "evidence_refs",
+        "latency_ms",
+        "affects_triage",
+        "failure_effect",
+        "cache_status",
+        "policy_decision"
       ],
-      "title": "IncidentEnrichmentFact",
+      "title": "IncidentEnrichmentResult",
       "type": "object"
     },
     "IncidentEscalationDetail": {
@@ -524,12 +1513,57 @@
           "title": "Ai Mode",
           "type": "string"
         },
+        "combiner_result": {
+          "title": "Combiner Result",
+          "type": "string"
+        },
+        "detector_recommendation": {
+          "title": "Detector Recommendation",
+          "type": "string"
+        },
         "deterministic_action": {
           "title": "Deterministic Action",
           "type": "string"
         },
+        "final_action": {
+          "title": "Final Action",
+          "type": "string"
+        },
         "judged_at": {
           "title": "Judged At",
+          "type": "string"
+        },
+        "model_calibrated_confidence": {
+          "anyOf": [
+            {
+              "maximum": 1.0,
+              "minimum": 0.0,
+              "type": "number"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Model Calibrated Confidence"
+        },
+        "model_human_gate_required": {
+          "title": "Model Human Gate Required",
+          "type": "boolean"
+        },
+        "model_status": {
+          "title": "Model Status",
+          "type": "string"
+        },
+        "model_validation_codes": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Model Validation Codes",
+          "type": "array"
+        },
+        "model_validation_status": {
+          "title": "Model Validation Status",
           "type": "string"
         },
         "model_verdict": {
@@ -555,13 +1589,20 @@
         }
       },
       "required": [
-        "action",
+        "detector_recommendation",
         "deterministic_action",
-        "reason_codes",
+        "model_verdict",
         "ai_mode",
+        "model_status",
+        "model_validation_status",
+        "model_human_gate_required",
+        "model_validation_codes",
+        "final_action",
+        "action",
+        "combiner_result",
+        "reason_codes",
         "policy_version",
-        "judged_at",
-        "model_verdict"
+        "judged_at"
       ],
       "title": "IncidentJudgmentDetail",
       "type": "object"
@@ -577,6 +1618,17 @@
           "title": "Confidence",
           "type": "number"
         },
+        "evidence_refs": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Evidence Refs",
+          "type": "array"
+        },
+        "label": {
+          "title": "Label",
+          "type": "string"
+        },
         "model_id": {
           "title": "Model Id",
           "type": "string"
@@ -591,46 +1643,106 @@
           },
           "title": "Reason Codes",
           "type": "array"
+        },
+        "uncertainty": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "title": "Uncertainty"
         }
       },
       "required": [
+        "label",
         "provider",
         "model_id",
         "action",
         "confidence",
-        "reason_codes"
+        "reason_codes",
+        "evidence_refs",
+        "uncertainty"
       ],
       "title": "IncidentModelVerdict",
       "type": "object"
     },
-    "IncidentRedaction": {
+    "IncidentPrivacy": {
       "additionalProperties": false,
       "properties": {
+        "authorization_headers_included": {
+          "const": false,
+          "default": false,
+          "title": "Authorization Headers Included",
+          "type": "boolean"
+        },
+        "credentials_included": {
+          "const": false,
+          "default": false,
+          "title": "Credentials Included",
+          "type": "boolean"
+        },
+        "detail_availability": {
+          "enum": [
+            "complete",
+            "summary_only"
+          ],
+          "title": "Detail Availability",
+          "type": "string"
+        },
+        "evidence_handling_policy": {
+          "default": "allowlist-hash-and-mask",
+          "title": "Evidence Handling Policy",
+          "type": "string"
+        },
+        "full_sensitive_content_included": {
+          "const": false,
+          "default": false,
+          "title": "Full Sensitive Content Included",
+          "type": "boolean"
+        },
         "hashed_reference_count": {
           "minimum": 0,
           "title": "Hashed Reference Count",
           "type": "integer"
         },
-        "policy_version": {
-          "default": "incident-detail-2026-07-22.1",
-          "title": "Policy Version",
-          "type": "string"
+        "ingest_tokens_included": {
+          "const": false,
+          "default": false,
+          "title": "Ingest Tokens Included",
+          "type": "boolean"
         },
         "raw_prompts_included": {
+          "const": false,
           "default": false,
           "title": "Raw Prompts Included",
           "type": "boolean"
         },
         "raw_tool_arguments_included": {
+          "const": false,
           "default": false,
           "title": "Raw Tool Arguments Included",
           "type": "boolean"
+        },
+        "redaction_count": {
+          "minimum": 0,
+          "title": "Redaction Count",
+          "type": "integer"
+        },
+        "redaction_policy_version": {
+          "default": "incident-detail-2026-07-23.2",
+          "title": "Redaction Policy Version",
+          "type": "string"
         }
       },
       "required": [
+        "detail_availability",
+        "redaction_count",
         "hashed_reference_count"
       ],
-      "title": "IncidentRedaction",
+      "title": "IncidentPrivacy",
       "type": "object"
     },
     "IncidentResponseDetail": {
@@ -646,6 +1758,10 @@
         "effect_allowed": {
           "title": "Effect Allowed",
           "type": "boolean"
+        },
+        "effect_status": {
+          "title": "Effect Status",
+          "type": "string"
         },
         "notes": {
           "items": {
@@ -670,12 +1786,96 @@
       "required": [
         "actions",
         "effect_allowed",
+        "effect_status",
         "simulated",
         "responder",
         "notes",
         "responded_at"
       ],
       "title": "IncidentResponseDetail",
+      "type": "object"
+    },
+    "IncidentSummary": {
+      "additionalProperties": false,
+      "properties": {
+        "agent_id": {
+          "title": "Agent Id",
+          "type": "string"
+        },
+        "alert_type": {
+          "title": "Alert Type",
+          "type": "string"
+        },
+        "created_at": {
+          "title": "Created At",
+          "type": "string"
+        },
+        "decision": {
+          "title": "Decision",
+          "type": "string"
+        },
+        "detail_availability": {
+          "enum": [
+            "complete",
+            "summary_only"
+          ],
+          "title": "Detail Availability",
+          "type": "string"
+        },
+        "effect_status": {
+          "title": "Effect Status",
+          "type": "string"
+        },
+        "event_id": {
+          "title": "Event Id",
+          "type": "string"
+        },
+        "finding_id": {
+          "title": "Finding Id",
+          "type": "string"
+        },
+        "flow_id": {
+          "title": "Flow Id",
+          "type": "string"
+        },
+        "priority": {
+          "title": "Priority",
+          "type": "string"
+        },
+        "severity": {
+          "title": "Severity",
+          "type": "string"
+        },
+        "status": {
+          "title": "Status",
+          "type": "string"
+        },
+        "title": {
+          "title": "Title",
+          "type": "string"
+        },
+        "updated_at": {
+          "title": "Updated At",
+          "type": "string"
+        }
+      },
+      "required": [
+        "finding_id",
+        "event_id",
+        "flow_id",
+        "alert_type",
+        "title",
+        "agent_id",
+        "severity",
+        "priority",
+        "status",
+        "decision",
+        "effect_status",
+        "created_at",
+        "updated_at",
+        "detail_availability"
+      ],
+      "title": "IncidentSummary",
       "type": "object"
     },
     "IncidentTimelineStep": {
@@ -716,6 +1916,76 @@
           "title": "Assessed At",
           "type": "string"
         },
+        "behavior_anomaly_score": {
+          "anyOf": [
+            {
+              "maximum": 100,
+              "minimum": 0,
+              "type": "integer"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Behavior Anomaly Score"
+        },
+        "behavior_assessment_id": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Behavior Assessment Id"
+        },
+        "behavior_drift_state": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Behavior Drift State"
+        },
+        "composite_risk_score": {
+          "anyOf": [
+            {
+              "maximum": 100,
+              "minimum": 0,
+              "type": "integer"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Composite Risk Score"
+        },
+        "contributions": {
+          "items": {
+            "$ref": "#/$defs/RiskContribution"
+          },
+          "title": "Contributions",
+          "type": "array"
+        },
+        "missing_context_warnings": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Missing Context Warnings",
+          "type": "array"
+        },
+        "narrative": {
+          "title": "Narrative",
+          "type": "string"
+        },
         "priority": {
           "title": "Priority",
           "type": "string"
@@ -731,19 +2001,26 @@
           "title": "Risk Score",
           "type": "integer"
         },
+        "route": {
+          "title": "Route",
+          "type": "string"
+        },
         "score_reproduced": {
           "default": true,
           "title": "Score Reproduced",
           "type": "boolean"
         },
         "score_version": {
-          "default": "triage-2026-07-22.1",
           "title": "Score Version",
           "type": "string"
         },
         "severity": {
           "title": "Severity",
           "type": "string"
+        },
+        "sla_minutes": {
+          "title": "Sla Minutes",
+          "type": "integer"
         }
       },
       "required": [
@@ -751,7 +2028,13 @@
         "severity",
         "priority",
         "reasons",
-        "assessed_at"
+        "assessed_at",
+        "score_version",
+        "contributions",
+        "sla_minutes",
+        "route",
+        "missing_context_warnings",
+        "narrative"
       ],
       "title": "IncidentTriageDetail",
       "type": "object"
@@ -781,6 +2064,10 @@
           "title": "Ledger Committed",
           "type": "boolean"
         },
+        "ledger_verified": {
+          "title": "Ledger Verified",
+          "type": "boolean"
+        },
         "response_simulated": {
           "title": "Response Simulated",
           "type": "boolean"
@@ -792,32 +2079,322 @@
         }
       },
       "required": [
+        "ledger_verified",
         "response_simulated",
         "basis"
       ],
       "title": "IncidentValidation",
       "type": "object"
     },
-    "RiskContribution": {
+    "JudgmentContradiction": {
       "additionalProperties": false,
       "properties": {
-        "delta": {
-          "title": "Delta",
-          "type": "integer"
+        "evidence_ids": {
+          "items": {
+            "type": "string"
+          },
+          "maxItems": 16,
+          "title": "Evidence Ids",
+          "type": "array"
         },
-        "evidence": {
-          "title": "Evidence",
+        "fact_key": {
+          "pattern": "^[a-z][a-z0-9_]{1,63}$",
+          "title": "Fact Key",
           "type": "string"
         },
-        "label": {
-          "title": "Label",
+        "left_claim_id": {
+          "pattern": "^acm_[0-9a-f]{32}$",
+          "title": "Left Claim Id",
+          "type": "string"
+        },
+        "reason_code": {
+          "pattern": "^[A-Z][A-Z0-9_]{2,63}$",
+          "title": "Reason Code",
+          "type": "string"
+        },
+        "right_claim_id": {
+          "pattern": "^acm_[0-9a-f]{32}$",
+          "title": "Right Claim Id",
+          "type": "string"
+        },
+        "subject": {
+          "maxLength": 128,
+          "minLength": 1,
+          "title": "Subject",
           "type": "string"
         }
       },
       "required": [
+        "left_claim_id",
+        "right_claim_id",
+        "subject",
+        "fact_key",
+        "reason_code"
+      ],
+      "title": "JudgmentContradiction",
+      "type": "object"
+    },
+    "JudgmentValidationIssue": {
+      "additionalProperties": false,
+      "properties": {
+        "code": {
+          "pattern": "^[A-Z][A-Z0-9_]{2,63}$",
+          "title": "Code",
+          "type": "string"
+        },
+        "evidence_ids": {
+          "items": {
+            "type": "string"
+          },
+          "maxItems": 16,
+          "title": "Evidence Ids",
+          "type": "array"
+        },
+        "message": {
+          "maxLength": 256,
+          "minLength": 3,
+          "title": "Message",
+          "type": "string"
+        },
+        "role": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/AnalystRole"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        },
+        "severity": {
+          "enum": [
+            "warning",
+            "error",
+            "critical"
+          ],
+          "title": "Severity",
+          "type": "string"
+        }
+      },
+      "required": [
+        "code",
+        "severity",
+        "message"
+      ],
+      "title": "JudgmentValidationIssue",
+      "type": "object"
+    },
+    "JudgmentValidationReport": {
+      "additionalProperties": false,
+      "properties": {
+        "accepted_claims": {
+          "minimum": 0,
+          "title": "Accepted Claims",
+          "type": "integer"
+        },
+        "automation_eligible": {
+          "const": false,
+          "default": false,
+          "title": "Automation Eligible",
+          "type": "boolean"
+        },
+        "calibrated_confidence": {
+          "maximum": 1.0,
+          "minimum": 0.0,
+          "title": "Calibrated Confidence",
+          "type": "number"
+        },
+        "claim_results": {
+          "items": {
+            "$ref": "#/$defs/ClaimValidationResult"
+          },
+          "maxItems": 80,
+          "title": "Claim Results",
+          "type": "array"
+        },
+        "contradictions": {
+          "items": {
+            "$ref": "#/$defs/JudgmentContradiction"
+          },
+          "maxItems": 32,
+          "title": "Contradictions",
+          "type": "array"
+        },
+        "deterministic_action": {
+          "$ref": "#/$defs/DecisionAction"
+        },
+        "human_gate_reasons": {
+          "items": {
+            "type": "string"
+          },
+          "maxItems": 32,
+          "title": "Human Gate Reasons",
+          "type": "array"
+        },
+        "human_gate_required": {
+          "title": "Human Gate Required",
+          "type": "boolean"
+        },
+        "issues": {
+          "items": {
+            "$ref": "#/$defs/JudgmentValidationIssue"
+          },
+          "maxItems": 64,
+          "title": "Issues",
+          "type": "array"
+        },
+        "machine_action": {
+          "$ref": "#/$defs/DecisionAction"
+        },
+        "mandatory_evidence": {
+          "items": {
+            "$ref": "#/$defs/MandatoryEvidenceCheck"
+          },
+          "maxItems": 5,
+          "minItems": 5,
+          "title": "Mandatory Evidence",
+          "type": "array"
+        },
+        "policy_version": {
+          "maxLength": 64,
+          "minLength": 1,
+          "title": "Policy Version",
+          "type": "string"
+        },
+        "rejected_claims": {
+          "minimum": 0,
+          "title": "Rejected Claims",
+          "type": "integer"
+        },
+        "report_id": {
+          "pattern": "^jvr_[0-9a-f]{32}$",
+          "title": "Report Id",
+          "type": "string"
+        },
+        "report_sha256": {
+          "pattern": "^[0-9a-f]{64}$",
+          "title": "Report Sha256",
+          "type": "string"
+        },
+        "schema_version": {
+          "default": "1.0.0",
+          "title": "Schema Version",
+          "type": "string"
+        },
+        "status": {
+          "$ref": "#/$defs/JudgmentValidationStatus"
+        },
+        "validated_at": {
+          "format": "date-time",
+          "title": "Validated At",
+          "type": "string"
+        }
+      },
+      "required": [
+        "policy_version",
+        "status",
+        "deterministic_action",
+        "machine_action",
+        "human_gate_required",
+        "mandatory_evidence",
+        "accepted_claims",
+        "rejected_claims",
+        "calibrated_confidence",
+        "report_sha256"
+      ],
+      "title": "JudgmentValidationReport",
+      "type": "object"
+    },
+    "JudgmentValidationStatus": {
+      "enum": [
+        "passed",
+        "human_review",
+        "rejected"
+      ],
+      "title": "JudgmentValidationStatus",
+      "type": "string"
+    },
+    "MandatoryEvidenceCheck": {
+      "additionalProperties": false,
+      "properties": {
+        "cited_kinds": {
+          "items": {
+            "type": "string"
+          },
+          "maxItems": 16,
+          "title": "Cited Kinds",
+          "type": "array"
+        },
+        "missing_kinds": {
+          "items": {
+            "type": "string"
+          },
+          "maxItems": 16,
+          "title": "Missing Kinds",
+          "type": "array"
+        },
+        "passed": {
+          "title": "Passed",
+          "type": "boolean"
+        },
+        "required_kinds": {
+          "items": {
+            "type": "string"
+          },
+          "maxItems": 16,
+          "minItems": 1,
+          "title": "Required Kinds",
+          "type": "array"
+        },
+        "role": {
+          "$ref": "#/$defs/AnalystRole"
+        }
+      },
+      "required": [
+        "role",
+        "required_kinds",
+        "passed"
+      ],
+      "title": "MandatoryEvidenceCheck",
+      "type": "object"
+    },
+    "RiskContribution": {
+      "additionalProperties": false,
+      "properties": {
+        "category": {
+          "title": "Category",
+          "type": "string"
+        },
+        "delta": {
+          "maximum": 100,
+          "minimum": -100,
+          "title": "Delta",
+          "type": "integer"
+        },
+        "evidence_refs": {
+          "items": {
+            "type": "string"
+          },
+          "minItems": 1,
+          "title": "Evidence Refs",
+          "type": "array"
+        },
+        "label": {
+          "title": "Label",
+          "type": "string"
+        },
+        "rationale": {
+          "title": "Rationale",
+          "type": "string"
+        }
+      },
+      "required": [
+        "category",
         "label",
         "delta",
-        "evidence"
+        "evidence_refs",
+        "rationale"
       ],
       "title": "RiskContribution",
       "type": "object"
@@ -856,7 +2433,7 @@
       "type": "string"
     },
     "schema_version": {
-      "default": "1.1.0",
+      "default": "2.0.0",
       "title": "Schema Version",
       "type": "string"
     }

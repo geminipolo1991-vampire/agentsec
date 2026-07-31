@@ -1,0 +1,415 @@
+{
+  "$defs": {
+    "ComponentKind": {
+      "enum": [
+        "application",
+        "agent",
+        "model",
+        "tool",
+        "data_store"
+      ],
+      "title": "ComponentKind",
+      "type": "string"
+    },
+    "PostureCheckRecord": {
+      "additionalProperties": false,
+      "properties": {
+        "applicable_kinds": {
+          "items": {
+            "$ref": "#/$defs/ComponentKind"
+          },
+          "title": "Applicable Kinds",
+          "type": "array",
+          "uniqueItems": true
+        },
+        "check_id": {
+          "title": "Check Id",
+          "type": "string"
+        },
+        "created_at": {
+          "format": "date-time",
+          "title": "Created At",
+          "type": "string"
+        },
+        "definition_sha256": {
+          "pattern": "^[0-9a-f]{64}$",
+          "title": "Definition Sha256",
+          "type": "string"
+        },
+        "description": {
+          "title": "Description",
+          "type": "string"
+        },
+        "enabled": {
+          "title": "Enabled",
+          "type": "boolean"
+        },
+        "evaluator": {
+          "$ref": "#/$defs/PostureEvaluator"
+        },
+        "framework_mappings": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Framework Mappings",
+          "type": "array"
+        },
+        "parameters": {
+          "additionalProperties": {
+            "type": "integer"
+          },
+          "title": "Parameters",
+          "type": "object"
+        },
+        "remediation": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Remediation",
+          "type": "array"
+        },
+        "severity": {
+          "$ref": "#/$defs/Severity"
+        },
+        "superseded_at": {
+          "anyOf": [
+            {
+              "format": "date-time",
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Superseded At"
+        },
+        "tenant_id": {
+          "title": "Tenant Id",
+          "type": "string"
+        },
+        "title": {
+          "title": "Title",
+          "type": "string"
+        },
+        "version": {
+          "title": "Version",
+          "type": "string"
+        }
+      },
+      "required": [
+        "tenant_id",
+        "check_id",
+        "version",
+        "title",
+        "description",
+        "evaluator",
+        "severity",
+        "applicable_kinds",
+        "parameters",
+        "remediation",
+        "framework_mappings",
+        "enabled",
+        "definition_sha256",
+        "created_at"
+      ],
+      "title": "PostureCheckRecord",
+      "type": "object"
+    },
+    "PostureEvaluator": {
+      "enum": [
+        "owner_required",
+        "managed_status_required",
+        "no_unapproved_permissions",
+        "effectful_permission_review",
+        "tool_schema_required",
+        "model_prompt_version_required",
+        "agent_policy_binding_required",
+        "max_component_risk"
+      ],
+      "title": "PostureEvaluator",
+      "type": "string"
+    },
+    "PostureException": {
+      "additionalProperties": false,
+      "properties": {
+        "approved_by": {
+          "title": "Approved By",
+          "type": "string"
+        },
+        "created_at": {
+          "format": "date-time",
+          "title": "Created At",
+          "type": "string"
+        },
+        "exception_id": {
+          "pattern": "^pste_[A-Za-z0-9]+$",
+          "title": "Exception Id",
+          "type": "string"
+        },
+        "expires_at": {
+          "format": "date-time",
+          "title": "Expires At",
+          "type": "string"
+        },
+        "finding_id": {
+          "title": "Finding Id",
+          "type": "string"
+        },
+        "owner_ref": {
+          "title": "Owner Ref",
+          "type": "string"
+        },
+        "reason": {
+          "title": "Reason",
+          "type": "string"
+        },
+        "revoke_reason": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Revoke Reason"
+        },
+        "revoked_at": {
+          "anyOf": [
+            {
+              "format": "date-time",
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Revoked At"
+        },
+        "revoked_by": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Revoked By"
+        },
+        "status": {
+          "$ref": "#/$defs/PostureExceptionStatus"
+        },
+        "tenant_id": {
+          "title": "Tenant Id",
+          "type": "string"
+        }
+      },
+      "required": [
+        "exception_id",
+        "tenant_id",
+        "finding_id",
+        "reason",
+        "owner_ref",
+        "approved_by",
+        "status",
+        "created_at",
+        "expires_at"
+      ],
+      "title": "PostureException",
+      "type": "object"
+    },
+    "PostureExceptionStatus": {
+      "enum": [
+        "active",
+        "expired",
+        "revoked"
+      ],
+      "title": "PostureExceptionStatus",
+      "type": "string"
+    },
+    "PostureFinding": {
+      "additionalProperties": false,
+      "properties": {
+        "active_exception_id": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Active Exception Id"
+        },
+        "check_id": {
+          "title": "Check Id",
+          "type": "string"
+        },
+        "check_version": {
+          "title": "Check Version",
+          "type": "string"
+        },
+        "component_id": {
+          "title": "Component Id",
+          "type": "string"
+        },
+        "component_kind": {
+          "$ref": "#/$defs/ComponentKind"
+        },
+        "component_name": {
+          "title": "Component Name",
+          "type": "string"
+        },
+        "evidence_refs": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Evidence Refs",
+          "type": "array"
+        },
+        "finding_id": {
+          "pattern": "^pstf_[0-9a-f]{32}$",
+          "title": "Finding Id",
+          "type": "string"
+        },
+        "first_seen_at": {
+          "format": "date-time",
+          "title": "First Seen At",
+          "type": "string"
+        },
+        "framework_mappings": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Framework Mappings",
+          "type": "array"
+        },
+        "last_seen_at": {
+          "format": "date-time",
+          "title": "Last Seen At",
+          "type": "string"
+        },
+        "observed": {
+          "additionalProperties": {
+            "type": "string"
+          },
+          "title": "Observed",
+          "type": "object"
+        },
+        "remediation": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Remediation",
+          "type": "array"
+        },
+        "resolved_at": {
+          "anyOf": [
+            {
+              "format": "date-time",
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Resolved At"
+        },
+        "risk_score": {
+          "maximum": 100,
+          "minimum": 0,
+          "title": "Risk Score",
+          "type": "integer"
+        },
+        "severity": {
+          "$ref": "#/$defs/Severity"
+        },
+        "status": {
+          "$ref": "#/$defs/PostureFindingStatus"
+        },
+        "tenant_id": {
+          "title": "Tenant Id",
+          "type": "string"
+        },
+        "title": {
+          "title": "Title",
+          "type": "string"
+        }
+      },
+      "required": [
+        "finding_id",
+        "tenant_id",
+        "check_id",
+        "check_version",
+        "component_id",
+        "component_kind",
+        "component_name",
+        "title",
+        "severity",
+        "risk_score",
+        "status",
+        "evidence_refs",
+        "observed",
+        "remediation",
+        "framework_mappings",
+        "first_seen_at",
+        "last_seen_at"
+      ],
+      "title": "PostureFinding",
+      "type": "object"
+    },
+    "PostureFindingStatus": {
+      "enum": [
+        "open",
+        "accepted_exception",
+        "resolved"
+      ],
+      "title": "PostureFindingStatus",
+      "type": "string"
+    },
+    "Severity": {
+      "enum": [
+        "info",
+        "low",
+        "medium",
+        "high",
+        "critical"
+      ],
+      "title": "Severity",
+      "type": "string"
+    }
+  },
+  "additionalProperties": false,
+  "properties": {
+    "check": {
+      "$ref": "#/$defs/PostureCheckRecord"
+    },
+    "exception": {
+      "anyOf": [
+        {
+          "$ref": "#/$defs/PostureException"
+        },
+        {
+          "type": "null"
+        }
+      ]
+    },
+    "finding": {
+      "$ref": "#/$defs/PostureFinding"
+    }
+  },
+  "required": [
+    "finding",
+    "exception",
+    "check"
+  ],
+  "title": "PostureFindingDetail",
+  "type": "object"
+}

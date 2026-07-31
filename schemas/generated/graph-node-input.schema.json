@@ -1,0 +1,86 @@
+{
+  "$defs": {
+    "SecurityNodeType": {
+      "enum": [
+        "application",
+        "agent",
+        "model",
+        "tool",
+        "data_store",
+        "source",
+        "resource",
+        "destination",
+        "decision",
+        "finding"
+      ],
+      "title": "SecurityNodeType",
+      "type": "string"
+    },
+    "Severity": {
+      "enum": [
+        "info",
+        "low",
+        "medium",
+        "high",
+        "critical"
+      ],
+      "title": "Severity",
+      "type": "string"
+    }
+  },
+  "additionalProperties": false,
+  "properties": {
+    "criticality": {
+      "$ref": "#/$defs/Severity",
+      "default": "medium"
+    },
+    "labels": {
+      "additionalProperties": {
+        "type": "string"
+      },
+      "title": "Labels",
+      "type": "object"
+    },
+    "name": {
+      "maxLength": 256,
+      "minLength": 1,
+      "title": "Name",
+      "type": "string"
+    },
+    "node_id": {
+      "maxLength": 512,
+      "minLength": 3,
+      "title": "Node Id",
+      "type": "string"
+    },
+    "node_type": {
+      "$ref": "#/$defs/SecurityNodeType"
+    },
+    "observed_at": {
+      "format": "date-time",
+      "title": "Observed At",
+      "type": "string"
+    },
+    "risk_score": {
+      "default": 0,
+      "maximum": 100,
+      "minimum": 0,
+      "title": "Risk Score",
+      "type": "integer"
+    },
+    "source_ref": {
+      "maxLength": 512,
+      "minLength": 1,
+      "title": "Source Ref",
+      "type": "string"
+    }
+  },
+  "required": [
+    "node_id",
+    "node_type",
+    "name",
+    "source_ref"
+  ],
+  "title": "GraphNodeInput",
+  "type": "object"
+}

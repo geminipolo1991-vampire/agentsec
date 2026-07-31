@@ -1,0 +1,196 @@
+{
+  "$defs": {
+    "ComponentKind": {
+      "enum": [
+        "application",
+        "agent",
+        "model",
+        "tool",
+        "data_store"
+      ],
+      "title": "ComponentKind",
+      "type": "string"
+    },
+    "ComponentPermission": {
+      "additionalProperties": false,
+      "properties": {
+        "approved": {
+          "default": false,
+          "title": "Approved",
+          "type": "boolean"
+        },
+        "effect": {
+          "$ref": "#/$defs/PermissionEffect",
+          "default": "allow"
+        },
+        "operation": {
+          "maxLength": 128,
+          "minLength": 1,
+          "title": "Operation",
+          "type": "string"
+        },
+        "resource_scope": {
+          "maxLength": 512,
+          "minLength": 1,
+          "title": "Resource Scope",
+          "type": "string"
+        },
+        "source_ref": {
+          "maxLength": 512,
+          "minLength": 1,
+          "title": "Source Ref",
+          "type": "string"
+        }
+      },
+      "required": [
+        "operation",
+        "resource_scope",
+        "source_ref"
+      ],
+      "title": "ComponentPermission",
+      "type": "object"
+    },
+    "ComponentStatus": {
+      "enum": [
+        "active",
+        "unmanaged",
+        "retired"
+      ],
+      "title": "ComponentStatus",
+      "type": "string"
+    },
+    "InventorySource": {
+      "enum": [
+        "declared",
+        "observed",
+        "imported"
+      ],
+      "title": "InventorySource",
+      "type": "string"
+    },
+    "PermissionEffect": {
+      "enum": [
+        "allow",
+        "deny"
+      ],
+      "title": "PermissionEffect",
+      "type": "string"
+    },
+    "Severity": {
+      "enum": [
+        "info",
+        "low",
+        "medium",
+        "high",
+        "critical"
+      ],
+      "title": "Severity",
+      "type": "string"
+    }
+  },
+  "additionalProperties": false,
+  "properties": {
+    "application_id": {
+      "anyOf": [
+        {
+          "maxLength": 128,
+          "minLength": 5,
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Application Id"
+    },
+    "component_id": {
+      "anyOf": [
+        {
+          "maxLength": 128,
+          "minLength": 5,
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Component Id"
+    },
+    "configuration": {
+      "additionalProperties": true,
+      "title": "Configuration",
+      "type": "object"
+    },
+    "criticality": {
+      "$ref": "#/$defs/Severity",
+      "default": "medium"
+    },
+    "external_ref": {
+      "maxLength": 512,
+      "minLength": 1,
+      "title": "External Ref",
+      "type": "string"
+    },
+    "kind": {
+      "$ref": "#/$defs/ComponentKind"
+    },
+    "name": {
+      "maxLength": 256,
+      "minLength": 1,
+      "title": "Name",
+      "type": "string"
+    },
+    "observed_at": {
+      "format": "date-time",
+      "title": "Observed At",
+      "type": "string"
+    },
+    "owner_ref": {
+      "anyOf": [
+        {
+          "maxLength": 256,
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Owner Ref"
+    },
+    "permissions": {
+      "items": {
+        "$ref": "#/$defs/ComponentPermission"
+      },
+      "maxItems": 256,
+      "title": "Permissions",
+      "type": "array"
+    },
+    "source": {
+      "$ref": "#/$defs/InventorySource"
+    },
+    "status": {
+      "$ref": "#/$defs/ComponentStatus",
+      "default": "active"
+    },
+    "tags": {
+      "items": {
+        "type": "string"
+      },
+      "maxItems": 64,
+      "title": "Tags",
+      "type": "array",
+      "uniqueItems": true
+    }
+  },
+  "required": [
+    "kind",
+    "name",
+    "external_ref",
+    "source"
+  ],
+  "title": "ComponentUpsert",
+  "type": "object"
+}

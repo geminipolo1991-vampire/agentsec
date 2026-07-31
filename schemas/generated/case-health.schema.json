@@ -1,0 +1,74 @@
+{
+  "additionalProperties": false,
+  "properties": {
+    "acknowledgment_breaches": {
+      "minimum": 0,
+      "title": "Acknowledgment Breaches",
+      "type": "integer"
+    },
+    "breached_sla": {
+      "minimum": 0,
+      "title": "Breached Sla",
+      "type": "integer"
+    },
+    "calculated_at": {
+      "format": "date-time",
+      "title": "Calculated At",
+      "type": "string"
+    },
+    "closed_cases": {
+      "minimum": 0,
+      "title": "Closed Cases",
+      "type": "integer"
+    },
+    "open_cases": {
+      "minimum": 0,
+      "title": "Open Cases",
+      "type": "integer"
+    },
+    "open_tasks": {
+      "minimum": 0,
+      "title": "Open Tasks",
+      "type": "integer"
+    },
+    "pending_review": {
+      "minimum": 0,
+      "title": "Pending Review",
+      "type": "integer"
+    },
+    "resolution_breaches": {
+      "minimum": 0,
+      "title": "Resolution Breaches",
+      "type": "integer"
+    },
+    "tenant_id": {
+      "title": "Tenant Id",
+      "type": "string"
+    },
+    "total_cases": {
+      "minimum": 0,
+      "title": "Total Cases",
+      "type": "integer"
+    },
+    "unassigned_cases": {
+      "minimum": 0,
+      "title": "Unassigned Cases",
+      "type": "integer"
+    }
+  },
+  "required": [
+    "tenant_id",
+    "total_cases",
+    "open_cases",
+    "pending_review",
+    "breached_sla",
+    "acknowledgment_breaches",
+    "resolution_breaches",
+    "unassigned_cases",
+    "closed_cases",
+    "open_tasks",
+    "calculated_at"
+  ],
+  "title": "CaseHealth",
+  "type": "object"
+}

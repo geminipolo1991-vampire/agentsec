@@ -1,0 +1,91 @@
+{
+  "$defs": {
+    "ApprovalScope": {
+      "enum": [
+        "execute",
+        "rollback"
+      ],
+      "title": "ApprovalScope",
+      "type": "string"
+    }
+  },
+  "additionalProperties": false,
+  "properties": {
+    "approval_id": {
+      "pattern": "^rap_[0-9a-f]{32}$",
+      "title": "Approval Id",
+      "type": "string"
+    },
+    "approval_sha256": {
+      "pattern": "^[0-9a-f]{64}$",
+      "title": "Approval Sha256",
+      "type": "string"
+    },
+    "approver_id": {
+      "pattern": "^(analyst|system)://[A-Za-z0-9_.@/-]+$",
+      "title": "Approver Id",
+      "type": "string"
+    },
+    "consumed_at": {
+      "anyOf": [
+        {
+          "format": "date-time",
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Consumed At"
+    },
+    "execution_id": {
+      "pattern": "^rex_[0-9a-f]{32}$",
+      "title": "Execution Id",
+      "type": "string"
+    },
+    "expires_at": {
+      "format": "date-time",
+      "title": "Expires At",
+      "type": "string"
+    },
+    "issued_at": {
+      "format": "date-time",
+      "title": "Issued At",
+      "type": "string"
+    },
+    "plan_sha256": {
+      "pattern": "^[0-9a-f]{64}$",
+      "title": "Plan Sha256",
+      "type": "string"
+    },
+    "reason": {
+      "maxLength": 512,
+      "minLength": 3,
+      "title": "Reason",
+      "type": "string"
+    },
+    "scope": {
+      "$ref": "#/$defs/ApprovalScope"
+    },
+    "tenant_id": {
+      "maxLength": 128,
+      "minLength": 1,
+      "title": "Tenant Id",
+      "type": "string"
+    }
+  },
+  "required": [
+    "execution_id",
+    "tenant_id",
+    "scope",
+    "plan_sha256",
+    "approver_id",
+    "reason",
+    "issued_at",
+    "expires_at",
+    "approval_sha256"
+  ],
+  "title": "ResponseApproval",
+  "type": "object"
+}

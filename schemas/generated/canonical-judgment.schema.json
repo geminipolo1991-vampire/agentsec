@@ -1,0 +1,161 @@
+{
+  "$defs": {
+    "DecisionAction": {
+      "enum": [
+        "allow",
+        "allow_with_obligations",
+        "require_approval",
+        "deny"
+      ],
+      "title": "DecisionAction",
+      "type": "string"
+    },
+    "JudgeType": {
+      "enum": [
+        "deterministic",
+        "ai_assisted",
+        "human",
+        "combined"
+      ],
+      "title": "JudgeType",
+      "type": "string"
+    }
+  },
+  "additionalProperties": false,
+  "properties": {
+    "abstained": {
+      "default": false,
+      "title": "Abstained",
+      "type": "boolean"
+    },
+    "action": {
+      "$ref": "#/$defs/DecisionAction"
+    },
+    "confidence": {
+      "maximum": 1.0,
+      "minimum": 0.0,
+      "title": "Confidence",
+      "type": "number"
+    },
+    "created_at": {
+      "format": "date-time",
+      "title": "Created At",
+      "type": "string"
+    },
+    "deterministic_action": {
+      "$ref": "#/$defs/DecisionAction"
+    },
+    "evidence_ids": {
+      "items": {
+        "maxLength": 256,
+        "minLength": 1,
+        "type": "string"
+      },
+      "maxItems": 1024,
+      "minItems": 1,
+      "title": "Evidence Ids",
+      "type": "array"
+    },
+    "judge_type": {
+      "$ref": "#/$defs/JudgeType"
+    },
+    "judged_at": {
+      "format": "date-time",
+      "title": "Judged At",
+      "type": "string"
+    },
+    "judgment_id": {
+      "maxLength": 128,
+      "minLength": 5,
+      "title": "Judgment Id",
+      "type": "string"
+    },
+    "labels": {
+      "items": {
+        "type": "string"
+      },
+      "maxItems": 64,
+      "title": "Labels",
+      "type": "array",
+      "uniqueItems": true
+    },
+    "policy_version": {
+      "maxLength": 64,
+      "minLength": 1,
+      "title": "Policy Version",
+      "type": "string"
+    },
+    "reason_codes": {
+      "items": {
+        "maxLength": 128,
+        "minLength": 1,
+        "type": "string"
+      },
+      "maxItems": 128,
+      "minItems": 1,
+      "title": "Reason Codes",
+      "type": "array"
+    },
+    "record_type": {
+      "const": "judgment",
+      "default": "judgment",
+      "title": "Record Type",
+      "type": "string"
+    },
+    "schema_version": {
+      "const": "1.0.0",
+      "default": "1.0.0",
+      "title": "Schema Version",
+      "type": "string"
+    },
+    "subject_id": {
+      "maxLength": 128,
+      "minLength": 5,
+      "title": "Subject Id",
+      "type": "string"
+    },
+    "subject_type": {
+      "enum": [
+        "alert",
+        "finding",
+        "incident"
+      ],
+      "title": "Subject Type",
+      "type": "string"
+    },
+    "tenant_id": {
+      "maxLength": 128,
+      "minLength": 1,
+      "title": "Tenant Id",
+      "type": "string"
+    },
+    "uncertainty": {
+      "anyOf": [
+        {
+          "maxLength": 2048,
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Uncertainty"
+    }
+  },
+  "required": [
+    "tenant_id",
+    "judgment_id",
+    "subject_type",
+    "subject_id",
+    "judge_type",
+    "action",
+    "deterministic_action",
+    "confidence",
+    "reason_codes",
+    "evidence_ids",
+    "policy_version"
+  ],
+  "title": "JudgmentRecord",
+  "type": "object"
+}

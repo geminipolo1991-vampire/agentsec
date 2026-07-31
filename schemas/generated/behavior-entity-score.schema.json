@@ -1,0 +1,149 @@
+{
+  "$defs": {
+    "BaselineState": {
+      "enum": [
+        "learning",
+        "active"
+      ],
+      "title": "BaselineState",
+      "type": "string"
+    },
+    "BehaviorEntityType": {
+      "enum": [
+        "agent",
+        "source",
+        "tool",
+        "destination"
+      ],
+      "title": "BehaviorEntityType",
+      "type": "string"
+    },
+    "BehaviorRiskFactor": {
+      "additionalProperties": false,
+      "properties": {
+        "contribution": {
+          "maximum": 100,
+          "minimum": 0,
+          "title": "Contribution",
+          "type": "integer"
+        },
+        "entity_ref": {
+          "maxLength": 128,
+          "minLength": 8,
+          "title": "Entity Ref",
+          "type": "string"
+        },
+        "evidence_refs": {
+          "items": {
+            "type": "string"
+          },
+          "maxItems": 16,
+          "minItems": 1,
+          "title": "Evidence Refs",
+          "type": "array"
+        },
+        "expected": {
+          "maxLength": 512,
+          "minLength": 1,
+          "title": "Expected",
+          "type": "string"
+        },
+        "factor": {
+          "pattern": "^[a-z][a-z0-9_]{2,63}$",
+          "title": "Factor",
+          "type": "string"
+        },
+        "observed": {
+          "maxLength": 256,
+          "minLength": 1,
+          "title": "Observed",
+          "type": "string"
+        },
+        "probability": {
+          "maximum": 1.0,
+          "minimum": 0.0,
+          "title": "Probability",
+          "type": "number"
+        },
+        "rationale": {
+          "maxLength": 512,
+          "minLength": 3,
+          "title": "Rationale",
+          "type": "string"
+        }
+      },
+      "required": [
+        "factor",
+        "entity_ref",
+        "observed",
+        "expected",
+        "probability",
+        "contribution",
+        "evidence_refs",
+        "rationale"
+      ],
+      "title": "BehaviorRiskFactor",
+      "type": "object"
+    }
+  },
+  "additionalProperties": false,
+  "properties": {
+    "anomaly_score": {
+      "maximum": 100,
+      "minimum": 0,
+      "title": "Anomaly Score",
+      "type": "integer"
+    },
+    "baseline_revision": {
+      "minimum": 0,
+      "title": "Baseline Revision",
+      "type": "integer"
+    },
+    "baseline_state": {
+      "$ref": "#/$defs/BaselineState"
+    },
+    "confidence": {
+      "maximum": 1.0,
+      "minimum": 0.0,
+      "title": "Confidence",
+      "type": "number"
+    },
+    "entity_ref": {
+      "title": "Entity Ref",
+      "type": "string"
+    },
+    "entity_type": {
+      "$ref": "#/$defs/BehaviorEntityType"
+    },
+    "evaluated_at": {
+      "format": "date-time",
+      "title": "Evaluated At",
+      "type": "string"
+    },
+    "factors": {
+      "items": {
+        "$ref": "#/$defs/BehaviorRiskFactor"
+      },
+      "maxItems": 32,
+      "title": "Factors",
+      "type": "array"
+    },
+    "observation_count": {
+      "minimum": 0,
+      "title": "Observation Count",
+      "type": "integer"
+    }
+  },
+  "required": [
+    "entity_ref",
+    "entity_type",
+    "baseline_revision",
+    "observation_count",
+    "baseline_state",
+    "anomaly_score",
+    "confidence",
+    "evaluated_at"
+  ],
+  "title": "EntityBehaviorScore",
+  "type": "object"
+}

@@ -1,0 +1,32 @@
+{
+  "additionalProperties": false,
+  "properties": {
+    "actor_id": {
+      "maxLength": 256,
+      "minLength": 3,
+      "title": "Actor Id",
+      "type": "string"
+    },
+    "permissions": {
+      "items": {
+        "type": "string"
+      },
+      "maxItems": 8,
+      "title": "Permissions",
+      "type": "array",
+      "uniqueItems": true
+    },
+    "tenant_id": {
+      "maxLength": 128,
+      "minLength": 1,
+      "title": "Tenant Id",
+      "type": "string"
+    }
+  },
+  "required": [
+    "tenant_id",
+    "actor_id"
+  ],
+  "title": "BehaviorPrincipal",
+  "type": "object"
+}

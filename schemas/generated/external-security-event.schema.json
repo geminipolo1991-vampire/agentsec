@@ -1,0 +1,165 @@
+{
+  "additionalProperties": false,
+  "properties": {
+    "agent_id": {
+      "maxLength": 128,
+      "minLength": 1,
+      "title": "Agent Id",
+      "type": "string"
+    },
+    "case_id": {
+      "anyOf": [
+        {
+          "maxLength": 128,
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Case Id"
+    },
+    "decision": {
+      "maxLength": 64,
+      "minLength": 1,
+      "title": "Decision",
+      "type": "string"
+    },
+    "destination_class": {
+      "anyOf": [
+        {
+          "maxLength": 64,
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Destination Class"
+    },
+    "detector_id": {
+      "maxLength": 128,
+      "minLength": 1,
+      "title": "Detector Id",
+      "type": "string"
+    },
+    "escalation_level": {
+      "maxLength": 64,
+      "minLength": 1,
+      "title": "Escalation Level",
+      "type": "string"
+    },
+    "event_id": {
+      "pattern": "^xevt_[0-9a-f]{32}$",
+      "title": "Event Id",
+      "type": "string"
+    },
+    "event_type": {
+      "default": "finding",
+      "pattern": "^(finding|incident|alert|audit)$",
+      "title": "Event Type",
+      "type": "string"
+    },
+    "evidence_pivot_id": {
+      "maxLength": 128,
+      "minLength": 1,
+      "title": "Evidence Pivot Id",
+      "type": "string"
+    },
+    "finding_id": {
+      "pattern": "^fnd_[A-Za-z0-9]+$",
+      "title": "Finding Id",
+      "type": "string"
+    },
+    "finding_type": {
+      "pattern": "^[a-z][a-z0-9_]{2,63}$",
+      "title": "Finding Type",
+      "type": "string"
+    },
+    "flow_id": {
+      "maxLength": 128,
+      "minLength": 1,
+      "title": "Flow Id",
+      "type": "string"
+    },
+    "ledger_integrity": {
+      "pattern": "^(verified|failed)$",
+      "title": "Ledger Integrity",
+      "type": "string"
+    },
+    "observed_at": {
+      "format": "date-time",
+      "title": "Observed At",
+      "type": "string"
+    },
+    "operation": {
+      "maxLength": 128,
+      "minLength": 1,
+      "title": "Operation",
+      "type": "string"
+    },
+    "policy_version": {
+      "maxLength": 128,
+      "minLength": 1,
+      "title": "Policy Version",
+      "type": "string"
+    },
+    "record_sha256": {
+      "pattern": "^[0-9a-f]{64}$",
+      "title": "Record Sha256",
+      "type": "string"
+    },
+    "resource_class": {
+      "maxLength": 64,
+      "minLength": 1,
+      "title": "Resource Class",
+      "type": "string"
+    },
+    "schema_version": {
+      "default": "1.0.0",
+      "title": "Schema Version",
+      "type": "string"
+    },
+    "severity": {
+      "pattern": "^(info|low|medium|high|critical)$",
+      "title": "Severity",
+      "type": "string"
+    },
+    "status": {
+      "maxLength": 64,
+      "minLength": 1,
+      "title": "Status",
+      "type": "string"
+    },
+    "tenant_id": {
+      "maxLength": 128,
+      "minLength": 1,
+      "title": "Tenant Id",
+      "type": "string"
+    }
+  },
+  "required": [
+    "event_id",
+    "tenant_id",
+    "finding_id",
+    "finding_type",
+    "severity",
+    "status",
+    "agent_id",
+    "flow_id",
+    "operation",
+    "resource_class",
+    "detector_id",
+    "policy_version",
+    "decision",
+    "escalation_level",
+    "evidence_pivot_id",
+    "ledger_integrity",
+    "observed_at",
+    "record_sha256"
+  ],
+  "title": "ExternalSecurityEvent",
+  "type": "object"
+}

@@ -1,0 +1,61 @@
+{
+  "additionalProperties": false,
+  "properties": {
+    "completed_modes": {
+      "maximum": 2,
+      "minimum": 1,
+      "title": "Completed Modes",
+      "type": "integer"
+    },
+    "completed_steps": {
+      "maximum": 16,
+      "minimum": 1,
+      "title": "Completed Steps",
+      "type": "integer"
+    },
+    "engine": {
+      "default": "agentsec-local-mock-sandbox",
+      "title": "Engine",
+      "type": "string"
+    },
+    "filesystem_enabled": {
+      "default": false,
+      "title": "Filesystem Enabled",
+      "type": "boolean"
+    },
+    "local_only": {
+      "default": true,
+      "title": "Local Only",
+      "type": "boolean"
+    },
+    "network_enabled": {
+      "default": false,
+      "title": "Network Enabled",
+      "type": "boolean"
+    },
+    "observed_effects": {
+      "maximum": 16,
+      "minimum": 0,
+      "title": "Observed Effects",
+      "type": "integer"
+    },
+    "receipt_sha256": {
+      "pattern": "^[0-9a-f]{64}$",
+      "title": "Receipt Sha256",
+      "type": "string"
+    },
+    "shell_enabled": {
+      "default": false,
+      "title": "Shell Enabled",
+      "type": "boolean"
+    }
+  },
+  "required": [
+    "completed_modes",
+    "completed_steps",
+    "observed_effects",
+    "receipt_sha256"
+  ],
+  "title": "SimulationSandboxReceipt",
+  "type": "object"
+}

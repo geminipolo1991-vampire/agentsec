@@ -1,0 +1,102 @@
+{
+  "$defs": {
+    "CaseStatus": {
+      "enum": [
+        "open",
+        "investigating",
+        "pending_review",
+        "resolved",
+        "closed"
+      ],
+      "title": "CaseStatus",
+      "type": "string"
+    }
+  },
+  "additionalProperties": false,
+  "properties": {
+    "action": {
+      "pattern": "^[a-z][a-z0-9_]{2,63}$",
+      "title": "Action",
+      "type": "string"
+    },
+    "actor_id": {
+      "title": "Actor Id",
+      "type": "string"
+    },
+    "audit_id": {
+      "pattern": "^cau_[0-9a-f]{32}$",
+      "title": "Audit Id",
+      "type": "string"
+    },
+    "audit_sha256": {
+      "pattern": "^[0-9a-f]{64}$",
+      "title": "Audit Sha256",
+      "type": "string"
+    },
+    "case_id": {
+      "pattern": "^case_[0-9a-f]{32}$",
+      "title": "Case Id",
+      "type": "string"
+    },
+    "details_sha256": {
+      "pattern": "^[0-9a-f]{64}$",
+      "title": "Details Sha256",
+      "type": "string"
+    },
+    "from_status": {
+      "anyOf": [
+        {
+          "$ref": "#/$defs/CaseStatus"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null
+    },
+    "occurred_at": {
+      "format": "date-time",
+      "title": "Occurred At",
+      "type": "string"
+    },
+    "previous_sha256": {
+      "pattern": "^[0-9a-f]{64}$",
+      "title": "Previous Sha256",
+      "type": "string"
+    },
+    "sequence": {
+      "maximum": 10000,
+      "minimum": 1,
+      "title": "Sequence",
+      "type": "integer"
+    },
+    "tenant_id": {
+      "title": "Tenant Id",
+      "type": "string"
+    },
+    "to_status": {
+      "anyOf": [
+        {
+          "$ref": "#/$defs/CaseStatus"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null
+    }
+  },
+  "required": [
+    "case_id",
+    "tenant_id",
+    "actor_id",
+    "action",
+    "details_sha256",
+    "occurred_at",
+    "sequence",
+    "previous_sha256",
+    "audit_sha256"
+  ],
+  "title": "CaseAuditEntry",
+  "type": "object"
+}

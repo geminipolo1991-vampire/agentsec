@@ -1,0 +1,54 @@
+{
+  "additionalProperties": false,
+  "properties": {
+    "algorithm": {
+      "maxLength": 128,
+      "minLength": 1,
+      "title": "Algorithm",
+      "type": "string"
+    },
+    "ciphertext": {
+      "maxLength": 10000000,
+      "minLength": 1,
+      "title": "Ciphertext",
+      "type": "string"
+    },
+    "ciphertext_sha256": {
+      "pattern": "^[0-9a-f]{64}$",
+      "title": "Ciphertext Sha256",
+      "type": "string"
+    },
+    "evidence_id": {
+      "maxLength": 128,
+      "minLength": 5,
+      "title": "Evidence Id",
+      "type": "string"
+    },
+    "key_reference": {
+      "maxLength": 512,
+      "minLength": 1,
+      "title": "Key Reference",
+      "type": "string"
+    },
+    "plaintext_sha256": {
+      "pattern": "^[0-9a-f]{64}$",
+      "title": "Plaintext Sha256",
+      "type": "string"
+    },
+    "protected_at": {
+      "format": "date-time",
+      "title": "Protected At",
+      "type": "string"
+    }
+  },
+  "required": [
+    "evidence_id",
+    "ciphertext",
+    "key_reference",
+    "algorithm",
+    "plaintext_sha256",
+    "ciphertext_sha256"
+  ],
+  "title": "ProtectedEvidenceBlob",
+  "type": "object"
+}

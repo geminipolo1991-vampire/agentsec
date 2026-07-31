@@ -1,0 +1,31 @@
+{
+  "$defs": {
+    "CaseTaskStatus": {
+      "enum": [
+        "open",
+        "in_progress",
+        "done",
+        "cancelled"
+      ],
+      "title": "CaseTaskStatus",
+      "type": "string"
+    }
+  },
+  "additionalProperties": false,
+  "properties": {
+    "expected_version": {
+      "minimum": 1,
+      "title": "Expected Version",
+      "type": "integer"
+    },
+    "status": {
+      "$ref": "#/$defs/CaseTaskStatus"
+    }
+  },
+  "required": [
+    "expected_version",
+    "status"
+  ],
+  "title": "CaseTaskTransitionRequest",
+  "type": "object"
+}

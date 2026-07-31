@@ -1,0 +1,60 @@
+{
+  "$defs": {
+    "SimulationVariant": {
+      "enum": [
+        "plain",
+        "japanese",
+        "spanish",
+        "unicode_confusable",
+        "zero_width",
+        "base64",
+        "mixed_obfuscation"
+      ],
+      "title": "SimulationVariant",
+      "type": "string"
+    }
+  },
+  "additionalProperties": false,
+  "properties": {
+    "locale": {
+      "pattern": "^[a-z]{2}(?:-[A-Z]{2})?$",
+      "title": "Locale",
+      "type": "string"
+    },
+    "normalized_signal_required": {
+      "default": true,
+      "title": "Normalized Signal Required",
+      "type": "boolean"
+    },
+    "qualification_boundary": {
+      "maxLength": 512,
+      "minLength": 3,
+      "title": "Qualification Boundary",
+      "type": "string"
+    },
+    "raw_content_retained": {
+      "default": false,
+      "title": "Raw Content Retained",
+      "type": "boolean"
+    },
+    "transformations": {
+      "items": {
+        "type": "string"
+      },
+      "maxItems": 8,
+      "title": "Transformations",
+      "type": "array"
+    },
+    "variant": {
+      "$ref": "#/$defs/SimulationVariant"
+    }
+  },
+  "required": [
+    "variant",
+    "locale",
+    "transformations",
+    "qualification_boundary"
+  ],
+  "title": "SimulationVariantProfile",
+  "type": "object"
+}

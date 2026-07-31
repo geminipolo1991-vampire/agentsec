@@ -1,0 +1,104 @@
+{
+  "additionalProperties": false,
+  "properties": {
+    "allowed_processing_regions": {
+      "items": {
+        "type": "string"
+      },
+      "maxItems": 16,
+      "minItems": 1,
+      "title": "Allowed Processing Regions",
+      "type": "array",
+      "uniqueItems": true
+    },
+    "display_name": {
+      "maxLength": 128,
+      "minLength": 2,
+      "title": "Display Name",
+      "type": "string"
+    },
+    "encryption_required": {
+      "default": true,
+      "title": "Encryption Required",
+      "type": "boolean"
+    },
+    "evidence_retention_days": {
+      "maximum": 36500,
+      "minimum": 1,
+      "title": "Evidence Retention Days",
+      "type": "integer"
+    },
+    "legal_hold": {
+      "default": false,
+      "title": "Legal Hold",
+      "type": "boolean"
+    },
+    "managed_key_reference": {
+      "pattern": "^keyref://[A-Za-z0-9_.@/-]+$",
+      "title": "Managed Key Reference",
+      "type": "string"
+    },
+    "policy_version": {
+      "minimum": 1,
+      "title": "Policy Version",
+      "type": "integer"
+    },
+    "record_sha256": {
+      "pattern": "^[0-9a-f]{64}$",
+      "title": "Record Sha256",
+      "type": "string"
+    },
+    "residency_region": {
+      "pattern": "^[a-z]{2}-[a-z]+-[0-9]+$",
+      "title": "Residency Region",
+      "type": "string"
+    },
+    "retention_days": {
+      "maximum": 36500,
+      "minimum": 1,
+      "title": "Retention Days",
+      "type": "integer"
+    },
+    "schema_version": {
+      "default": "1.0.0",
+      "title": "Schema Version",
+      "type": "string"
+    },
+    "status": {
+      "pattern": "^(active|suspended)$",
+      "title": "Status",
+      "type": "string"
+    },
+    "tenant_id": {
+      "maxLength": 128,
+      "minLength": 1,
+      "title": "Tenant Id",
+      "type": "string"
+    },
+    "updated_at": {
+      "format": "date-time",
+      "title": "Updated At",
+      "type": "string"
+    },
+    "updated_by": {
+      "title": "Updated By",
+      "type": "string"
+    }
+  },
+  "required": [
+    "tenant_id",
+    "display_name",
+    "status",
+    "residency_region",
+    "allowed_processing_regions",
+    "retention_days",
+    "evidence_retention_days",
+    "managed_key_reference",
+    "policy_version",
+    "updated_by",
+    "updated_at",
+    "record_sha256"
+  ],
+  "title": "TenantSecurityPolicy",
+  "type": "object"
+}

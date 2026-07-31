@@ -1,0 +1,86 @@
+{
+  "additionalProperties": false,
+  "properties": {
+    "approval_present": {
+      "title": "Approval Present",
+      "type": "boolean"
+    },
+    "authority_gap": {
+      "title": "Authority Gap",
+      "type": "boolean"
+    },
+    "destination_class": {
+      "maxLength": 64,
+      "minLength": 1,
+      "title": "Destination Class",
+      "type": "string"
+    },
+    "effectful": {
+      "title": "Effectful",
+      "type": "boolean"
+    },
+    "event_id": {
+      "title": "Event Id",
+      "type": "string"
+    },
+    "feature_sha256": {
+      "pattern": "^[0-9a-f]{64}$",
+      "title": "Feature Sha256",
+      "type": "string"
+    },
+    "hour_bucket": {
+      "maximum": 23,
+      "minimum": 0,
+      "title": "Hour Bucket",
+      "type": "integer"
+    },
+    "occurred_at": {
+      "format": "date-time",
+      "title": "Occurred At",
+      "type": "string"
+    },
+    "operation": {
+      "maxLength": 128,
+      "minLength": 1,
+      "title": "Operation",
+      "type": "string"
+    },
+    "resource_class": {
+      "maxLength": 64,
+      "minLength": 1,
+      "title": "Resource Class",
+      "type": "string"
+    },
+    "schema_drift": {
+      "title": "Schema Drift",
+      "type": "boolean"
+    },
+    "sensitive_data": {
+      "title": "Sensitive Data",
+      "type": "boolean"
+    },
+    "source_trust": {
+      "maxLength": 64,
+      "minLength": 1,
+      "title": "Source Trust",
+      "type": "string"
+    }
+  },
+  "required": [
+    "event_id",
+    "occurred_at",
+    "operation",
+    "resource_class",
+    "destination_class",
+    "source_trust",
+    "hour_bucket",
+    "effectful",
+    "approval_present",
+    "sensitive_data",
+    "authority_gap",
+    "schema_drift",
+    "feature_sha256"
+  ],
+  "title": "BehaviorFeatureVector",
+  "type": "object"
+}

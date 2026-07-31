@@ -1,0 +1,51 @@
+{
+  "additionalProperties": false,
+  "properties": {
+    "confidence": {
+      "maximum": 1.0,
+      "minimum": 0.0,
+      "title": "Confidence",
+      "type": "number"
+    },
+    "evidence_refs": {
+      "items": {
+        "type": "string"
+      },
+      "maxItems": 16,
+      "title": "Evidence Refs",
+      "type": "array"
+    },
+    "matched": {
+      "title": "Matched",
+      "type": "boolean"
+    },
+    "model_id": {
+      "maxLength": 256,
+      "minLength": 1,
+      "title": "Model Id",
+      "type": "string"
+    },
+    "provider": {
+      "maxLength": 64,
+      "minLength": 1,
+      "title": "Provider",
+      "type": "string"
+    },
+    "reason_codes": {
+      "items": {
+        "type": "string"
+      },
+      "maxItems": 16,
+      "title": "Reason Codes",
+      "type": "array"
+    }
+  },
+  "required": [
+    "provider",
+    "model_id",
+    "matched",
+    "confidence"
+  ],
+  "title": "SemanticDetectionVerdict",
+  "type": "object"
+}

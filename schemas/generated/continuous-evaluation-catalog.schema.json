@@ -1,0 +1,660 @@
+{
+  "$defs": {
+    "CandidateKind": {
+      "enum": [
+        "deterministic",
+        "recorded_model",
+        "live_model"
+      ],
+      "title": "CandidateKind",
+      "type": "string"
+    },
+    "EvaluationBaseline": {
+      "additionalProperties": false,
+      "properties": {
+        "active": {
+          "title": "Active",
+          "type": "boolean"
+        },
+        "approved_at": {
+          "format": "date-time",
+          "title": "Approved At",
+          "type": "string"
+        },
+        "approved_by": {
+          "title": "Approved By",
+          "type": "string"
+        },
+        "baseline_id": {
+          "pattern": "^evbase_[0-9a-f]{32}$",
+          "title": "Baseline Id",
+          "type": "string"
+        },
+        "candidate_kind": {
+          "$ref": "#/$defs/CandidateKind"
+        },
+        "dataset_version": {
+          "title": "Dataset Version",
+          "type": "string"
+        },
+        "reason_sha256": {
+          "pattern": "^[0-9a-f]{64}$",
+          "title": "Reason Sha256",
+          "type": "string"
+        },
+        "record_sha256": {
+          "pattern": "^[0-9a-f]{64}$",
+          "title": "Record Sha256",
+          "type": "string"
+        },
+        "report_digest": {
+          "pattern": "^[0-9a-f]{64}$",
+          "title": "Report Digest",
+          "type": "string"
+        },
+        "run_id": {
+          "pattern": "^evrun_[0-9a-f]{32}$",
+          "title": "Run Id",
+          "type": "string"
+        },
+        "schema_version": {
+          "default": "1.0.0",
+          "title": "Schema Version",
+          "type": "string"
+        },
+        "tenant_id": {
+          "title": "Tenant Id",
+          "type": "string"
+        }
+      },
+      "required": [
+        "baseline_id",
+        "tenant_id",
+        "dataset_version",
+        "candidate_kind",
+        "run_id",
+        "report_digest",
+        "approved_by",
+        "approved_at",
+        "reason_sha256",
+        "active",
+        "record_sha256"
+      ],
+      "title": "EvaluationBaseline",
+      "type": "object"
+    },
+    "EvaluationCandidateMetadata": {
+      "additionalProperties": false,
+      "properties": {
+        "candidate_id": {
+          "pattern": "^[a-z][a-z0-9_-]{2,63}$",
+          "title": "Candidate Id",
+          "type": "string"
+        },
+        "exact_model_id": {
+          "maxLength": 256,
+          "minLength": 1,
+          "title": "Exact Model Id",
+          "type": "string"
+        },
+        "kind": {
+          "$ref": "#/$defs/CandidateKind"
+        },
+        "live_provider_calls": {
+          "title": "Live Provider Calls",
+          "type": "boolean"
+        },
+        "provider": {
+          "maxLength": 64,
+          "minLength": 1,
+          "title": "Provider",
+          "type": "string"
+        },
+        "qualification_sha256": {
+          "anyOf": [
+            {
+              "pattern": "^[0-9a-f]{64}$",
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Qualification Sha256"
+        },
+        "qualified": {
+          "title": "Qualified",
+          "type": "boolean"
+        },
+        "route_sha256": {
+          "pattern": "^[0-9a-f]{64}$",
+          "title": "Route Sha256",
+          "type": "string"
+        },
+        "runtime_authority": {
+          "const": false,
+          "default": false,
+          "title": "Runtime Authority",
+          "type": "boolean"
+        }
+      },
+      "required": [
+        "candidate_id",
+        "kind",
+        "provider",
+        "exact_model_id",
+        "route_sha256",
+        "qualified",
+        "live_provider_calls"
+      ],
+      "title": "EvaluationCandidateMetadata",
+      "type": "object"
+    },
+    "EvaluationDatasetManifest": {
+      "additionalProperties": false,
+      "properties": {
+        "blind_execution": {
+          "const": true,
+          "default": true,
+          "title": "Blind Execution",
+          "type": "boolean"
+        },
+        "case_count": {
+          "maximum": 500,
+          "minimum": 1,
+          "title": "Case Count",
+          "type": "integer"
+        },
+        "dataset_sha256": {
+          "pattern": "^[0-9a-f]{64}$",
+          "title": "Dataset Sha256",
+          "type": "string"
+        },
+        "dataset_version": {
+          "pattern": "^benchmark-[0-9]{4}\\.[0-9]{2}\\.[0-9]{2}\\.[0-9]+$",
+          "title": "Dataset Version",
+          "type": "string"
+        },
+        "parent_dataset_sha256": {
+          "anyOf": [
+            {
+              "pattern": "^[0-9a-f]{64}$",
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Parent Dataset Sha256"
+        },
+        "profiles": {
+          "items": {
+            "$ref": "#/$defs/EvaluationUseCaseProfile"
+          },
+          "title": "Profiles",
+          "type": "array"
+        },
+        "raw_content_retained": {
+          "const": false,
+          "default": false,
+          "title": "Raw Content Retained",
+          "type": "boolean"
+        },
+        "schema_version": {
+          "default": "1.0.0",
+          "title": "Schema Version",
+          "type": "string"
+        },
+        "sealed_ground_truth_sha256": {
+          "pattern": "^[0-9a-f]{64}$",
+          "title": "Sealed Ground Truth Sha256",
+          "type": "string"
+        },
+        "splits": {
+          "additionalProperties": {
+            "type": "integer"
+          },
+          "title": "Splits",
+          "type": "object"
+        },
+        "use_case_count": {
+          "maximum": 64,
+          "minimum": 1,
+          "title": "Use Case Count",
+          "type": "integer"
+        }
+      },
+      "required": [
+        "dataset_version",
+        "case_count",
+        "use_case_count",
+        "splits",
+        "profiles",
+        "sealed_ground_truth_sha256",
+        "dataset_sha256"
+      ],
+      "title": "EvaluationDatasetManifest",
+      "type": "object"
+    },
+    "EvaluationHealth": {
+      "additionalProperties": false,
+      "properties": {
+        "active_baselines": {
+          "minimum": 0,
+          "title": "Active Baselines",
+          "type": "integer"
+        },
+        "audit_valid": {
+          "title": "Audit Valid",
+          "type": "boolean"
+        },
+        "blocked_runs": {
+          "minimum": 0,
+          "title": "Blocked Runs",
+          "type": "integer"
+        },
+        "calculated_at": {
+          "format": "date-time",
+          "title": "Calculated At",
+          "type": "string"
+        },
+        "candidates": {
+          "minimum": 0,
+          "title": "Candidates",
+          "type": "integer"
+        },
+        "cases_in_latest_dataset": {
+          "minimum": 0,
+          "title": "Cases In Latest Dataset",
+          "type": "integer"
+        },
+        "datasets": {
+          "minimum": 0,
+          "title": "Datasets",
+          "type": "integer"
+        },
+        "direct_learning_enabled": {
+          "const": false,
+          "default": false,
+          "title": "Direct Learning Enabled",
+          "type": "boolean"
+        },
+        "feedback_approved": {
+          "minimum": 0,
+          "title": "Feedback Approved",
+          "type": "integer"
+        },
+        "feedback_candidates": {
+          "minimum": 0,
+          "title": "Feedback Candidates",
+          "type": "integer"
+        },
+        "feedback_promoted": {
+          "minimum": 0,
+          "title": "Feedback Promoted",
+          "type": "integer"
+        },
+        "held_runs": {
+          "minimum": 0,
+          "title": "Held Runs",
+          "type": "integer"
+        },
+        "live_candidates": {
+          "minimum": 0,
+          "title": "Live Candidates",
+          "type": "integer"
+        },
+        "passing_runs": {
+          "minimum": 0,
+          "title": "Passing Runs",
+          "type": "integer"
+        },
+        "runs": {
+          "minimum": 0,
+          "title": "Runs",
+          "type": "integer"
+        },
+        "runtime_policy_mutation_enabled": {
+          "const": false,
+          "default": false,
+          "title": "Runtime Policy Mutation Enabled",
+          "type": "boolean"
+        },
+        "schema_version": {
+          "default": "1.0.0",
+          "title": "Schema Version",
+          "type": "string"
+        },
+        "status": {
+          "enum": [
+            "healthy",
+            "degraded"
+          ],
+          "title": "Status",
+          "type": "string"
+        },
+        "tenant_id": {
+          "title": "Tenant Id",
+          "type": "string"
+        }
+      },
+      "required": [
+        "status",
+        "tenant_id",
+        "datasets",
+        "cases_in_latest_dataset",
+        "candidates",
+        "live_candidates",
+        "runs",
+        "passing_runs",
+        "blocked_runs",
+        "held_runs",
+        "active_baselines",
+        "feedback_candidates",
+        "feedback_approved",
+        "feedback_promoted",
+        "audit_valid",
+        "calculated_at"
+      ],
+      "title": "EvaluationHealth",
+      "type": "object"
+    },
+    "EvaluationThresholdPolicy": {
+      "additionalProperties": false,
+      "properties": {
+        "maximum_abstention_increase": {
+          "maximum": 1.0,
+          "minimum": 0.0,
+          "title": "Maximum Abstention Increase",
+          "type": "number"
+        },
+        "maximum_abstention_rate": {
+          "maximum": 1.0,
+          "minimum": 0.0,
+          "title": "Maximum Abstention Rate",
+          "type": "number"
+        },
+        "maximum_benign_completion_drop": {
+          "maximum": 1.0,
+          "minimum": 0.0,
+          "title": "Maximum Benign Completion Drop",
+          "type": "number"
+        },
+        "maximum_brier_increase": {
+          "maximum": 1.0,
+          "minimum": 0.0,
+          "title": "Maximum Brier Increase",
+          "type": "number"
+        },
+        "maximum_brier_score": {
+          "maximum": 1.0,
+          "minimum": 0.0,
+          "title": "Maximum Brier Score",
+          "type": "number"
+        },
+        "maximum_calibration_error": {
+          "maximum": 1.0,
+          "minimum": 0.0,
+          "title": "Maximum Calibration Error",
+          "type": "number"
+        },
+        "maximum_evidence_drop": {
+          "maximum": 1.0,
+          "minimum": 0.0,
+          "title": "Maximum Evidence Drop",
+          "type": "number"
+        },
+        "maximum_forbidden_effect_increase": {
+          "maximum": 1.0,
+          "minimum": 0.0,
+          "title": "Maximum Forbidden Effect Increase",
+          "type": "number"
+        },
+        "maximum_forbidden_effect_rate": {
+          "maximum": 1.0,
+          "minimum": 0.0,
+          "title": "Maximum Forbidden Effect Rate",
+          "type": "number"
+        },
+        "maximum_precision_drop": {
+          "maximum": 1.0,
+          "minimum": 0.0,
+          "title": "Maximum Precision Drop",
+          "type": "number"
+        },
+        "maximum_recall_drop": {
+          "maximum": 1.0,
+          "minimum": 0.0,
+          "title": "Maximum Recall Drop",
+          "type": "number"
+        },
+        "maximum_safe_action_drop": {
+          "maximum": 1.0,
+          "minimum": 0.0,
+          "title": "Maximum Safe Action Drop",
+          "type": "number"
+        },
+        "maximum_severity_drop": {
+          "maximum": 1.0,
+          "minimum": 0.0,
+          "title": "Maximum Severity Drop",
+          "type": "number"
+        },
+        "minimum_alert_precision": {
+          "maximum": 1.0,
+          "minimum": 0.0,
+          "title": "Minimum Alert Precision",
+          "type": "number"
+        },
+        "minimum_benign_completion_rate": {
+          "maximum": 1.0,
+          "minimum": 0.0,
+          "title": "Minimum Benign Completion Rate",
+          "type": "number"
+        },
+        "minimum_cases": {
+          "maximum": 500,
+          "minimum": 1,
+          "title": "Minimum Cases",
+          "type": "integer"
+        },
+        "minimum_cases_per_use_case": {
+          "maximum": 100,
+          "minimum": 1,
+          "title": "Minimum Cases Per Use Case",
+          "type": "integer"
+        },
+        "minimum_detector_recall": {
+          "maximum": 1.0,
+          "minimum": 0.0,
+          "title": "Minimum Detector Recall",
+          "type": "number"
+        },
+        "minimum_evidence_validity_rate": {
+          "maximum": 1.0,
+          "minimum": 0.0,
+          "title": "Minimum Evidence Validity Rate",
+          "type": "number"
+        },
+        "minimum_safe_action_rate": {
+          "maximum": 1.0,
+          "minimum": 0.0,
+          "title": "Minimum Safe Action Rate",
+          "type": "number"
+        },
+        "minimum_schema_validity_rate": {
+          "maximum": 1.0,
+          "minimum": 0.0,
+          "title": "Minimum Schema Validity Rate",
+          "type": "number"
+        },
+        "minimum_severity_exact_rate": {
+          "maximum": 1.0,
+          "minimum": 0.0,
+          "title": "Minimum Severity Exact Rate",
+          "type": "number"
+        },
+        "minimum_severity_within_one_rate": {
+          "maximum": 1.0,
+          "minimum": 0.0,
+          "title": "Minimum Severity Within One Rate",
+          "type": "number"
+        },
+        "policy_sha256": {
+          "pattern": "^[0-9a-f]{64}$",
+          "title": "Policy Sha256",
+          "type": "string"
+        },
+        "policy_version": {
+          "pattern": "^[0-9]+\\.[0-9]+\\.[0-9]+$",
+          "title": "Policy Version",
+          "type": "string"
+        },
+        "schema_version": {
+          "default": "1.0.0",
+          "title": "Schema Version",
+          "type": "string"
+        }
+      },
+      "required": [
+        "policy_version",
+        "minimum_cases",
+        "minimum_cases_per_use_case",
+        "minimum_alert_precision",
+        "minimum_detector_recall",
+        "maximum_forbidden_effect_rate",
+        "minimum_benign_completion_rate",
+        "minimum_severity_exact_rate",
+        "minimum_severity_within_one_rate",
+        "minimum_evidence_validity_rate",
+        "minimum_safe_action_rate",
+        "maximum_abstention_rate",
+        "maximum_brier_score",
+        "maximum_calibration_error",
+        "minimum_schema_validity_rate",
+        "maximum_recall_drop",
+        "maximum_precision_drop",
+        "maximum_severity_drop",
+        "maximum_evidence_drop",
+        "maximum_safe_action_drop",
+        "maximum_benign_completion_drop",
+        "maximum_forbidden_effect_increase",
+        "maximum_abstention_increase",
+        "maximum_brier_increase",
+        "policy_sha256"
+      ],
+      "title": "EvaluationThresholdPolicy",
+      "type": "object"
+    },
+    "EvaluationUseCaseProfile": {
+      "additionalProperties": false,
+      "properties": {
+        "cases": {
+          "minimum": 1,
+          "title": "Cases",
+          "type": "integer"
+        },
+        "framework_mappings": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Framework Mappings",
+          "type": "array"
+        },
+        "use_case": {
+          "title": "Use Case",
+          "type": "string"
+        },
+        "variants": {
+          "items": {
+            "$ref": "#/$defs/SimulationVariant"
+          },
+          "title": "Variants",
+          "type": "array"
+        }
+      },
+      "required": [
+        "use_case",
+        "cases",
+        "variants",
+        "framework_mappings"
+      ],
+      "title": "EvaluationUseCaseProfile",
+      "type": "object"
+    },
+    "SimulationVariant": {
+      "enum": [
+        "plain",
+        "japanese",
+        "spanish",
+        "unicode_confusable",
+        "zero_width",
+        "base64",
+        "mixed_obfuscation"
+      ],
+      "title": "SimulationVariant",
+      "type": "string"
+    }
+  },
+  "additionalProperties": false,
+  "properties": {
+    "baselines": {
+      "items": {
+        "$ref": "#/$defs/EvaluationBaseline"
+      },
+      "maxItems": 128,
+      "title": "Baselines",
+      "type": "array"
+    },
+    "candidates": {
+      "items": {
+        "$ref": "#/$defs/EvaluationCandidateMetadata"
+      },
+      "maxItems": 64,
+      "title": "Candidates",
+      "type": "array"
+    },
+    "datasets": {
+      "items": {
+        "$ref": "#/$defs/EvaluationDatasetManifest"
+      },
+      "maxItems": 100,
+      "title": "Datasets",
+      "type": "array"
+    },
+    "health": {
+      "$ref": "#/$defs/EvaluationHealth"
+    },
+    "latest_dataset": {
+      "$ref": "#/$defs/EvaluationDatasetManifest"
+    },
+    "policy": {
+      "$ref": "#/$defs/EvaluationThresholdPolicy"
+    },
+    "safety_invariants": {
+      "items": {
+        "type": "string"
+      },
+      "title": "Safety Invariants",
+      "type": "array"
+    },
+    "schema_version": {
+      "default": "1.0.0",
+      "title": "Schema Version",
+      "type": "string"
+    }
+  },
+  "required": [
+    "latest_dataset",
+    "datasets",
+    "candidates",
+    "policy",
+    "baselines",
+    "health",
+    "safety_invariants"
+  ],
+  "title": "EvaluationCatalog",
+  "type": "object"
+}

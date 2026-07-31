@@ -1,0 +1,152 @@
+{
+  "$defs": {
+    "IntegrationDestinationSpec": {
+      "additionalProperties": false,
+      "properties": {
+        "allowed_hosts": {
+          "items": {
+            "type": "string"
+          },
+          "maxItems": 16,
+          "minItems": 1,
+          "title": "Allowed Hosts",
+          "type": "array"
+        },
+        "credential_env": {
+          "anyOf": [
+            {
+              "pattern": "^[A-Z][A-Z0-9_]{2,127}$",
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Credential Env"
+        },
+        "destination_id": {
+          "pattern": "^integration://[A-Za-z0-9_.@/-]+$",
+          "title": "Destination Id",
+          "type": "string"
+        },
+        "enabled": {
+          "default": true,
+          "title": "Enabled",
+          "type": "boolean"
+        },
+        "endpoint": {
+          "maxLength": 512,
+          "minLength": 10,
+          "title": "Endpoint",
+          "type": "string"
+        },
+        "index": {
+          "anyOf": [
+            {
+              "pattern": "^[a-z0-9][a-z0-9._-]{0,127}$",
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Index"
+        },
+        "indexer_ack": {
+          "default": false,
+          "title": "Indexer Ack",
+          "type": "boolean"
+        },
+        "kind": {
+          "$ref": "#/$defs/IntegrationKind"
+        },
+        "max_attempts": {
+          "default": 5,
+          "maximum": 20,
+          "minimum": 1,
+          "title": "Max Attempts",
+          "type": "integer"
+        },
+        "name": {
+          "maxLength": 128,
+          "minLength": 3,
+          "title": "Name",
+          "type": "string"
+        },
+        "retry_base_seconds": {
+          "default": 10,
+          "maximum": 3600,
+          "minimum": 1,
+          "title": "Retry Base Seconds",
+          "type": "integer"
+        },
+        "sourcetype": {
+          "default": "agentsec:finding",
+          "maxLength": 128,
+          "minLength": 3,
+          "title": "Sourcetype",
+          "type": "string"
+        }
+      },
+      "required": [
+        "destination_id",
+        "name",
+        "kind",
+        "endpoint",
+        "allowed_hosts"
+      ],
+      "title": "IntegrationDestinationSpec",
+      "type": "object"
+    },
+    "IntegrationKind": {
+      "enum": [
+        "splunk_hec",
+        "elastic_bulk",
+        "signed_webhook",
+        "syslog_tls",
+        "cef_tls",
+        "otlp_http_json"
+      ],
+      "title": "IntegrationKind",
+      "type": "string"
+    }
+  },
+  "additionalProperties": false,
+  "properties": {
+    "destinations": {
+      "items": {
+        "$ref": "#/$defs/IntegrationDestinationSpec"
+      },
+      "maxItems": 32,
+      "minItems": 1,
+      "title": "Destinations",
+      "type": "array"
+    },
+    "policy_version": {
+      "maxLength": 128,
+      "minLength": 3,
+      "title": "Policy Version",
+      "type": "string"
+    },
+    "schema_version": {
+      "default": "1.0.0",
+      "title": "Schema Version",
+      "type": "string"
+    },
+    "tenant_id": {
+      "maxLength": 128,
+      "minLength": 1,
+      "title": "Tenant Id",
+      "type": "string"
+    }
+  },
+  "required": [
+    "policy_version",
+    "tenant_id",
+    "destinations"
+  ],
+  "title": "IntegrationPolicy",
+  "type": "object"
+}

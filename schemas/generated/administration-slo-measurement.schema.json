@@ -1,0 +1,108 @@
+{
+  "$defs": {
+    "ServiceLevelObjective": {
+      "additionalProperties": false,
+      "properties": {
+        "comparison": {
+          "pattern": "^(gte|lte)$",
+          "title": "Comparison",
+          "type": "string"
+        },
+        "metric": {
+          "pattern": "^(availability|latency_ms|durability|detector_lag_ms)$",
+          "title": "Metric",
+          "type": "string"
+        },
+        "name": {
+          "maxLength": 128,
+          "minLength": 3,
+          "title": "Name",
+          "type": "string"
+        },
+        "objective_id": {
+          "pattern": "^slo://[A-Za-z0-9_.@/-]+$",
+          "title": "Objective Id",
+          "type": "string"
+        },
+        "target": {
+          "exclusiveMinimum": 0,
+          "title": "Target",
+          "type": "number"
+        },
+        "window_minutes": {
+          "maximum": 525600,
+          "minimum": 1,
+          "title": "Window Minutes",
+          "type": "integer"
+        }
+      },
+      "required": [
+        "objective_id",
+        "name",
+        "metric",
+        "comparison",
+        "target",
+        "window_minutes"
+      ],
+      "title": "ServiceLevelObjective",
+      "type": "object"
+    }
+  },
+  "additionalProperties": false,
+  "properties": {
+    "error_budget_remaining": {
+      "maximum": 1,
+      "minimum": 0,
+      "title": "Error Budget Remaining",
+      "type": "number"
+    },
+    "measured_at": {
+      "format": "date-time",
+      "title": "Measured At",
+      "type": "string"
+    },
+    "measured_by": {
+      "title": "Measured By",
+      "type": "string"
+    },
+    "measurement_id": {
+      "pattern": "^slo-measurement_[0-9a-f]{32}$",
+      "title": "Measurement Id",
+      "type": "string"
+    },
+    "objective": {
+      "$ref": "#/$defs/ServiceLevelObjective"
+    },
+    "observed": {
+      "minimum": 0,
+      "title": "Observed",
+      "type": "number"
+    },
+    "passed": {
+      "title": "Passed",
+      "type": "boolean"
+    },
+    "record_sha256": {
+      "pattern": "^[0-9a-f]{64}$",
+      "title": "Record Sha256",
+      "type": "string"
+    },
+    "tenant_id": {
+      "title": "Tenant Id",
+      "type": "string"
+    }
+  },
+  "required": [
+    "measurement_id",
+    "tenant_id",
+    "objective",
+    "observed",
+    "passed",
+    "error_budget_remaining",
+    "measured_at",
+    "measured_by",
+    "record_sha256"
+  ],
+  "title": "ServiceLevelMeasurement",
+  "type": "object"
+}

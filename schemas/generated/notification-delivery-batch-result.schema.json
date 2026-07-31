@@ -1,0 +1,46 @@
+{
+  "additionalProperties": false,
+  "properties": {
+    "ack_pending": {
+      "minimum": 0,
+      "title": "Ack Pending",
+      "type": "integer"
+    },
+    "claimed": {
+      "maximum": 100,
+      "minimum": 0,
+      "title": "Claimed",
+      "type": "integer"
+    },
+    "dead_lettered": {
+      "minimum": 0,
+      "title": "Dead Lettered",
+      "type": "integer"
+    },
+    "delivered": {
+      "minimum": 0,
+      "title": "Delivered",
+      "type": "integer"
+    },
+    "processed_at": {
+      "format": "date-time",
+      "title": "Processed At",
+      "type": "string"
+    },
+    "retry_scheduled": {
+      "minimum": 0,
+      "title": "Retry Scheduled",
+      "type": "integer"
+    }
+  },
+  "required": [
+    "claimed",
+    "delivered",
+    "ack_pending",
+    "retry_scheduled",
+    "dead_lettered",
+    "processed_at"
+  ],
+  "title": "DeliveryBatchResult",
+  "type": "object"
+}

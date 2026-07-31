@@ -1,0 +1,92 @@
+{
+  "$defs": {
+    "ReachableNode": {
+      "additionalProperties": false,
+      "properties": {
+        "depth": {
+          "minimum": 0,
+          "title": "Depth",
+          "type": "integer"
+        },
+        "node_id": {
+          "title": "Node Id",
+          "type": "string"
+        },
+        "risk_score": {
+          "maximum": 100,
+          "minimum": 0,
+          "title": "Risk Score",
+          "type": "integer"
+        },
+        "via_edge_id": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Via Edge Id"
+        }
+      },
+      "required": [
+        "node_id",
+        "depth",
+        "risk_score"
+      ],
+      "title": "ReachableNode",
+      "type": "object"
+    }
+  },
+  "additionalProperties": false,
+  "properties": {
+    "as_of": {
+      "format": "date-time",
+      "title": "As Of",
+      "type": "string"
+    },
+    "direction": {
+      "pattern": "^(outbound|inbound)$",
+      "title": "Direction",
+      "type": "string"
+    },
+    "max_depth": {
+      "maximum": 20,
+      "minimum": 1,
+      "title": "Max Depth",
+      "type": "integer"
+    },
+    "origin_node_id": {
+      "title": "Origin Node Id",
+      "type": "string"
+    },
+    "reachable": {
+      "items": {
+        "$ref": "#/$defs/ReachableNode"
+      },
+      "title": "Reachable",
+      "type": "array"
+    },
+    "tenant_id": {
+      "title": "Tenant Id",
+      "type": "string"
+    },
+    "truncated": {
+      "title": "Truncated",
+      "type": "boolean"
+    }
+  },
+  "required": [
+    "tenant_id",
+    "origin_node_id",
+    "direction",
+    "reachable",
+    "max_depth",
+    "truncated",
+    "as_of"
+  ],
+  "title": "ReachabilityResult",
+  "type": "object"
+}

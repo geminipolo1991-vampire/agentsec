@@ -1,0 +1,56 @@
+{
+  "additionalProperties": false,
+  "properties": {
+    "assigned_to": {
+      "anyOf": [
+        {
+          "maxLength": 256,
+          "pattern": "^(analyst|system|workload)://[A-Za-z0-9_.@/-]+$",
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Assigned To"
+    },
+    "description": {
+      "maxLength": 1024,
+      "minLength": 3,
+      "title": "Description",
+      "type": "string"
+    },
+    "due_at": {
+      "anyOf": [
+        {
+          "format": "date-time",
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Due At"
+    },
+    "expected_version": {
+      "minimum": 1,
+      "title": "Expected Version",
+      "type": "integer"
+    },
+    "title": {
+      "maxLength": 256,
+      "minLength": 3,
+      "title": "Title",
+      "type": "string"
+    }
+  },
+  "required": [
+    "expected_version",
+    "title",
+    "description"
+  ],
+  "title": "CaseTaskCreateRequest",
+  "type": "object"
+}

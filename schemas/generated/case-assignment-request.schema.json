@@ -1,0 +1,43 @@
+{
+  "additionalProperties": false,
+  "properties": {
+    "assigned_to": {
+      "anyOf": [
+        {
+          "maxLength": 256,
+          "pattern": "^(analyst|system|workload)://[A-Za-z0-9_.@/-]+$",
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Assigned To"
+    },
+    "expected_version": {
+      "minimum": 1,
+      "title": "Expected Version",
+      "type": "integer"
+    },
+    "team_id": {
+      "anyOf": [
+        {
+          "maxLength": 256,
+          "pattern": "^team://[A-Za-z0-9_.@/-]+$",
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Team Id"
+    }
+  },
+  "required": [
+    "expected_version"
+  ],
+  "title": "CaseAssignmentRequest",
+  "type": "object"
+}

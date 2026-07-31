@@ -1,0 +1,332 @@
+{
+  "$defs": {
+    "AnalystAlternative": {
+      "additionalProperties": false,
+      "properties": {
+        "evidence_ids": {
+          "items": {
+            "type": "string"
+          },
+          "maxItems": 16,
+          "title": "Evidence Ids",
+          "type": "array"
+        },
+        "rationale": {
+          "maxLength": 512,
+          "minLength": 3,
+          "title": "Rationale",
+          "type": "string"
+        },
+        "recommended_action": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/DecisionAction"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        },
+        "title": {
+          "maxLength": 128,
+          "minLength": 3,
+          "title": "Title",
+          "type": "string"
+        }
+      },
+      "required": [
+        "title",
+        "rationale"
+      ],
+      "title": "AnalystAlternative",
+      "type": "object"
+    },
+    "AnalystClaim": {
+      "additionalProperties": false,
+      "description": "A bounded, machine-checkable assertion made by one analyst role.",
+      "properties": {
+        "claim_id": {
+          "pattern": "^acm_[0-9a-f]{32}$",
+          "title": "Claim Id",
+          "type": "string"
+        },
+        "evidence_ids": {
+          "items": {
+            "type": "string"
+          },
+          "maxItems": 16,
+          "minItems": 1,
+          "title": "Evidence Ids",
+          "type": "array"
+        },
+        "expected_value": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "boolean"
+            },
+            {
+              "type": "integer"
+            },
+            {
+              "type": "number"
+            },
+            {
+              "items": {
+                "type": "string"
+              },
+              "type": "array"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Expected Value"
+        },
+        "fact_key": {
+          "pattern": "^[a-z][a-z0-9_]{1,63}$",
+          "title": "Fact Key",
+          "type": "string"
+        },
+        "operator": {
+          "$ref": "#/$defs/AnalystClaimOperator"
+        },
+        "statement": {
+          "maxLength": 512,
+          "minLength": 3,
+          "title": "Statement",
+          "type": "string"
+        },
+        "subject": {
+          "maxLength": 128,
+          "minLength": 1,
+          "title": "Subject",
+          "type": "string"
+        }
+      },
+      "required": [
+        "statement",
+        "subject",
+        "fact_key",
+        "operator",
+        "evidence_ids"
+      ],
+      "title": "AnalystClaim",
+      "type": "object"
+    },
+    "AnalystClaimOperator": {
+      "enum": [
+        "equals",
+        "contains",
+        "exists"
+      ],
+      "title": "AnalystClaimOperator",
+      "type": "string"
+    },
+    "AnalystRole": {
+      "enum": [
+        "triage",
+        "investigation",
+        "judge",
+        "escalation",
+        "response_advisor"
+      ],
+      "title": "AnalystRole",
+      "type": "string"
+    },
+    "AnalystRoleStatus": {
+      "enum": [
+        "completed",
+        "abstained",
+        "unavailable"
+      ],
+      "title": "AnalystRoleStatus",
+      "type": "string"
+    },
+    "DecisionAction": {
+      "enum": [
+        "allow",
+        "allow_with_obligations",
+        "require_approval",
+        "deny"
+      ],
+      "title": "DecisionAction",
+      "type": "string"
+    }
+  },
+  "additionalProperties": false,
+  "properties": {
+    "abstention_reason": {
+      "anyOf": [
+        {
+          "maxLength": 512,
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Abstention Reason"
+    },
+    "alternatives": {
+      "items": {
+        "$ref": "#/$defs/AnalystAlternative"
+      },
+      "maxItems": 5,
+      "title": "Alternatives",
+      "type": "array"
+    },
+    "claims": {
+      "items": {
+        "$ref": "#/$defs/AnalystClaim"
+      },
+      "maxItems": 16,
+      "title": "Claims",
+      "type": "array"
+    },
+    "completed_at": {
+      "format": "date-time",
+      "title": "Completed At",
+      "type": "string"
+    },
+    "confidence": {
+      "anyOf": [
+        {
+          "maximum": 1.0,
+          "minimum": 0.0,
+          "type": "number"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Confidence"
+    },
+    "escalation_advice": {
+      "anyOf": [
+        {
+          "maxLength": 256,
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Escalation Advice"
+    },
+    "evidence_ids": {
+      "items": {
+        "type": "string"
+      },
+      "maxItems": 32,
+      "title": "Evidence Ids",
+      "type": "array"
+    },
+    "hypothesis": {
+      "anyOf": [
+        {
+          "maxLength": 1024,
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Hypothesis"
+    },
+    "latency_ms": {
+      "default": 0,
+      "maximum": 60000,
+      "minimum": 0,
+      "title": "Latency Ms",
+      "type": "integer"
+    },
+    "model_id": {
+      "maxLength": 128,
+      "minLength": 1,
+      "title": "Model Id",
+      "type": "string"
+    },
+    "provider": {
+      "maxLength": 64,
+      "minLength": 1,
+      "title": "Provider",
+      "type": "string"
+    },
+    "reason_codes": {
+      "items": {
+        "type": "string"
+      },
+      "maxItems": 32,
+      "title": "Reason Codes",
+      "type": "array"
+    },
+    "recommended_action": {
+      "anyOf": [
+        {
+          "$ref": "#/$defs/DecisionAction"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null
+    },
+    "response_advice": {
+      "items": {
+        "type": "string"
+      },
+      "maxItems": 8,
+      "title": "Response Advice",
+      "type": "array"
+    },
+    "role": {
+      "$ref": "#/$defs/AnalystRole"
+    },
+    "schema_version": {
+      "default": "1.0.0",
+      "title": "Schema Version",
+      "type": "string"
+    },
+    "status": {
+      "$ref": "#/$defs/AnalystRoleStatus"
+    },
+    "summary": {
+      "anyOf": [
+        {
+          "maxLength": 1024,
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Summary"
+    },
+    "uncertainties": {
+      "items": {
+        "type": "string"
+      },
+      "maxItems": 16,
+      "title": "Uncertainties",
+      "type": "array"
+    }
+  },
+  "required": [
+    "role",
+    "status",
+    "provider",
+    "model_id"
+  ],
+  "title": "AnalystRoleResult",
+  "type": "object"
+}

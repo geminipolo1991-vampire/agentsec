@@ -40,8 +40,11 @@ These are corpus results, not population estimates. See `docs/limitations.md`.
 
 ## Production-v1 verdict
 
-**Not authorized.** Durable state, independent enforcement/telemetry, revocable
-production identity and signing, multi-tenant isolation, real connector tests,
-HA/backup/restore, SLOs, pilot ownership, and organizational approvals remain
-open. The EC2 Tokyo files are a hardened deployment scaffold, not evidence of a
+**Not authorized.** Module 24 now implements single-tenant reference RBAC,
+signed-assertion/MFA checks, external workload/key metadata, append-only admin
+audit, SLO measurements, recovery receipts, and supply-chain attestations. It
+explicitly does not verify enterprise IdP federation, external KMS/HSM custody,
+geographic residency enforcement, distributed HA, managed backup/failover,
+real connector/provider behavior, pilot ownership, or organizational approval.
+The repository therefore remains a local research product, not evidence of a
 live production control.

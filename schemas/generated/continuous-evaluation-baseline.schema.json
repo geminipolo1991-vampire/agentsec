@@ -1,0 +1,85 @@
+{
+  "$defs": {
+    "CandidateKind": {
+      "enum": [
+        "deterministic",
+        "recorded_model",
+        "live_model"
+      ],
+      "title": "CandidateKind",
+      "type": "string"
+    }
+  },
+  "additionalProperties": false,
+  "properties": {
+    "active": {
+      "title": "Active",
+      "type": "boolean"
+    },
+    "approved_at": {
+      "format": "date-time",
+      "title": "Approved At",
+      "type": "string"
+    },
+    "approved_by": {
+      "title": "Approved By",
+      "type": "string"
+    },
+    "baseline_id": {
+      "pattern": "^evbase_[0-9a-f]{32}$",
+      "title": "Baseline Id",
+      "type": "string"
+    },
+    "candidate_kind": {
+      "$ref": "#/$defs/CandidateKind"
+    },
+    "dataset_version": {
+      "title": "Dataset Version",
+      "type": "string"
+    },
+    "reason_sha256": {
+      "pattern": "^[0-9a-f]{64}$",
+      "title": "Reason Sha256",
+      "type": "string"
+    },
+    "record_sha256": {
+      "pattern": "^[0-9a-f]{64}$",
+      "title": "Record Sha256",
+      "type": "string"
+    },
+    "report_digest": {
+      "pattern": "^[0-9a-f]{64}$",
+      "title": "Report Digest",
+      "type": "string"
+    },
+    "run_id": {
+      "pattern": "^evrun_[0-9a-f]{32}$",
+      "title": "Run Id",
+      "type": "string"
+    },
+    "schema_version": {
+      "default": "1.0.0",
+      "title": "Schema Version",
+      "type": "string"
+    },
+    "tenant_id": {
+      "title": "Tenant Id",
+      "type": "string"
+    }
+  },
+  "required": [
+    "baseline_id",
+    "tenant_id",
+    "dataset_version",
+    "candidate_kind",
+    "run_id",
+    "report_digest",
+    "approved_by",
+    "approved_at",
+    "reason_sha256",
+    "active",
+    "record_sha256"
+  ],
+  "title": "EvaluationBaseline",
+  "type": "object"
+}

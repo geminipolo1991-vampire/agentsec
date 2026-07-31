@@ -1,0 +1,344 @@
+{
+  "$defs": {
+    "EscalationLevel": {
+      "enum": [
+        "none",
+        "review_queue",
+        "soc_urgent",
+        "incident_page"
+      ],
+      "title": "EscalationLevel",
+      "type": "string"
+    },
+    "NotificationChannel": {
+      "enum": [
+        "on_call",
+        "ticket",
+        "email",
+        "messaging"
+      ],
+      "title": "NotificationChannel",
+      "type": "string"
+    },
+    "NotificationDestination": {
+      "additionalProperties": false,
+      "properties": {
+        "allowed_hosts": {
+          "items": {
+            "type": "string"
+          },
+          "maxItems": 16,
+          "minItems": 1,
+          "title": "Allowed Hosts",
+          "type": "array"
+        },
+        "channel": {
+          "$ref": "#/$defs/NotificationChannel"
+        },
+        "credential_env": {
+          "pattern": "^[A-Z][A-Z0-9_]{2,127}$",
+          "title": "Credential Env",
+          "type": "string"
+        },
+        "destination_id": {
+          "pattern": "^destination://[A-Za-z0-9_.@/-]+$",
+          "title": "Destination Id",
+          "type": "string"
+        },
+        "enabled": {
+          "default": true,
+          "title": "Enabled",
+          "type": "boolean"
+        },
+        "endpoint": {
+          "maxLength": 512,
+          "minLength": 12,
+          "title": "Endpoint",
+          "type": "string"
+        },
+        "name": {
+          "maxLength": 128,
+          "minLength": 3,
+          "title": "Name",
+          "type": "string"
+        },
+        "provider_ack_required": {
+          "default": false,
+          "title": "Provider Ack Required",
+          "type": "boolean"
+        }
+      },
+      "required": [
+        "destination_id",
+        "name",
+        "channel",
+        "endpoint",
+        "allowed_hosts",
+        "credential_env"
+      ],
+      "title": "NotificationDestination",
+      "type": "object"
+    },
+    "NotificationRoute": {
+      "additionalProperties": false,
+      "properties": {
+        "acknowledgment_minutes": {
+          "maximum": 1440,
+          "minimum": 1,
+          "title": "Acknowledgment Minutes",
+          "type": "integer"
+        },
+        "alert_types": {
+          "items": {
+            "type": "string"
+          },
+          "maxItems": 32,
+          "title": "Alert Types",
+          "type": "array"
+        },
+        "destination_templates": {
+          "additionalProperties": {
+            "type": "string"
+          },
+          "maxProperties": 16,
+          "minProperties": 1,
+          "title": "Destination Templates",
+          "type": "object"
+        },
+        "enabled": {
+          "default": true,
+          "title": "Enabled",
+          "type": "boolean"
+        },
+        "escalation_levels": {
+          "items": {
+            "$ref": "#/$defs/EscalationLevel"
+          },
+          "maxItems": 3,
+          "minItems": 1,
+          "title": "Escalation Levels",
+          "type": "array"
+        },
+        "max_attempts": {
+          "maximum": 20,
+          "minimum": 1,
+          "title": "Max Attempts",
+          "type": "integer"
+        },
+        "name": {
+          "maxLength": 128,
+          "minLength": 3,
+          "title": "Name",
+          "type": "string"
+        },
+        "on_call_schedule_id": {
+          "pattern": "^schedule://[A-Za-z0-9_.@/-]+$",
+          "title": "On Call Schedule Id",
+          "type": "string"
+        },
+        "priorities": {
+          "items": {
+            "type": "string"
+          },
+          "maxItems": 4,
+          "minItems": 1,
+          "title": "Priorities",
+          "type": "array"
+        },
+        "retry_base_seconds": {
+          "maximum": 3600,
+          "minimum": 1,
+          "title": "Retry Base Seconds",
+          "type": "integer"
+        },
+        "route_id": {
+          "pattern": "^route://[A-Za-z0-9_.@/-]+$",
+          "title": "Route Id",
+          "type": "string"
+        }
+      },
+      "required": [
+        "route_id",
+        "name",
+        "priorities",
+        "escalation_levels",
+        "destination_templates",
+        "on_call_schedule_id",
+        "acknowledgment_minutes",
+        "max_attempts",
+        "retry_base_seconds"
+      ],
+      "title": "NotificationRoute",
+      "type": "object"
+    },
+    "NotificationTemplate": {
+      "additionalProperties": false,
+      "properties": {
+        "body_template": {
+          "maxLength": 1024,
+          "minLength": 3,
+          "title": "Body Template",
+          "type": "string"
+        },
+        "channel": {
+          "$ref": "#/$defs/NotificationChannel"
+        },
+        "name": {
+          "maxLength": 128,
+          "minLength": 3,
+          "title": "Name",
+          "type": "string"
+        },
+        "subject_template": {
+          "maxLength": 256,
+          "minLength": 3,
+          "title": "Subject Template",
+          "type": "string"
+        },
+        "template_id": {
+          "pattern": "^template://[A-Za-z0-9_.@/-]+$",
+          "title": "Template Id",
+          "type": "string"
+        },
+        "version": {
+          "minimum": 1,
+          "title": "Version",
+          "type": "integer"
+        }
+      },
+      "required": [
+        "template_id",
+        "name",
+        "channel",
+        "subject_template",
+        "body_template",
+        "version"
+      ],
+      "title": "NotificationTemplate",
+      "type": "object"
+    },
+    "OnCallSchedule": {
+      "additionalProperties": false,
+      "properties": {
+        "member_ids": {
+          "items": {
+            "type": "string"
+          },
+          "maxItems": 100,
+          "minItems": 1,
+          "title": "Member Ids",
+          "type": "array"
+        },
+        "name": {
+          "maxLength": 128,
+          "minLength": 3,
+          "title": "Name",
+          "type": "string"
+        },
+        "rotation_minutes": {
+          "maximum": 10080,
+          "minimum": 15,
+          "title": "Rotation Minutes",
+          "type": "integer"
+        },
+        "schedule_id": {
+          "pattern": "^schedule://[A-Za-z0-9_.@/-]+$",
+          "title": "Schedule Id",
+          "type": "string"
+        },
+        "starts_at": {
+          "format": "date-time",
+          "title": "Starts At",
+          "type": "string"
+        },
+        "timezone_name": {
+          "maxLength": 64,
+          "minLength": 1,
+          "title": "Timezone Name",
+          "type": "string"
+        },
+        "version": {
+          "minimum": 1,
+          "title": "Version",
+          "type": "integer"
+        }
+      },
+      "required": [
+        "schedule_id",
+        "name",
+        "timezone_name",
+        "starts_at",
+        "rotation_minutes",
+        "member_ids",
+        "version"
+      ],
+      "title": "OnCallSchedule",
+      "type": "object"
+    }
+  },
+  "additionalProperties": false,
+  "properties": {
+    "destinations": {
+      "items": {
+        "$ref": "#/$defs/NotificationDestination"
+      },
+      "maxItems": 32,
+      "minItems": 1,
+      "title": "Destinations",
+      "type": "array"
+    },
+    "policy_sha256": {
+      "pattern": "^[0-9a-f]{64}$",
+      "title": "Policy Sha256",
+      "type": "string"
+    },
+    "policy_version": {
+      "maxLength": 128,
+      "minLength": 3,
+      "title": "Policy Version",
+      "type": "string"
+    },
+    "routes": {
+      "items": {
+        "$ref": "#/$defs/NotificationRoute"
+      },
+      "maxItems": 32,
+      "minItems": 1,
+      "title": "Routes",
+      "type": "array"
+    },
+    "schedules": {
+      "items": {
+        "$ref": "#/$defs/OnCallSchedule"
+      },
+      "maxItems": 32,
+      "minItems": 1,
+      "title": "Schedules",
+      "type": "array"
+    },
+    "schema_version": {
+      "default": "1.0.0",
+      "title": "Schema Version",
+      "type": "string"
+    },
+    "templates": {
+      "items": {
+        "$ref": "#/$defs/NotificationTemplate"
+      },
+      "maxItems": 64,
+      "minItems": 1,
+      "title": "Templates",
+      "type": "array"
+    }
+  },
+  "required": [
+    "policy_version",
+    "destinations",
+    "schedules",
+    "templates",
+    "routes",
+    "policy_sha256"
+  ],
+  "title": "NotificationPolicy",
+  "type": "object"
+}

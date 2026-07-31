@@ -1,0 +1,139 @@
+{
+  "$defs": {
+    "CorrelationCandidate": {
+      "additionalProperties": false,
+      "properties": {
+        "incident_id": {
+          "title": "Incident Id",
+          "type": "string"
+        },
+        "reasons": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Reasons",
+          "type": "array"
+        },
+        "score": {
+          "maximum": 100,
+          "minimum": 0,
+          "title": "Score",
+          "type": "integer"
+        }
+      },
+      "required": [
+        "incident_id",
+        "score",
+        "reasons"
+      ],
+      "title": "CorrelationCandidate",
+      "type": "object"
+    },
+    "CorrelationOutcome": {
+      "enum": [
+        "created",
+        "attached",
+        "reopened",
+        "suppressed"
+      ],
+      "title": "CorrelationOutcome",
+      "type": "string"
+    }
+  },
+  "additionalProperties": false,
+  "properties": {
+    "candidates": {
+      "items": {
+        "$ref": "#/$defs/CorrelationCandidate"
+      },
+      "maxItems": 20,
+      "title": "Candidates",
+      "type": "array"
+    },
+    "decided_at": {
+      "format": "date-time",
+      "title": "Decided At",
+      "type": "string"
+    },
+    "decision_id": {
+      "pattern": "^cord_[A-Za-z0-9]+$",
+      "title": "Decision Id",
+      "type": "string"
+    },
+    "decision_sha256": {
+      "pattern": "^[0-9a-f]{64}$",
+      "title": "Decision Sha256",
+      "type": "string"
+    },
+    "finding_id": {
+      "title": "Finding Id",
+      "type": "string"
+    },
+    "incident_id": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "title": "Incident Id"
+    },
+    "outcome": {
+      "$ref": "#/$defs/CorrelationOutcome"
+    },
+    "policy_version": {
+      "default": "correlation-2026-07-24.1",
+      "title": "Policy Version",
+      "type": "string"
+    },
+    "reasons": {
+      "items": {
+        "type": "string"
+      },
+      "title": "Reasons",
+      "type": "array"
+    },
+    "schema_version": {
+      "default": "1.0.0",
+      "title": "Schema Version",
+      "type": "string"
+    },
+    "selected_score": {
+      "maximum": 100,
+      "minimum": 0,
+      "title": "Selected Score",
+      "type": "integer"
+    },
+    "suppression_id": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "title": "Suppression Id"
+    },
+    "tenant_id": {
+      "title": "Tenant Id",
+      "type": "string"
+    }
+  },
+  "required": [
+    "decision_id",
+    "tenant_id",
+    "finding_id",
+    "outcome",
+    "incident_id",
+    "suppression_id",
+    "selected_score",
+    "reasons",
+    "decided_at",
+    "decision_sha256"
+  ],
+  "title": "CorrelationDecision",
+  "type": "object"
+}

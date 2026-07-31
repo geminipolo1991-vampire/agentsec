@@ -1,0 +1,120 @@
+{
+  "$defs": {
+    "AttemptPhase": {
+      "enum": [
+        "execute",
+        "verify",
+        "rollback",
+        "verify_rollback"
+      ],
+      "title": "AttemptPhase",
+      "type": "string"
+    }
+  },
+  "additionalProperties": false,
+  "properties": {
+    "attempt_id": {
+      "pattern": "^rat_[0-9a-f]{32}$",
+      "title": "Attempt Id",
+      "type": "string"
+    },
+    "attempt_number": {
+      "maximum": 1000,
+      "minimum": 1,
+      "title": "Attempt Number",
+      "type": "integer"
+    },
+    "attempt_sha256": {
+      "pattern": "^[0-9a-f]{64}$",
+      "title": "Attempt Sha256",
+      "type": "string"
+    },
+    "attempted_at": {
+      "format": "date-time",
+      "title": "Attempted At",
+      "type": "string"
+    },
+    "error_code": {
+      "anyOf": [
+        {
+          "pattern": "^[a-z][a-z0-9_]{2,63}$",
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Error Code"
+    },
+    "evidence_sha256": {
+      "anyOf": [
+        {
+          "pattern": "^[0-9a-f]{64}$",
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Evidence Sha256"
+    },
+    "execution_id": {
+      "pattern": "^rex_[0-9a-f]{32}$",
+      "title": "Execution Id",
+      "type": "string"
+    },
+    "latency_ms": {
+      "maximum": 120000,
+      "minimum": 0,
+      "title": "Latency Ms",
+      "type": "integer"
+    },
+    "outcome": {
+      "pattern": "^(accepted|verified|failed)$",
+      "title": "Outcome",
+      "type": "string"
+    },
+    "phase": {
+      "$ref": "#/$defs/AttemptPhase"
+    },
+    "provider_reference_sha256": {
+      "anyOf": [
+        {
+          "pattern": "^[0-9a-f]{64}$",
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Provider Reference Sha256"
+    },
+    "step_id": {
+      "pattern": "^step://[A-Za-z0-9_.@/-]+$",
+      "title": "Step Id",
+      "type": "string"
+    },
+    "tenant_id": {
+      "maxLength": 128,
+      "minLength": 1,
+      "title": "Tenant Id",
+      "type": "string"
+    }
+  },
+  "required": [
+    "execution_id",
+    "tenant_id",
+    "step_id",
+    "phase",
+    "attempt_number",
+    "outcome",
+    "latency_ms",
+    "attempted_at",
+    "attempt_sha256"
+  ],
+  "title": "ResponseAttempt",
+  "type": "object"
+}

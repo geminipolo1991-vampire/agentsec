@@ -1,0 +1,123 @@
+{
+  "$defs": {
+    "ComponentKind": {
+      "enum": [
+        "application",
+        "agent",
+        "model",
+        "tool",
+        "data_store"
+      ],
+      "title": "ComponentKind",
+      "type": "string"
+    },
+    "PostureEvaluator": {
+      "enum": [
+        "owner_required",
+        "managed_status_required",
+        "no_unapproved_permissions",
+        "effectful_permission_review",
+        "tool_schema_required",
+        "model_prompt_version_required",
+        "agent_policy_binding_required",
+        "max_component_risk"
+      ],
+      "title": "PostureEvaluator",
+      "type": "string"
+    },
+    "Severity": {
+      "enum": [
+        "info",
+        "low",
+        "medium",
+        "high",
+        "critical"
+      ],
+      "title": "Severity",
+      "type": "string"
+    }
+  },
+  "additionalProperties": false,
+  "properties": {
+    "applicable_kinds": {
+      "items": {
+        "$ref": "#/$defs/ComponentKind"
+      },
+      "maxItems": 5,
+      "minItems": 1,
+      "title": "Applicable Kinds",
+      "type": "array",
+      "uniqueItems": true
+    },
+    "check_id": {
+      "pattern": "^PST-[A-Z0-9-]{3,64}$",
+      "title": "Check Id",
+      "type": "string"
+    },
+    "description": {
+      "maxLength": 1024,
+      "minLength": 3,
+      "title": "Description",
+      "type": "string"
+    },
+    "enabled": {
+      "default": true,
+      "title": "Enabled",
+      "type": "boolean"
+    },
+    "evaluator": {
+      "$ref": "#/$defs/PostureEvaluator"
+    },
+    "framework_mappings": {
+      "items": {
+        "type": "string"
+      },
+      "maxItems": 32,
+      "title": "Framework Mappings",
+      "type": "array"
+    },
+    "parameters": {
+      "additionalProperties": {
+        "type": "integer"
+      },
+      "maxProperties": 8,
+      "title": "Parameters",
+      "type": "object"
+    },
+    "remediation": {
+      "items": {
+        "type": "string"
+      },
+      "maxItems": 16,
+      "minItems": 1,
+      "title": "Remediation",
+      "type": "array"
+    },
+    "severity": {
+      "$ref": "#/$defs/Severity"
+    },
+    "title": {
+      "maxLength": 256,
+      "minLength": 3,
+      "title": "Title",
+      "type": "string"
+    },
+    "version": {
+      "pattern": "^[A-Za-z0-9][A-Za-z0-9._-]{0,63}$",
+      "title": "Version",
+      "type": "string"
+    }
+  },
+  "required": [
+    "check_id",
+    "version",
+    "title",
+    "description",
+    "evaluator",
+    "severity",
+    "applicable_kinds",
+    "remediation"
+  ],
+  "title": "PostureCheckDefinition",
+  "type": "object"
+}

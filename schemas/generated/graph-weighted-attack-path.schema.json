@@ -1,0 +1,67 @@
+{
+  "additionalProperties": false,
+  "properties": {
+    "as_of": {
+      "format": "date-time",
+      "title": "As Of",
+      "type": "string"
+    },
+    "edge_ids": {
+      "items": {
+        "type": "string"
+      },
+      "title": "Edge Ids",
+      "type": "array"
+    },
+    "exposure_score": {
+      "maximum": 100,
+      "minimum": 0,
+      "title": "Exposure Score",
+      "type": "integer"
+    },
+    "node_ids": {
+      "items": {
+        "type": "string"
+      },
+      "title": "Node Ids",
+      "type": "array"
+    },
+    "risk_factors": {
+      "items": {
+        "type": "string"
+      },
+      "title": "Risk Factors",
+      "type": "array"
+    },
+    "source_node_id": {
+      "title": "Source Node Id",
+      "type": "string"
+    },
+    "target_node_id": {
+      "title": "Target Node Id",
+      "type": "string"
+    },
+    "tenant_id": {
+      "title": "Tenant Id",
+      "type": "string"
+    },
+    "total_weight": {
+      "minimum": 0.0,
+      "title": "Total Weight",
+      "type": "number"
+    }
+  },
+  "required": [
+    "tenant_id",
+    "source_node_id",
+    "target_node_id",
+    "node_ids",
+    "edge_ids",
+    "total_weight",
+    "exposure_score",
+    "risk_factors",
+    "as_of"
+  ],
+  "title": "WeightedAttackPath",
+  "type": "object"
+}

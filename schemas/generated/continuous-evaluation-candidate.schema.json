@@ -1,0 +1,79 @@
+{
+  "$defs": {
+    "CandidateKind": {
+      "enum": [
+        "deterministic",
+        "recorded_model",
+        "live_model"
+      ],
+      "title": "CandidateKind",
+      "type": "string"
+    }
+  },
+  "additionalProperties": false,
+  "properties": {
+    "candidate_id": {
+      "pattern": "^[a-z][a-z0-9_-]{2,63}$",
+      "title": "Candidate Id",
+      "type": "string"
+    },
+    "exact_model_id": {
+      "maxLength": 256,
+      "minLength": 1,
+      "title": "Exact Model Id",
+      "type": "string"
+    },
+    "kind": {
+      "$ref": "#/$defs/CandidateKind"
+    },
+    "live_provider_calls": {
+      "title": "Live Provider Calls",
+      "type": "boolean"
+    },
+    "provider": {
+      "maxLength": 64,
+      "minLength": 1,
+      "title": "Provider",
+      "type": "string"
+    },
+    "qualification_sha256": {
+      "anyOf": [
+        {
+          "pattern": "^[0-9a-f]{64}$",
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Qualification Sha256"
+    },
+    "qualified": {
+      "title": "Qualified",
+      "type": "boolean"
+    },
+    "route_sha256": {
+      "pattern": "^[0-9a-f]{64}$",
+      "title": "Route Sha256",
+      "type": "string"
+    },
+    "runtime_authority": {
+      "const": false,
+      "default": false,
+      "title": "Runtime Authority",
+      "type": "boolean"
+    }
+  },
+  "required": [
+    "candidate_id",
+    "kind",
+    "provider",
+    "exact_model_id",
+    "route_sha256",
+    "qualified",
+    "live_provider_calls"
+  ],
+  "title": "EvaluationCandidateMetadata",
+  "type": "object"
+}

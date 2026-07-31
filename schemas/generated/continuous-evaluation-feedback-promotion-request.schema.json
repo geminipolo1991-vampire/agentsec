@@ -1,0 +1,21 @@
+{
+  "additionalProperties": false,
+  "properties": {
+    "new_dataset_version": {
+      "pattern": "^benchmark-[0-9]{4}\\.[0-9]{2}\\.[0-9]{2}\\.[0-9]+$",
+      "title": "New Dataset Version",
+      "type": "string"
+    },
+    "reason_sha256": {
+      "pattern": "^[0-9a-f]{64}$",
+      "title": "Reason Sha256",
+      "type": "string"
+    }
+  },
+  "required": [
+    "new_dataset_version",
+    "reason_sha256"
+  ],
+  "title": "EvaluationFeedbackPromotionRequest",
+  "type": "object"
+}

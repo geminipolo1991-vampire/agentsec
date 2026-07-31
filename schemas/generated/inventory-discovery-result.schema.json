@@ -1,0 +1,45 @@
+{
+  "additionalProperties": false,
+  "properties": {
+    "component_ids": {
+      "items": {
+        "type": "string"
+      },
+      "title": "Component Ids",
+      "type": "array"
+    },
+    "configuration_revisions": {
+      "minimum": 0,
+      "title": "Configuration Revisions",
+      "type": "integer"
+    },
+    "duplicate": {
+      "title": "Duplicate",
+      "type": "boolean"
+    },
+    "observation_id": {
+      "title": "Observation Id",
+      "type": "string"
+    },
+    "recorded_at": {
+      "format": "date-time",
+      "title": "Recorded At",
+      "type": "string"
+    },
+    "relationship_count": {
+      "minimum": 0,
+      "title": "Relationship Count",
+      "type": "integer"
+    }
+  },
+  "required": [
+    "observation_id",
+    "duplicate",
+    "component_ids",
+    "relationship_count",
+    "configuration_revisions",
+    "recorded_at"
+  ],
+  "title": "DiscoveryResult",
+  "type": "object"
+}

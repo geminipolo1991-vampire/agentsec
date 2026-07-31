@@ -11,6 +11,16 @@
       "sha256": "3a025ff220d5af25654f9e7ae155418574703ef1cd23e1193157cb2a704efbbf"
     },
     {
+      "path": "reports/evaluation/continuous-baseline.json",
+      "record_digest": "2b4dba2008352c28b6ea0f7b69598c6ad22561ede971dc018d899dbd24af2839",
+      "sha256": "bbc92058906532c6cd99c74f863cfe608bdd33a1be0112c071c43dbbe8f695b3"
+    },
+    {
+      "path": "reports/evaluation/continuous.json",
+      "record_digest": "9a8e8b438d677564666a68d6209fe4c363846f6acf136dd5d8f5827017f8c28b",
+      "sha256": "2baa96b8cbd239966d1286ad0ad08d536ee29a163667277236a82efac3a5d2ce"
+    },
+    {
       "path": "reports/evaluation/deterministic.json",
       "record_digest": "9293b398da15bb0b9f1ead6a21fc74acd5e400feb9d15a9bb3a85d3f1e25e144",
       "sha256": "875a6949e9bf97e17d7ccd462c71f978501e5f42342381c515947fbf255364f2"
@@ -48,12 +58,15 @@
   ],
   "dataset_version": "synthetic-corpus-2026-07-22.1",
   "input_digests": {
-    "configs/codex-evaluation.json": "04665950ce959b5fda2f7e5c2110fbf16ddeec08c293709ceee49c36ada72490",
-    "src/agentsec/detection.py": "a4ccea9027ab7e87c0e4e554c87e704549593b9b9c96e48b3c615b68fe437040",
+    "configs/codex-evaluation.json": "33e4965a0359404d1fb5deb7f8f5099e11e0432c0c3684a8801e45a727d67933",
+    "configs/continuous-evaluation-policy.json": "d45746d82d8b420baa43ea314c1712168b5a227c2e0b99dc37e2a6f79254593b",
+    "src/agentsec/continuous_evaluation.py": "7ab5a0c29bb330504fd020fdf3d1a1375f9a7b7d436ef07c1fe83f3e5b62c26f",
+    "src/agentsec/detection.py": "f964982ada14c780bf243d47f2a14b18e3bd2e29127f1dacfe754c73776267ce",
     "src/agentsec/evaluation.py": "cac231354a37a02c9dcfc802ecf1f87983c47cda751fcd2e287751c7f7958fdb",
     "src/agentsec/scenarios.py": "bbfe5a2fd36cd1ce696f2b101b5c73215ae8045e966df8d7d91cac01655cd9c5",
+    "src/agentsec/simulation.py": "447469f65955e72e5215b6929391147148879f31dbb13a8408a2840865c49970",
     "src/agentsec/synthetic.py": "5af135383c6ea50204d7b3b2943a0fa229ef1f924de7cc8542050bd06204a205"
   },
-  "manifest_digest": "d842f37eef7182fed83f53527ec045b9f89c40389461d0f54b743058e5c9f02f",
+  "manifest_digest": "ed52d68b63acdc8f3eeb40f9d6e9c0e049915cf829d57491da803078106cfbaf",
   "schema_version": "1.0.0"
 }

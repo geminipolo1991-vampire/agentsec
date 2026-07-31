@@ -1,0 +1,84 @@
+{
+  "$defs": {
+    "ResponseOperation": {
+      "enum": [
+        "session.quarantine",
+        "session.restore",
+        "agent.pause",
+        "agent.resume",
+        "identity.suspend",
+        "identity.restore",
+        "network.block_destination",
+        "network.unblock_destination",
+        "ticket.annotate"
+      ],
+      "title": "ResponseOperation",
+      "type": "string"
+    }
+  },
+  "additionalProperties": false,
+  "properties": {
+    "allowed_hosts": {
+      "items": {
+        "type": "string"
+      },
+      "maxItems": 8,
+      "minItems": 1,
+      "title": "Allowed Hosts",
+      "type": "array"
+    },
+    "connector_id": {
+      "pattern": "^connector://[A-Za-z0-9_.@/-]+$",
+      "title": "Connector Id",
+      "type": "string"
+    },
+    "credential_env": {
+      "pattern": "^[A-Z][A-Z0-9_]{2,127}$",
+      "title": "Credential Env",
+      "type": "string"
+    },
+    "enabled": {
+      "default": true,
+      "title": "Enabled",
+      "type": "boolean"
+    },
+    "endpoint": {
+      "maxLength": 512,
+      "minLength": 12,
+      "title": "Endpoint",
+      "type": "string"
+    },
+    "name": {
+      "maxLength": 128,
+      "minLength": 3,
+      "title": "Name",
+      "type": "string"
+    },
+    "operations": {
+      "items": {
+        "$ref": "#/$defs/ResponseOperation"
+      },
+      "maxItems": 32,
+      "minItems": 1,
+      "title": "Operations",
+      "type": "array"
+    },
+    "timeout_seconds": {
+      "default": 5.0,
+      "maximum": 30.0,
+      "minimum": 0.1,
+      "title": "Timeout Seconds",
+      "type": "number"
+    }
+  },
+  "required": [
+    "connector_id",
+    "name",
+    "endpoint",
+    "allowed_hosts",
+    "credential_env",
+    "operations"
+  ],
+  "title": "ResponseConnectorSpec",
+  "type": "object"
+}

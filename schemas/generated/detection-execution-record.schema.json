@@ -1,0 +1,112 @@
+{
+  "$defs": {
+    "DetectionExecutionMode": {
+      "enum": [
+        "streaming",
+        "scheduled",
+        "both"
+      ],
+      "title": "DetectionExecutionMode",
+      "type": "string"
+    },
+    "DetectionExecutionStatus": {
+      "enum": [
+        "matched",
+        "no_match",
+        "error"
+      ],
+      "title": "DetectionExecutionStatus",
+      "type": "string"
+    }
+  },
+  "additionalProperties": false,
+  "properties": {
+    "alert_ids": {
+      "items": {
+        "type": "string"
+      },
+      "maxItems": 256,
+      "title": "Alert Ids",
+      "type": "array"
+    },
+    "completed_at": {
+      "format": "date-time",
+      "title": "Completed At",
+      "type": "string"
+    },
+    "duration_ms": {
+      "minimum": 0,
+      "title": "Duration Ms",
+      "type": "integer"
+    },
+    "error_code": {
+      "anyOf": [
+        {
+          "maxLength": 128,
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Error Code"
+    },
+    "evaluated_event_count": {
+      "maximum": 10000,
+      "minimum": 0,
+      "title": "Evaluated Event Count",
+      "type": "integer"
+    },
+    "execution_id": {
+      "pattern": "^dexe_[A-Za-z0-9]+$",
+      "title": "Execution Id",
+      "type": "string"
+    },
+    "matched_event_ids": {
+      "items": {
+        "type": "string"
+      },
+      "maxItems": 256,
+      "title": "Matched Event Ids",
+      "type": "array"
+    },
+    "mode": {
+      "$ref": "#/$defs/DetectionExecutionMode"
+    },
+    "rule_id": {
+      "title": "Rule Id",
+      "type": "string"
+    },
+    "rule_version": {
+      "title": "Rule Version",
+      "type": "string"
+    },
+    "started_at": {
+      "format": "date-time",
+      "title": "Started At",
+      "type": "string"
+    },
+    "status": {
+      "$ref": "#/$defs/DetectionExecutionStatus"
+    },
+    "tenant_id": {
+      "title": "Tenant Id",
+      "type": "string"
+    }
+  },
+  "required": [
+    "execution_id",
+    "tenant_id",
+    "rule_id",
+    "rule_version",
+    "mode",
+    "status",
+    "evaluated_event_count",
+    "duration_ms",
+    "started_at",
+    "completed_at"
+  ],
+  "title": "DetectionExecutionRecord",
+  "type": "object"
+}

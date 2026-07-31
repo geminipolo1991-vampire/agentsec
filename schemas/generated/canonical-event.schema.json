@@ -1,0 +1,174 @@
+{
+  "additionalProperties": false,
+  "properties": {
+    "actor_entity_id": {
+      "maxLength": 256,
+      "minLength": 1,
+      "title": "Actor Entity Id",
+      "type": "string"
+    },
+    "attributes": {
+      "additionalProperties": {
+        "anyOf": [
+          {
+            "type": "string"
+          },
+          {
+            "type": "integer"
+          },
+          {
+            "type": "number"
+          },
+          {
+            "type": "boolean"
+          }
+        ]
+      },
+      "title": "Attributes",
+      "type": "object"
+    },
+    "created_at": {
+      "format": "date-time",
+      "title": "Created At",
+      "type": "string"
+    },
+    "event_id": {
+      "maxLength": 128,
+      "minLength": 5,
+      "title": "Event Id",
+      "type": "string"
+    },
+    "event_kind": {
+      "maxLength": 128,
+      "minLength": 1,
+      "title": "Event Kind",
+      "type": "string"
+    },
+    "evidence_ids": {
+      "items": {
+        "maxLength": 256,
+        "minLength": 1,
+        "type": "string"
+      },
+      "maxItems": 256,
+      "title": "Evidence Ids",
+      "type": "array"
+    },
+    "labels": {
+      "items": {
+        "type": "string"
+      },
+      "maxItems": 64,
+      "title": "Labels",
+      "type": "array",
+      "uniqueItems": true
+    },
+    "observed_at": {
+      "format": "date-time",
+      "title": "Observed At",
+      "type": "string"
+    },
+    "occurred_at": {
+      "format": "date-time",
+      "title": "Occurred At",
+      "type": "string"
+    },
+    "operation": {
+      "anyOf": [
+        {
+          "maxLength": 128,
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Operation"
+    },
+    "outcome": {
+      "anyOf": [
+        {
+          "maxLength": 64,
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Outcome"
+    },
+    "record_type": {
+      "const": "event",
+      "default": "event",
+      "title": "Record Type",
+      "type": "string"
+    },
+    "schema_version": {
+      "const": "1.0.0",
+      "default": "1.0.0",
+      "title": "Schema Version",
+      "type": "string"
+    },
+    "session_id": {
+      "anyOf": [
+        {
+          "maxLength": 128,
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Session Id"
+    },
+    "source_ref": {
+      "maxLength": 512,
+      "minLength": 1,
+      "title": "Source Ref",
+      "type": "string"
+    },
+    "source_trust": {
+      "maxLength": 64,
+      "minLength": 1,
+      "title": "Source Trust",
+      "type": "string"
+    },
+    "target_entity_ids": {
+      "items": {
+        "maxLength": 256,
+        "minLength": 1,
+        "type": "string"
+      },
+      "maxItems": 256,
+      "title": "Target Entity Ids",
+      "type": "array"
+    },
+    "tenant_id": {
+      "maxLength": 128,
+      "minLength": 1,
+      "title": "Tenant Id",
+      "type": "string"
+    },
+    "trace_id": {
+      "maxLength": 128,
+      "minLength": 1,
+      "title": "Trace Id",
+      "type": "string"
+    }
+  },
+  "required": [
+    "tenant_id",
+    "event_id",
+    "occurred_at",
+    "event_kind",
+    "trace_id",
+    "actor_entity_id",
+    "source_ref",
+    "source_trust"
+  ],
+  "title": "EventRecord",
+  "type": "object"
+}

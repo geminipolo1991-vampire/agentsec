@@ -1,0 +1,54 @@
+{
+  "$defs": {
+    "DecisionAction": {
+      "enum": [
+        "allow",
+        "allow_with_obligations",
+        "require_approval",
+        "deny"
+      ],
+      "title": "DecisionAction",
+      "type": "string"
+    }
+  },
+  "additionalProperties": false,
+  "properties": {
+    "evidence_ids": {
+      "items": {
+        "type": "string"
+      },
+      "maxItems": 16,
+      "title": "Evidence Ids",
+      "type": "array"
+    },
+    "rationale": {
+      "maxLength": 512,
+      "minLength": 3,
+      "title": "Rationale",
+      "type": "string"
+    },
+    "recommended_action": {
+      "anyOf": [
+        {
+          "$ref": "#/$defs/DecisionAction"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null
+    },
+    "title": {
+      "maxLength": 128,
+      "minLength": 3,
+      "title": "Title",
+      "type": "string"
+    }
+  },
+  "required": [
+    "title",
+    "rationale"
+  ],
+  "title": "AnalystAlternative",
+  "type": "object"
+}

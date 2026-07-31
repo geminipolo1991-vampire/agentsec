@@ -1,0 +1,76 @@
+{
+  "additionalProperties": false,
+  "properties": {
+    "accepted_exceptions": {
+      "minimum": 0,
+      "title": "Accepted Exceptions",
+      "type": "integer"
+    },
+    "calculated_at": {
+      "format": "date-time",
+      "title": "Calculated At",
+      "type": "string"
+    },
+    "critical_open_findings": {
+      "minimum": 0,
+      "title": "Critical Open Findings",
+      "type": "integer"
+    },
+    "enabled_checks": {
+      "minimum": 0,
+      "title": "Enabled Checks",
+      "type": "integer"
+    },
+    "latest_scan_at": {
+      "anyOf": [
+        {
+          "format": "date-time",
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "title": "Latest Scan At"
+    },
+    "open_findings": {
+      "minimum": 0,
+      "title": "Open Findings",
+      "type": "integer"
+    },
+    "posture_score": {
+      "maximum": 100,
+      "minimum": 0,
+      "title": "Posture Score",
+      "type": "integer"
+    },
+    "resolved_findings": {
+      "minimum": 0,
+      "title": "Resolved Findings",
+      "type": "integer"
+    },
+    "tenant_id": {
+      "title": "Tenant Id",
+      "type": "string"
+    },
+    "total_findings": {
+      "minimum": 0,
+      "title": "Total Findings",
+      "type": "integer"
+    }
+  },
+  "required": [
+    "tenant_id",
+    "enabled_checks",
+    "total_findings",
+    "open_findings",
+    "accepted_exceptions",
+    "resolved_findings",
+    "critical_open_findings",
+    "posture_score",
+    "latest_scan_at",
+    "calculated_at"
+  ],
+  "title": "PostureSummary",
+  "type": "object"
+}

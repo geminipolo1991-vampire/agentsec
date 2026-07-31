@@ -1,0 +1,42 @@
+{
+  "additionalProperties": false,
+  "properties": {
+    "actor_id": {
+      "maxLength": 256,
+      "minLength": 3,
+      "pattern": "^(analyst|system|workload)://[A-Za-z0-9_.@/-]+$",
+      "title": "Actor Id",
+      "type": "string"
+    },
+    "permissions": {
+      "items": {
+        "type": "string"
+      },
+      "maxItems": 16,
+      "title": "Permissions",
+      "type": "array",
+      "uniqueItems": true
+    },
+    "team_ids": {
+      "items": {
+        "type": "string"
+      },
+      "maxItems": 32,
+      "title": "Team Ids",
+      "type": "array",
+      "uniqueItems": true
+    },
+    "tenant_id": {
+      "maxLength": 128,
+      "minLength": 1,
+      "title": "Tenant Id",
+      "type": "string"
+    }
+  },
+  "required": [
+    "tenant_id",
+    "actor_id"
+  ],
+  "title": "CasePrincipal",
+  "type": "object"
+}

@@ -1,0 +1,260 @@
+{
+  "$defs": {
+    "SecurityEdgeType": {
+      "enum": [
+        "contains",
+        "uses_model",
+        "uses_tool",
+        "accesses",
+        "influences",
+        "calls",
+        "sends_to",
+        "authorized_by",
+        "produces"
+      ],
+      "title": "SecurityEdgeType",
+      "type": "string"
+    },
+    "SecurityGraphEdge": {
+      "additionalProperties": false,
+      "properties": {
+        "edge_id": {
+          "title": "Edge Id",
+          "type": "string"
+        },
+        "edge_type": {
+          "$ref": "#/$defs/SecurityEdgeType"
+        },
+        "evidence_refs": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Evidence Refs",
+          "type": "array"
+        },
+        "record_sha256": {
+          "pattern": "^[0-9a-f]{64}$",
+          "title": "Record Sha256",
+          "type": "string"
+        },
+        "risk_factors": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Risk Factors",
+          "type": "array"
+        },
+        "source_node_id": {
+          "title": "Source Node Id",
+          "type": "string"
+        },
+        "source_ref": {
+          "title": "Source Ref",
+          "type": "string"
+        },
+        "target_node_id": {
+          "title": "Target Node Id",
+          "type": "string"
+        },
+        "tenant_id": {
+          "title": "Tenant Id",
+          "type": "string"
+        },
+        "valid_from": {
+          "format": "date-time",
+          "title": "Valid From",
+          "type": "string"
+        },
+        "valid_to": {
+          "anyOf": [
+            {
+              "format": "date-time",
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Valid To"
+        },
+        "version": {
+          "minimum": 1,
+          "title": "Version",
+          "type": "integer"
+        },
+        "weight": {
+          "maximum": 100.0,
+          "minimum": 0.1,
+          "title": "Weight",
+          "type": "number"
+        }
+      },
+      "required": [
+        "tenant_id",
+        "edge_id",
+        "version",
+        "source_node_id",
+        "target_node_id",
+        "edge_type",
+        "weight",
+        "risk_factors",
+        "evidence_refs",
+        "source_ref",
+        "valid_from",
+        "record_sha256"
+      ],
+      "title": "SecurityGraphEdge",
+      "type": "object"
+    },
+    "SecurityGraphNode": {
+      "additionalProperties": false,
+      "properties": {
+        "criticality": {
+          "$ref": "#/$defs/Severity"
+        },
+        "labels": {
+          "additionalProperties": {
+            "type": "string"
+          },
+          "title": "Labels",
+          "type": "object"
+        },
+        "name": {
+          "title": "Name",
+          "type": "string"
+        },
+        "node_id": {
+          "title": "Node Id",
+          "type": "string"
+        },
+        "node_type": {
+          "$ref": "#/$defs/SecurityNodeType"
+        },
+        "record_sha256": {
+          "pattern": "^[0-9a-f]{64}$",
+          "title": "Record Sha256",
+          "type": "string"
+        },
+        "risk_score": {
+          "maximum": 100,
+          "minimum": 0,
+          "title": "Risk Score",
+          "type": "integer"
+        },
+        "source_ref": {
+          "title": "Source Ref",
+          "type": "string"
+        },
+        "tenant_id": {
+          "title": "Tenant Id",
+          "type": "string"
+        },
+        "valid_from": {
+          "format": "date-time",
+          "title": "Valid From",
+          "type": "string"
+        },
+        "valid_to": {
+          "anyOf": [
+            {
+              "format": "date-time",
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Valid To"
+        },
+        "version": {
+          "minimum": 1,
+          "title": "Version",
+          "type": "integer"
+        }
+      },
+      "required": [
+        "tenant_id",
+        "node_id",
+        "version",
+        "node_type",
+        "name",
+        "risk_score",
+        "criticality",
+        "labels",
+        "source_ref",
+        "valid_from",
+        "record_sha256"
+      ],
+      "title": "SecurityGraphNode",
+      "type": "object"
+    },
+    "SecurityNodeType": {
+      "enum": [
+        "application",
+        "agent",
+        "model",
+        "tool",
+        "data_store",
+        "source",
+        "resource",
+        "destination",
+        "decision",
+        "finding"
+      ],
+      "title": "SecurityNodeType",
+      "type": "string"
+    },
+    "Severity": {
+      "enum": [
+        "info",
+        "low",
+        "medium",
+        "high",
+        "critical"
+      ],
+      "title": "Severity",
+      "type": "string"
+    }
+  },
+  "additionalProperties": false,
+  "properties": {
+    "as_of": {
+      "format": "date-time",
+      "title": "As Of",
+      "type": "string"
+    },
+    "edges": {
+      "items": {
+        "$ref": "#/$defs/SecurityGraphEdge"
+      },
+      "title": "Edges",
+      "type": "array"
+    },
+    "nodes": {
+      "items": {
+        "$ref": "#/$defs/SecurityGraphNode"
+      },
+      "title": "Nodes",
+      "type": "array"
+    },
+    "tenant_id": {
+      "title": "Tenant Id",
+      "type": "string"
+    },
+    "truncated": {
+      "default": false,
+      "title": "Truncated",
+      "type": "boolean"
+    }
+  },
+  "required": [
+    "tenant_id",
+    "as_of",
+    "nodes",
+    "edges"
+  ],
+  "title": "SecurityGraphSnapshot",
+  "type": "object"
+}

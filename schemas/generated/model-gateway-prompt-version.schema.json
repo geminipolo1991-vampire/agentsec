@@ -1,0 +1,62 @@
+{
+  "additionalProperties": false,
+  "properties": {
+    "author_id": {
+      "title": "Author Id",
+      "type": "string"
+    },
+    "created_at": {
+      "format": "date-time",
+      "title": "Created At",
+      "type": "string"
+    },
+    "output_schema_sha256": {
+      "pattern": "^[0-9a-f]{64}$",
+      "title": "Output Schema Sha256",
+      "type": "string"
+    },
+    "prompt_id": {
+      "pattern": "^prm_[A-Za-z0-9_.-]+$",
+      "title": "Prompt Id",
+      "type": "string"
+    },
+    "prompt_sha256": {
+      "pattern": "^[0-9a-f]{64}$",
+      "title": "Prompt Sha256",
+      "type": "string"
+    },
+    "system_instructions": {
+      "maxLength": 16000,
+      "minLength": 20,
+      "title": "System Instructions",
+      "type": "string"
+    },
+    "tenant_id": {
+      "title": "Tenant Id",
+      "type": "string"
+    },
+    "version": {
+      "minimum": 1,
+      "title": "Version",
+      "type": "integer"
+    },
+    "workload": {
+      "pattern": "^[a-z][a-z0-9_]{2,63}$",
+      "title": "Workload",
+      "type": "string"
+    }
+  },
+  "required": [
+    "prompt_id",
+    "version",
+    "tenant_id",
+    "workload",
+    "system_instructions",
+    "output_schema_sha256",
+    "author_id",
+    "created_at",
+    "prompt_sha256"
+  ],
+  "title": "PromptVersion",
+  "type": "object"
+}

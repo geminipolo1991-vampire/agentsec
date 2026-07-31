@@ -1,0 +1,874 @@
+{
+  "$defs": {
+    "AttachmentScanStatus": {
+      "enum": [
+        "pending",
+        "clean",
+        "quarantined"
+      ],
+      "title": "AttachmentScanStatus",
+      "type": "string"
+    },
+    "CaseAttachment": {
+      "additionalProperties": false,
+      "properties": {
+        "attachment_id": {
+          "pattern": "^cat_[0-9a-f]{32}$",
+          "title": "Attachment Id",
+          "type": "string"
+        },
+        "attachment_sha256": {
+          "pattern": "^[0-9a-f]{64}$",
+          "title": "Attachment Sha256",
+          "type": "string"
+        },
+        "case_id": {
+          "pattern": "^case_[0-9a-f]{32}$",
+          "title": "Case Id",
+          "type": "string"
+        },
+        "content_sha256": {
+          "pattern": "^[0-9a-f]{64}$",
+          "title": "Content Sha256",
+          "type": "string"
+        },
+        "created_at": {
+          "format": "date-time",
+          "title": "Created At",
+          "type": "string"
+        },
+        "display_name": {
+          "maxLength": 256,
+          "minLength": 1,
+          "title": "Display Name",
+          "type": "string"
+        },
+        "evidence_ref": {
+          "pattern": "^[a-z][a-z0-9_-]{1,31}_sha256:[0-9a-f]{24}$",
+          "title": "Evidence Ref",
+          "type": "string"
+        },
+        "media_type": {
+          "pattern": "^(application/pdf|application/json|text/plain|image/png|image/jpeg)$",
+          "title": "Media Type",
+          "type": "string"
+        },
+        "scan_status": {
+          "$ref": "#/$defs/AttachmentScanStatus",
+          "default": "pending"
+        },
+        "scanned_at": {
+          "anyOf": [
+            {
+              "format": "date-time",
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Scanned At"
+        },
+        "scanner_ref": {
+          "anyOf": [
+            {
+              "pattern": "^scanner_sha256:[0-9a-f]{24}$",
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Scanner Ref"
+        },
+        "size_bytes": {
+          "maximum": 10485760,
+          "minimum": 1,
+          "title": "Size Bytes",
+          "type": "integer"
+        },
+        "tenant_id": {
+          "title": "Tenant Id",
+          "type": "string"
+        },
+        "uploaded_by": {
+          "title": "Uploaded By",
+          "type": "string"
+        }
+      },
+      "required": [
+        "case_id",
+        "tenant_id",
+        "display_name",
+        "media_type",
+        "size_bytes",
+        "content_sha256",
+        "evidence_ref",
+        "uploaded_by",
+        "created_at",
+        "attachment_sha256"
+      ],
+      "title": "CaseAttachment",
+      "type": "object"
+    },
+    "CaseAuditEntry": {
+      "additionalProperties": false,
+      "properties": {
+        "action": {
+          "pattern": "^[a-z][a-z0-9_]{2,63}$",
+          "title": "Action",
+          "type": "string"
+        },
+        "actor_id": {
+          "title": "Actor Id",
+          "type": "string"
+        },
+        "audit_id": {
+          "pattern": "^cau_[0-9a-f]{32}$",
+          "title": "Audit Id",
+          "type": "string"
+        },
+        "audit_sha256": {
+          "pattern": "^[0-9a-f]{64}$",
+          "title": "Audit Sha256",
+          "type": "string"
+        },
+        "case_id": {
+          "pattern": "^case_[0-9a-f]{32}$",
+          "title": "Case Id",
+          "type": "string"
+        },
+        "details_sha256": {
+          "pattern": "^[0-9a-f]{64}$",
+          "title": "Details Sha256",
+          "type": "string"
+        },
+        "from_status": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/CaseStatus"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        },
+        "occurred_at": {
+          "format": "date-time",
+          "title": "Occurred At",
+          "type": "string"
+        },
+        "previous_sha256": {
+          "pattern": "^[0-9a-f]{64}$",
+          "title": "Previous Sha256",
+          "type": "string"
+        },
+        "sequence": {
+          "maximum": 10000,
+          "minimum": 1,
+          "title": "Sequence",
+          "type": "integer"
+        },
+        "tenant_id": {
+          "title": "Tenant Id",
+          "type": "string"
+        },
+        "to_status": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/CaseStatus"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        }
+      },
+      "required": [
+        "case_id",
+        "tenant_id",
+        "actor_id",
+        "action",
+        "details_sha256",
+        "occurred_at",
+        "sequence",
+        "previous_sha256",
+        "audit_sha256"
+      ],
+      "title": "CaseAuditEntry",
+      "type": "object"
+    },
+    "CaseComment": {
+      "additionalProperties": false,
+      "properties": {
+        "actor_id": {
+          "pattern": "^(analyst|system|workload)://[A-Za-z0-9_.@/-]+$",
+          "title": "Actor Id",
+          "type": "string"
+        },
+        "body": {
+          "maxLength": 2048,
+          "minLength": 1,
+          "title": "Body",
+          "type": "string"
+        },
+        "case_id": {
+          "pattern": "^case_[0-9a-f]{32}$",
+          "title": "Case Id",
+          "type": "string"
+        },
+        "comment_id": {
+          "pattern": "^cmt_[0-9a-f]{32}$",
+          "title": "Comment Id",
+          "type": "string"
+        },
+        "comment_sha256": {
+          "pattern": "^[0-9a-f]{64}$",
+          "title": "Comment Sha256",
+          "type": "string"
+        },
+        "created_at": {
+          "format": "date-time",
+          "title": "Created At",
+          "type": "string"
+        },
+        "tenant_id": {
+          "title": "Tenant Id",
+          "type": "string"
+        }
+      },
+      "required": [
+        "case_id",
+        "tenant_id",
+        "actor_id",
+        "body",
+        "created_at",
+        "comment_sha256"
+      ],
+      "title": "CaseComment",
+      "type": "object"
+    },
+    "CaseRecord": {
+      "additionalProperties": false,
+      "properties": {
+        "acknowledged_at": {
+          "anyOf": [
+            {
+              "format": "date-time",
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Acknowledged At"
+        },
+        "acknowledgment_due_at": {
+          "format": "date-time",
+          "title": "Acknowledgment Due At",
+          "type": "string"
+        },
+        "approved_at": {
+          "anyOf": [
+            {
+              "format": "date-time",
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Approved At"
+        },
+        "approved_by": {
+          "anyOf": [
+            {
+              "maxLength": 256,
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Approved By"
+        },
+        "assigned_to": {
+          "anyOf": [
+            {
+              "maxLength": 256,
+              "pattern": "^(analyst|system|workload)://[A-Za-z0-9_.@/-]+$",
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Assigned To"
+        },
+        "audit_count": {
+          "default": 0,
+          "maximum": 1000,
+          "minimum": 0,
+          "title": "Audit Count",
+          "type": "integer"
+        },
+        "audit_head_sha256": {
+          "default": "0000000000000000000000000000000000000000000000000000000000000000",
+          "pattern": "^[0-9a-f]{64}$",
+          "title": "Audit Head Sha256",
+          "type": "string"
+        },
+        "case_id": {
+          "pattern": "^case_[0-9a-f]{32}$",
+          "title": "Case Id",
+          "type": "string"
+        },
+        "closed_at": {
+          "anyOf": [
+            {
+              "format": "date-time",
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Closed At"
+        },
+        "closed_by": {
+          "anyOf": [
+            {
+              "maxLength": 256,
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Closed By"
+        },
+        "correlation_incident_ids": {
+          "items": {
+            "type": "string"
+          },
+          "maxItems": 32,
+          "title": "Correlation Incident Ids",
+          "type": "array"
+        },
+        "created_at": {
+          "format": "date-time",
+          "title": "Created At",
+          "type": "string"
+        },
+        "due_at": {
+          "format": "date-time",
+          "title": "Due At",
+          "type": "string"
+        },
+        "finding_ids": {
+          "items": {
+            "type": "string"
+          },
+          "maxItems": 128,
+          "minItems": 1,
+          "title": "Finding Ids",
+          "type": "array"
+        },
+        "policy_version": {
+          "default": "case-management-2026-07-24.1",
+          "title": "Policy Version",
+          "type": "string"
+        },
+        "priority": {
+          "pattern": "^P[0-3]$",
+          "title": "Priority",
+          "type": "string"
+        },
+        "queue": {
+          "anyOf": [
+            {
+              "maxLength": 128,
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Queue"
+        },
+        "record_sha256": {
+          "pattern": "^[0-9a-f]{64}$",
+          "title": "Record Sha256",
+          "type": "string"
+        },
+        "resolution_requested_at": {
+          "anyOf": [
+            {
+              "format": "date-time",
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Resolution Requested At"
+        },
+        "resolution_requested_by": {
+          "anyOf": [
+            {
+              "maxLength": 256,
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Resolution Requested By"
+        },
+        "schema_version": {
+          "default": "1.0.0",
+          "title": "Schema Version",
+          "type": "string"
+        },
+        "severity": {
+          "pattern": "^(info|low|medium|high|critical)$",
+          "title": "Severity",
+          "type": "string"
+        },
+        "sla_minutes": {
+          "maximum": 43200,
+          "minimum": 1,
+          "title": "Sla Minutes",
+          "type": "integer"
+        },
+        "sla_state": {
+          "$ref": "#/$defs/CaseSlaState",
+          "default": "on_track"
+        },
+        "status": {
+          "$ref": "#/$defs/CaseStatus",
+          "default": "open"
+        },
+        "summary": {
+          "maxLength": 512,
+          "minLength": 3,
+          "title": "Summary",
+          "type": "string"
+        },
+        "team_id": {
+          "anyOf": [
+            {
+              "maxLength": 256,
+              "pattern": "^team://[A-Za-z0-9_.@/-]+$",
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Team Id"
+        },
+        "tenant_id": {
+          "maxLength": 128,
+          "minLength": 1,
+          "title": "Tenant Id",
+          "type": "string"
+        },
+        "title": {
+          "maxLength": 256,
+          "minLength": 3,
+          "title": "Title",
+          "type": "string"
+        },
+        "updated_at": {
+          "format": "date-time",
+          "title": "Updated At",
+          "type": "string"
+        },
+        "version": {
+          "default": 1,
+          "minimum": 1,
+          "title": "Version",
+          "type": "integer"
+        }
+      },
+      "required": [
+        "tenant_id",
+        "title",
+        "summary",
+        "finding_ids",
+        "priority",
+        "severity",
+        "sla_minutes",
+        "acknowledgment_due_at",
+        "due_at",
+        "created_at",
+        "updated_at",
+        "record_sha256"
+      ],
+      "title": "CaseRecord",
+      "type": "object"
+    },
+    "CaseRelationship": {
+      "additionalProperties": false,
+      "properties": {
+        "case_id": {
+          "pattern": "^case_[0-9a-f]{32}$",
+          "title": "Case Id",
+          "type": "string"
+        },
+        "created_at": {
+          "format": "date-time",
+          "title": "Created At",
+          "type": "string"
+        },
+        "created_by": {
+          "title": "Created By",
+          "type": "string"
+        },
+        "kind": {
+          "$ref": "#/$defs/CaseRelationshipKind"
+        },
+        "reason": {
+          "maxLength": 512,
+          "minLength": 10,
+          "title": "Reason",
+          "type": "string"
+        },
+        "relationship_id": {
+          "pattern": "^crl_[0-9a-f]{32}$",
+          "title": "Relationship Id",
+          "type": "string"
+        },
+        "relationship_sha256": {
+          "pattern": "^[0-9a-f]{64}$",
+          "title": "Relationship Sha256",
+          "type": "string"
+        },
+        "target_id": {
+          "maxLength": 128,
+          "minLength": 5,
+          "title": "Target Id",
+          "type": "string"
+        },
+        "target_type": {
+          "pattern": "^(case|finding|incident)$",
+          "title": "Target Type",
+          "type": "string"
+        },
+        "tenant_id": {
+          "title": "Tenant Id",
+          "type": "string"
+        }
+      },
+      "required": [
+        "case_id",
+        "tenant_id",
+        "kind",
+        "target_type",
+        "target_id",
+        "reason",
+        "created_by",
+        "created_at",
+        "relationship_sha256"
+      ],
+      "title": "CaseRelationship",
+      "type": "object"
+    },
+    "CaseRelationshipKind": {
+      "enum": [
+        "related",
+        "parent",
+        "child",
+        "duplicate",
+        "blocks"
+      ],
+      "title": "CaseRelationshipKind",
+      "type": "string"
+    },
+    "CaseReview": {
+      "additionalProperties": false,
+      "properties": {
+        "case_id": {
+          "pattern": "^case_[0-9a-f]{32}$",
+          "title": "Case Id",
+          "type": "string"
+        },
+        "comment": {
+          "maxLength": 1024,
+          "minLength": 3,
+          "title": "Comment",
+          "type": "string"
+        },
+        "created_at": {
+          "format": "date-time",
+          "title": "Created At",
+          "type": "string"
+        },
+        "decision": {
+          "$ref": "#/$defs/CaseReviewDecision"
+        },
+        "review_id": {
+          "pattern": "^crv_[0-9a-f]{32}$",
+          "title": "Review Id",
+          "type": "string"
+        },
+        "review_sha256": {
+          "pattern": "^[0-9a-f]{64}$",
+          "title": "Review Sha256",
+          "type": "string"
+        },
+        "reviewer_id": {
+          "title": "Reviewer Id",
+          "type": "string"
+        },
+        "tenant_id": {
+          "title": "Tenant Id",
+          "type": "string"
+        }
+      },
+      "required": [
+        "case_id",
+        "tenant_id",
+        "decision",
+        "reviewer_id",
+        "comment",
+        "created_at",
+        "review_sha256"
+      ],
+      "title": "CaseReview",
+      "type": "object"
+    },
+    "CaseReviewDecision": {
+      "enum": [
+        "approve",
+        "request_changes",
+        "escalate"
+      ],
+      "title": "CaseReviewDecision",
+      "type": "string"
+    },
+    "CaseSlaState": {
+      "enum": [
+        "on_track",
+        "at_risk",
+        "breached",
+        "met"
+      ],
+      "title": "CaseSlaState",
+      "type": "string"
+    },
+    "CaseStatus": {
+      "enum": [
+        "open",
+        "investigating",
+        "pending_review",
+        "resolved",
+        "closed"
+      ],
+      "title": "CaseStatus",
+      "type": "string"
+    },
+    "CaseTask": {
+      "additionalProperties": false,
+      "properties": {
+        "assigned_to": {
+          "anyOf": [
+            {
+              "maxLength": 256,
+              "pattern": "^(analyst|system|workload)://[A-Za-z0-9_.@/-]+$",
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Assigned To"
+        },
+        "case_id": {
+          "pattern": "^case_[0-9a-f]{32}$",
+          "title": "Case Id",
+          "type": "string"
+        },
+        "completed_at": {
+          "anyOf": [
+            {
+              "format": "date-time",
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Completed At"
+        },
+        "completed_by": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Completed By"
+        },
+        "created_at": {
+          "format": "date-time",
+          "title": "Created At",
+          "type": "string"
+        },
+        "created_by": {
+          "title": "Created By",
+          "type": "string"
+        },
+        "description": {
+          "maxLength": 1024,
+          "minLength": 3,
+          "title": "Description",
+          "type": "string"
+        },
+        "due_at": {
+          "anyOf": [
+            {
+              "format": "date-time",
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Due At"
+        },
+        "status": {
+          "$ref": "#/$defs/CaseTaskStatus",
+          "default": "open"
+        },
+        "task_id": {
+          "pattern": "^ctk_[0-9a-f]{32}$",
+          "title": "Task Id",
+          "type": "string"
+        },
+        "task_sha256": {
+          "pattern": "^[0-9a-f]{64}$",
+          "title": "Task Sha256",
+          "type": "string"
+        },
+        "tenant_id": {
+          "title": "Tenant Id",
+          "type": "string"
+        },
+        "title": {
+          "maxLength": 256,
+          "minLength": 3,
+          "title": "Title",
+          "type": "string"
+        },
+        "updated_at": {
+          "format": "date-time",
+          "title": "Updated At",
+          "type": "string"
+        }
+      },
+      "required": [
+        "case_id",
+        "tenant_id",
+        "title",
+        "description",
+        "created_by",
+        "created_at",
+        "updated_at",
+        "task_sha256"
+      ],
+      "title": "CaseTask",
+      "type": "object"
+    },
+    "CaseTaskStatus": {
+      "enum": [
+        "open",
+        "in_progress",
+        "done",
+        "cancelled"
+      ],
+      "title": "CaseTaskStatus",
+      "type": "string"
+    }
+  },
+  "additionalProperties": false,
+  "properties": {
+    "attachments": {
+      "items": {
+        "$ref": "#/$defs/CaseAttachment"
+      },
+      "maxItems": 200,
+      "title": "Attachments",
+      "type": "array"
+    },
+    "audit": {
+      "items": {
+        "$ref": "#/$defs/CaseAuditEntry"
+      },
+      "maxItems": 1000,
+      "title": "Audit",
+      "type": "array"
+    },
+    "case": {
+      "$ref": "#/$defs/CaseRecord"
+    },
+    "comments": {
+      "items": {
+        "$ref": "#/$defs/CaseComment"
+      },
+      "maxItems": 500,
+      "title": "Comments",
+      "type": "array"
+    },
+    "relationships": {
+      "items": {
+        "$ref": "#/$defs/CaseRelationship"
+      },
+      "maxItems": 200,
+      "title": "Relationships",
+      "type": "array"
+    },
+    "reviews": {
+      "items": {
+        "$ref": "#/$defs/CaseReview"
+      },
+      "maxItems": 100,
+      "title": "Reviews",
+      "type": "array"
+    },
+    "tasks": {
+      "items": {
+        "$ref": "#/$defs/CaseTask"
+      },
+      "maxItems": 500,
+      "title": "Tasks",
+      "type": "array"
+    }
+  },
+  "required": [
+    "case"
+  ],
+  "title": "CaseDetail",
+  "type": "object"
+}

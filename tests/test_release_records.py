@@ -6,6 +6,11 @@ import unittest
 from pathlib import Path
 
 from agentsec.crypto import canonical_bytes
+from agentsec.continuous_evaluation import (
+    CandidateKind,
+    ContinuousEvaluationReport,
+    EvaluationGateState,
+)
 from agentsec.evaluation import EvaluationReleaseManifest
 
 
@@ -33,6 +38,31 @@ class ReleaseRecordTests(unittest.TestCase):
         self.assertEqual(
             hashlib.sha256(canonical_bytes(digest_payload)).hexdigest(),
             manifest.manifest_digest,
+        )
+
+        continuous_artifact = next(
+            item
+            for item in manifest.artifacts
+            if item.path == "reports/evaluation/continuous.json"
+        )
+        continuous = ContinuousEvaluationReport.model_validate_json(
+            (root / continuous_artifact.path).read_text(encoding="utf-8")
+        )
+        baseline = ContinuousEvaluationReport.model_validate_json(
+            (root / "reports/evaluation/continuous-baseline.json").read_text(
+                encoding="utf-8"
+            )
+        )
+        self.assertEqual(continuous.gate.state, EvaluationGateState.PASS)
+        self.assertEqual(continuous.candidate.kind, CandidateKind.RECORDED_MODEL)
+        self.assertEqual(continuous.dataset.case_count, 42)
+        self.assertEqual(continuous.dataset.splits["holdout"], 24)
+        self.assertEqual(continuous.dataset.use_case_count, 6)
+        self.assertIsNotNone(continuous.gate.drift)
+        self.assertTrue(continuous.gate.drift.passed)
+        self.assertEqual(
+            continuous.gate.drift.baseline_record_digest,
+            baseline.record_digest,
         )
 
 

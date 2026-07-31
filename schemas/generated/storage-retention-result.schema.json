@@ -1,0 +1,38 @@
+{
+  "additionalProperties": false,
+  "properties": {
+    "evaluated_at": {
+      "format": "date-time",
+      "title": "Evaluated At",
+      "type": "string"
+    },
+    "expired_blobs": {
+      "minimum": 0,
+      "title": "Expired Blobs",
+      "type": "integer"
+    },
+    "expired_payloads": {
+      "minimum": 0,
+      "title": "Expired Payloads",
+      "type": "integer"
+    },
+    "held_payloads": {
+      "minimum": 0,
+      "title": "Held Payloads",
+      "type": "integer"
+    },
+    "policy_id": {
+      "title": "Policy Id",
+      "type": "string"
+    }
+  },
+  "required": [
+    "policy_id",
+    "evaluated_at",
+    "expired_payloads",
+    "expired_blobs",
+    "held_payloads"
+  ],
+  "title": "RetentionResult",
+  "type": "object"
+}

@@ -1,0 +1,88 @@
+{
+  "additionalProperties": false,
+  "properties": {
+    "accepted": {
+      "title": "Accepted",
+      "type": "boolean"
+    },
+    "acknowledged": {
+      "title": "Acknowledged",
+      "type": "boolean"
+    },
+    "attempt_id": {
+      "pattern": "^iat_[0-9a-f]{32}$",
+      "title": "Attempt Id",
+      "type": "string"
+    },
+    "attempted_at": {
+      "format": "date-time",
+      "title": "Attempted At",
+      "type": "string"
+    },
+    "delivery_id": {
+      "pattern": "^idl_[0-9a-f]{32}$",
+      "title": "Delivery Id",
+      "type": "string"
+    },
+    "error_code": {
+      "anyOf": [
+        {
+          "pattern": "^[a-z][a-z0-9_]{2,63}$",
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Error Code"
+    },
+    "operation": {
+      "pattern": "^(send|ack_poll)$",
+      "title": "Operation",
+      "type": "string"
+    },
+    "provider_receipt_sha256": {
+      "anyOf": [
+        {
+          "pattern": "^[0-9a-f]{64}$",
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Provider Receipt Sha256"
+    },
+    "provider_reference_sha256": {
+      "anyOf": [
+        {
+          "pattern": "^[0-9a-f]{64}$",
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Provider Reference Sha256"
+    },
+    "sequence": {
+      "minimum": 1,
+      "title": "Sequence",
+      "type": "integer"
+    }
+  },
+  "required": [
+    "attempt_id",
+    "delivery_id",
+    "sequence",
+    "operation",
+    "accepted",
+    "acknowledged",
+    "attempted_at"
+  ],
+  "title": "IntegrationAttempt",
+  "type": "object"
+}

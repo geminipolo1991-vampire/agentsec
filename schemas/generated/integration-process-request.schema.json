@@ -1,0 +1,14 @@
+{
+  "additionalProperties": false,
+  "properties": {
+    "limit": {
+      "default": 25,
+      "maximum": 100,
+      "minimum": 1,
+      "title": "Limit",
+      "type": "integer"
+    }
+  },
+  "title": "IntegrationProcessRequest",
+  "type": "object"
+}

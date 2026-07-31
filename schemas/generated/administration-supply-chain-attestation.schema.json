@@ -1,0 +1,87 @@
+{
+  "additionalProperties": false,
+  "properties": {
+    "artifact_sha256": {
+      "pattern": "^[0-9a-f]{64}$",
+      "title": "Artifact Sha256",
+      "type": "string"
+    },
+    "attestation_id": {
+      "pattern": "^attestation_[0-9a-f]{32}$",
+      "title": "Attestation Id",
+      "type": "string"
+    },
+    "builder_id": {
+      "title": "Builder Id",
+      "type": "string"
+    },
+    "dependency_scan_passed": {
+      "title": "Dependency Scan Passed",
+      "type": "boolean"
+    },
+    "passed": {
+      "title": "Passed",
+      "type": "boolean"
+    },
+    "provenance_sha256": {
+      "pattern": "^[0-9a-f]{64}$",
+      "title": "Provenance Sha256",
+      "type": "string"
+    },
+    "record_sha256": {
+      "pattern": "^[0-9a-f]{64}$",
+      "title": "Record Sha256",
+      "type": "string"
+    },
+    "release_id": {
+      "maxLength": 128,
+      "minLength": 3,
+      "title": "Release Id",
+      "type": "string"
+    },
+    "sbom_sha256": {
+      "pattern": "^[0-9a-f]{64}$",
+      "title": "Sbom Sha256",
+      "type": "string"
+    },
+    "secret_scan_passed": {
+      "title": "Secret Scan Passed",
+      "type": "boolean"
+    },
+    "signature_verified": {
+      "title": "Signature Verified",
+      "type": "boolean"
+    },
+    "tenant_id": {
+      "title": "Tenant Id",
+      "type": "string"
+    },
+    "verified_at": {
+      "format": "date-time",
+      "title": "Verified At",
+      "type": "string"
+    },
+    "verifier_id": {
+      "title": "Verifier Id",
+      "type": "string"
+    }
+  },
+  "required": [
+    "attestation_id",
+    "tenant_id",
+    "release_id",
+    "artifact_sha256",
+    "sbom_sha256",
+    "provenance_sha256",
+    "dependency_scan_passed",
+    "secret_scan_passed",
+    "signature_verified",
+    "builder_id",
+    "verifier_id",
+    "verified_at",
+    "passed",
+    "record_sha256"
+  ],
+  "title": "SupplyChainAttestation",
+  "type": "object"
+}

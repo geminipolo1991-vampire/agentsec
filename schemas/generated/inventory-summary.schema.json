@@ -1,0 +1,81 @@
+{
+  "$defs": {
+    "ComponentKind": {
+      "enum": [
+        "application",
+        "agent",
+        "model",
+        "tool",
+        "data_store"
+      ],
+      "title": "ComponentKind",
+      "type": "string"
+    }
+  },
+  "additionalProperties": false,
+  "properties": {
+    "active_components": {
+      "minimum": 0,
+      "title": "Active Components",
+      "type": "integer"
+    },
+    "by_kind": {
+      "additionalProperties": {
+        "type": "integer"
+      },
+      "propertyNames": {
+        "$ref": "#/$defs/ComponentKind"
+      },
+      "title": "By Kind",
+      "type": "object"
+    },
+    "calculated_at": {
+      "format": "date-time",
+      "title": "Calculated At",
+      "type": "string"
+    },
+    "high_risk_components": {
+      "minimum": 0,
+      "title": "High Risk Components",
+      "type": "integer"
+    },
+    "maximum_risk_score": {
+      "maximum": 100,
+      "minimum": 0,
+      "title": "Maximum Risk Score",
+      "type": "integer"
+    },
+    "tenant_id": {
+      "title": "Tenant Id",
+      "type": "string"
+    },
+    "total_components": {
+      "minimum": 0,
+      "title": "Total Components",
+      "type": "integer"
+    },
+    "unmanaged_components": {
+      "minimum": 0,
+      "title": "Unmanaged Components",
+      "type": "integer"
+    },
+    "unowned_components": {
+      "minimum": 0,
+      "title": "Unowned Components",
+      "type": "integer"
+    }
+  },
+  "required": [
+    "tenant_id",
+    "total_components",
+    "by_kind",
+    "active_components",
+    "unmanaged_components",
+    "unowned_components",
+    "high_risk_components",
+    "maximum_risk_score",
+    "calculated_at"
+  ],
+  "title": "InventorySummary",
+  "type": "object"
+}

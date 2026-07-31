@@ -1,0 +1,160 @@
+{
+  "additionalProperties": false,
+  "properties": {
+    "active": {
+      "default": true,
+      "title": "Active",
+      "type": "boolean"
+    },
+    "anomaly_threshold": {
+      "default": 55,
+      "maximum": 95,
+      "minimum": 30,
+      "title": "Anomaly Threshold",
+      "type": "integer"
+    },
+    "authority_weight": {
+      "default": 15,
+      "maximum": 40,
+      "minimum": 0,
+      "title": "Authority Weight",
+      "type": "integer"
+    },
+    "config_id": {
+      "default": "BHV-DEFAULT",
+      "pattern": "^BHV-[A-Z0-9-]{3,64}$",
+      "title": "Config Id",
+      "type": "string"
+    },
+    "config_sha256": {
+      "pattern": "^[0-9a-f]{64}$",
+      "title": "Config Sha256",
+      "type": "string"
+    },
+    "created_at": {
+      "format": "date-time",
+      "title": "Created At",
+      "type": "string"
+    },
+    "created_by": {
+      "title": "Created By",
+      "type": "string"
+    },
+    "destination_weight": {
+      "default": 15,
+      "maximum": 40,
+      "minimum": 0,
+      "title": "Destination Weight",
+      "type": "integer"
+    },
+    "drift_critical_rate": {
+      "default": 0.5,
+      "maximum": 0.95,
+      "minimum": 0.1,
+      "title": "Drift Critical Rate",
+      "type": "number"
+    },
+    "drift_warning_rate": {
+      "default": 0.25,
+      "maximum": 0.8,
+      "minimum": 0.05,
+      "title": "Drift Warning Rate",
+      "type": "number"
+    },
+    "drift_window_size": {
+      "default": 50,
+      "maximum": 500,
+      "minimum": 10,
+      "title": "Drift Window Size",
+      "type": "integer"
+    },
+    "maximum_observations": {
+      "default": 100000,
+      "maximum": 1000000,
+      "minimum": 100,
+      "title": "Maximum Observations",
+      "type": "integer"
+    },
+    "minimum_observations": {
+      "default": 5,
+      "maximum": 1000,
+      "minimum": 5,
+      "title": "Minimum Observations",
+      "type": "integer"
+    },
+    "operation_weight": {
+      "default": 25,
+      "maximum": 50,
+      "minimum": 0,
+      "title": "Operation Weight",
+      "type": "integer"
+    },
+    "rare_probability": {
+      "default": 0.1,
+      "maximum": 0.4,
+      "minimum": 0.01,
+      "title": "Rare Probability",
+      "type": "number"
+    },
+    "reason": {
+      "maxLength": 1024,
+      "minLength": 10,
+      "title": "Reason",
+      "type": "string"
+    },
+    "retention_days": {
+      "default": 30,
+      "maximum": 365,
+      "minimum": 1,
+      "title": "Retention Days",
+      "type": "integer"
+    },
+    "schema_drift_weight": {
+      "default": 10,
+      "maximum": 30,
+      "minimum": 0,
+      "title": "Schema Drift Weight",
+      "type": "integer"
+    },
+    "sensitive_weight": {
+      "default": 10,
+      "maximum": 30,
+      "minimum": 0,
+      "title": "Sensitive Weight",
+      "type": "integer"
+    },
+    "source_trust_weight": {
+      "default": 15,
+      "maximum": 40,
+      "minimum": 0,
+      "title": "Source Trust Weight",
+      "type": "integer"
+    },
+    "tenant_id": {
+      "title": "Tenant Id",
+      "type": "string"
+    },
+    "time_weight": {
+      "default": 10,
+      "maximum": 30,
+      "minimum": 0,
+      "title": "Time Weight",
+      "type": "integer"
+    },
+    "version": {
+      "pattern": "^[A-Za-z0-9][A-Za-z0-9._-]{0,63}$",
+      "title": "Version",
+      "type": "string"
+    }
+  },
+  "required": [
+    "version",
+    "tenant_id",
+    "created_by",
+    "reason",
+    "created_at",
+    "config_sha256"
+  ],
+  "title": "BehaviorTuningConfig",
+  "type": "object"
+}

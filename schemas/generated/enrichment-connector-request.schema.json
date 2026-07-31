@@ -1,0 +1,73 @@
+{
+  "additionalProperties": false,
+  "properties": {
+    "connector": {
+      "pattern": "^[a-z][a-z0-9_.-]{2,63}$",
+      "title": "Connector",
+      "type": "string"
+    },
+    "connector_version": {
+      "maxLength": 64,
+      "minLength": 1,
+      "title": "Connector Version",
+      "type": "string"
+    },
+    "fields": {
+      "additionalProperties": {
+        "anyOf": [
+          {
+            "type": "string"
+          },
+          {
+            "type": "boolean"
+          },
+          {
+            "type": "integer"
+          },
+          {
+            "type": "number"
+          },
+          {
+            "items": {
+              "type": "string"
+            },
+            "type": "array"
+          }
+        ]
+      },
+      "maxProperties": 15,
+      "title": "Fields",
+      "type": "object"
+    },
+    "input_sha256": {
+      "pattern": "^[0-9a-f]{64}$",
+      "title": "Input Sha256",
+      "type": "string"
+    },
+    "requested_at": {
+      "format": "date-time",
+      "title": "Requested At",
+      "type": "string"
+    },
+    "schema_version": {
+      "default": "1.0.0",
+      "title": "Schema Version",
+      "type": "string"
+    },
+    "tenant_id": {
+      "maxLength": 128,
+      "minLength": 1,
+      "title": "Tenant Id",
+      "type": "string"
+    }
+  },
+  "required": [
+    "tenant_id",
+    "connector",
+    "connector_version",
+    "requested_at",
+    "input_sha256"
+  ],
+  "title": "EnrichmentConnectorRequest",
+  "type": "object"
+}

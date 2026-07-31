@@ -1,0 +1,147 @@
+{
+  "$defs": {
+    "DecisionAction": {
+      "enum": [
+        "allow",
+        "allow_with_obligations",
+        "require_approval",
+        "deny"
+      ],
+      "title": "DecisionAction",
+      "type": "string"
+    },
+    "EvaluationGroundTruth": {
+      "additionalProperties": false,
+      "properties": {
+        "allowed_evidence_refs": {
+          "items": {
+            "type": "string"
+          },
+          "maxItems": 256,
+          "title": "Allowed Evidence Refs",
+          "type": "array"
+        },
+        "attack": {
+          "title": "Attack",
+          "type": "boolean"
+        },
+        "expected_action": {
+          "$ref": "#/$defs/DecisionAction"
+        },
+        "expected_alert_types": {
+          "items": {
+            "type": "string"
+          },
+          "maxItems": 32,
+          "title": "Expected Alert Types",
+          "type": "array"
+        },
+        "expected_severity": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/Severity"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        },
+        "forbidden_effect": {
+          "title": "Forbidden Effect",
+          "type": "boolean"
+        }
+      },
+      "required": [
+        "attack",
+        "expected_alert_types",
+        "expected_action",
+        "forbidden_effect",
+        "allowed_evidence_refs"
+      ],
+      "title": "EvaluationGroundTruth",
+      "type": "object"
+    },
+    "Severity": {
+      "enum": [
+        "info",
+        "low",
+        "medium",
+        "high",
+        "critical"
+      ],
+      "title": "Severity",
+      "type": "string"
+    }
+  },
+  "additionalProperties": false,
+  "properties": {
+    "dataset_version": {
+      "pattern": "^benchmark-[0-9]{4}\\.[0-9]{2}\\.[0-9]{2}\\.[0-9]+$",
+      "title": "Dataset Version",
+      "type": "string"
+    },
+    "proposed_ground_truth": {
+      "$ref": "#/$defs/EvaluationGroundTruth"
+    },
+    "rationale_sha256": {
+      "pattern": "^[0-9a-f]{64}$",
+      "title": "Rationale Sha256",
+      "type": "string"
+    },
+    "request_id": {
+      "pattern": "^req_[A-Za-z0-9]{8,64}$",
+      "title": "Request Id",
+      "type": "string"
+    },
+    "source_applied_to_model": {
+      "const": false,
+      "default": false,
+      "title": "Source Applied To Model",
+      "type": "boolean"
+    },
+    "source_feedback_id": {
+      "pattern": "^aif_[A-Za-z0-9]{8,64}$",
+      "title": "Source Feedback Id",
+      "type": "string"
+    },
+    "source_feedback_sha256": {
+      "pattern": "^[0-9a-f]{64}$",
+      "title": "Source Feedback Sha256",
+      "type": "string"
+    },
+    "source_rating": {
+      "enum": [
+        "helpful",
+        "incorrect",
+        "incomplete",
+        "needs_review"
+      ],
+      "title": "Source Rating",
+      "type": "string"
+    },
+    "source_run_id": {
+      "pattern": "^air_[0-9a-f]{32}$",
+      "title": "Source Run Id",
+      "type": "string"
+    },
+    "target_case_id": {
+      "pattern": "^evc_[0-9a-f]{32}$",
+      "title": "Target Case Id",
+      "type": "string"
+    }
+  },
+  "required": [
+    "request_id",
+    "dataset_version",
+    "target_case_id",
+    "source_feedback_id",
+    "source_run_id",
+    "source_feedback_sha256",
+    "source_rating",
+    "proposed_ground_truth",
+    "rationale_sha256"
+  ],
+  "title": "EvaluationFeedbackProposalRequest",
+  "type": "object"
+}

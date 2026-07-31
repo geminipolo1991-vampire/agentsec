@@ -1,0 +1,22 @@
+{
+  "additionalProperties": false,
+  "properties": {
+    "body": {
+      "maxLength": 2048,
+      "minLength": 1,
+      "title": "Body",
+      "type": "string"
+    },
+    "expected_version": {
+      "minimum": 1,
+      "title": "Expected Version",
+      "type": "integer"
+    }
+  },
+  "required": [
+    "expected_version",
+    "body"
+  ],
+  "title": "CaseCommentRequest",
+  "type": "object"
+}

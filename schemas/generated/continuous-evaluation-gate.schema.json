@@ -1,0 +1,150 @@
+{
+  "$defs": {
+    "EvaluationDrift": {
+      "additionalProperties": false,
+      "properties": {
+        "baseline_record_digest": {
+          "pattern": "^[0-9a-f]{64}$",
+          "title": "Baseline Record Digest",
+          "type": "string"
+        },
+        "candidate_metrics_sha256": {
+          "pattern": "^[0-9a-f]{64}$",
+          "title": "Candidate Metrics Sha256",
+          "type": "string"
+        },
+        "checks": {
+          "items": {
+            "$ref": "#/$defs/EvaluationGateCheck"
+          },
+          "title": "Checks",
+          "type": "array"
+        },
+        "metric_deltas": {
+          "additionalProperties": {
+            "type": "number"
+          },
+          "title": "Metric Deltas",
+          "type": "object"
+        },
+        "passed": {
+          "title": "Passed",
+          "type": "boolean"
+        }
+      },
+      "required": [
+        "baseline_record_digest",
+        "candidate_metrics_sha256",
+        "metric_deltas",
+        "checks",
+        "passed"
+      ],
+      "title": "EvaluationDrift",
+      "type": "object"
+    },
+    "EvaluationGateCheck": {
+      "additionalProperties": false,
+      "properties": {
+        "check_id": {
+          "pattern": "^[a-z][a-z0-9_]{2,63}$",
+          "title": "Check Id",
+          "type": "string"
+        },
+        "observed": {
+          "title": "Observed",
+          "type": "number"
+        },
+        "operator": {
+          "enum": [
+            "gte",
+            "lte"
+          ],
+          "title": "Operator",
+          "type": "string"
+        },
+        "passed": {
+          "title": "Passed",
+          "type": "boolean"
+        },
+        "scope": {
+          "maxLength": 128,
+          "minLength": 1,
+          "title": "Scope",
+          "type": "string"
+        },
+        "threshold": {
+          "title": "Threshold",
+          "type": "number"
+        }
+      },
+      "required": [
+        "check_id",
+        "passed",
+        "observed",
+        "threshold",
+        "operator",
+        "scope"
+      ],
+      "title": "EvaluationGateCheck",
+      "type": "object"
+    },
+    "EvaluationGateState": {
+      "enum": [
+        "pass",
+        "block",
+        "hold"
+      ],
+      "title": "EvaluationGateState",
+      "type": "string"
+    }
+  },
+  "additionalProperties": false,
+  "properties": {
+    "checks": {
+      "items": {
+        "$ref": "#/$defs/EvaluationGateCheck"
+      },
+      "title": "Checks",
+      "type": "array"
+    },
+    "drift": {
+      "anyOf": [
+        {
+          "$ref": "#/$defs/EvaluationDrift"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null
+    },
+    "policy_sha256": {
+      "pattern": "^[0-9a-f]{64}$",
+      "title": "Policy Sha256",
+      "type": "string"
+    },
+    "policy_version": {
+      "title": "Policy Version",
+      "type": "string"
+    },
+    "reasons": {
+      "items": {
+        "type": "string"
+      },
+      "title": "Reasons",
+      "type": "array"
+    },
+    "state": {
+      "$ref": "#/$defs/EvaluationGateState"
+    }
+  },
+  "required": [
+    "state",
+    "policy_version",
+    "policy_sha256",
+    "checks",
+    "reasons"
+  ],
+  "title": "EvaluationGateDecision",
+  "type": "object"
+}

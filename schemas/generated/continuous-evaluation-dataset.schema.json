@@ -1,0 +1,408 @@
+{
+  "$defs": {
+    "AgentEvent": {
+      "additionalProperties": false,
+      "description": "Metadata-only observation of a proposed AI-agent effect.",
+      "properties": {
+        "agent_id": {
+          "maxLength": 128,
+          "minLength": 1,
+          "title": "Agent Id",
+          "type": "string"
+        },
+        "approval_present": {
+          "default": false,
+          "title": "Approval Present",
+          "type": "boolean"
+        },
+        "attributes": {
+          "additionalProperties": {
+            "type": "string"
+          },
+          "title": "Attributes",
+          "type": "object"
+        },
+        "authority_operations": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Authority Operations",
+          "type": "array",
+          "uniqueItems": true
+        },
+        "data_classes": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Data Classes",
+          "type": "array",
+          "uniqueItems": true
+        },
+        "declared_tool_schema_digest": {
+          "anyOf": [
+            {
+              "maxLength": 128,
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Declared Tool Schema Digest"
+        },
+        "destination": {
+          "anyOf": [
+            {
+              "maxLength": 512,
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Destination"
+        },
+        "event_id": {
+          "maxLength": 128,
+          "minLength": 5,
+          "title": "Event Id",
+          "type": "string"
+        },
+        "flow_id": {
+          "maxLength": 128,
+          "minLength": 1,
+          "title": "Flow Id",
+          "type": "string"
+        },
+        "indicators": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Indicators",
+          "type": "array",
+          "uniqueItems": true
+        },
+        "is_effectful": {
+          "default": true,
+          "title": "Is Effectful",
+          "type": "boolean"
+        },
+        "observed_tool_schema_digest": {
+          "anyOf": [
+            {
+              "maxLength": 128,
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Observed Tool Schema Digest"
+        },
+        "occurred_at": {
+          "format": "date-time",
+          "title": "Occurred At",
+          "type": "string"
+        },
+        "operation": {
+          "maxLength": 128,
+          "minLength": 1,
+          "title": "Operation",
+          "type": "string"
+        },
+        "resource": {
+          "maxLength": 512,
+          "minLength": 1,
+          "title": "Resource",
+          "type": "string"
+        },
+        "schema_version": {
+          "default": "1.0.0",
+          "title": "Schema Version",
+          "type": "string"
+        },
+        "source_id": {
+          "maxLength": 256,
+          "minLength": 1,
+          "title": "Source Id",
+          "type": "string"
+        },
+        "source_trust": {
+          "$ref": "#/$defs/TrustClass"
+        },
+        "source_type": {
+          "maxLength": 64,
+          "minLength": 1,
+          "title": "Source Type",
+          "type": "string"
+        },
+        "tenant_id": {
+          "maxLength": 128,
+          "minLength": 1,
+          "title": "Tenant Id",
+          "type": "string"
+        },
+        "tool_name": {
+          "anyOf": [
+            {
+              "maxLength": 128,
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Tool Name"
+        }
+      },
+      "required": [
+        "tenant_id",
+        "flow_id",
+        "agent_id",
+        "operation",
+        "resource",
+        "source_type",
+        "source_id",
+        "source_trust"
+      ],
+      "title": "AgentEvent",
+      "type": "object"
+    },
+    "BlindEvaluationCase": {
+      "additionalProperties": false,
+      "description": "Candidate-visible input.  Expected labels are deliberately absent.",
+      "properties": {
+        "case_id": {
+          "pattern": "^evc_[0-9a-f]{32}$",
+          "title": "Case Id",
+          "type": "string"
+        },
+        "dataset_split": {
+          "pattern": "^(development|validation|holdout)$",
+          "title": "Dataset Split",
+          "type": "string"
+        },
+        "events": {
+          "items": {
+            "$ref": "#/$defs/AgentEvent"
+          },
+          "maxItems": 8,
+          "minItems": 1,
+          "title": "Events",
+          "type": "array"
+        },
+        "framework_mappings": {
+          "items": {
+            "type": "string"
+          },
+          "maxItems": 32,
+          "minItems": 1,
+          "title": "Framework Mappings",
+          "type": "array"
+        },
+        "stimulus_sha256": {
+          "pattern": "^[0-9a-f]{64}$",
+          "title": "Stimulus Sha256",
+          "type": "string"
+        },
+        "use_case": {
+          "pattern": "^[a-z][a-z0-9_]{2,63}$",
+          "title": "Use Case",
+          "type": "string"
+        },
+        "variant": {
+          "$ref": "#/$defs/SimulationVariant"
+        }
+      },
+      "required": [
+        "case_id",
+        "use_case",
+        "dataset_split",
+        "variant",
+        "framework_mappings",
+        "events",
+        "stimulus_sha256"
+      ],
+      "title": "BlindEvaluationCase",
+      "type": "object"
+    },
+    "DecisionAction": {
+      "enum": [
+        "allow",
+        "allow_with_obligations",
+        "require_approval",
+        "deny"
+      ],
+      "title": "DecisionAction",
+      "type": "string"
+    },
+    "EvaluationGroundTruth": {
+      "additionalProperties": false,
+      "properties": {
+        "allowed_evidence_refs": {
+          "items": {
+            "type": "string"
+          },
+          "maxItems": 256,
+          "title": "Allowed Evidence Refs",
+          "type": "array"
+        },
+        "attack": {
+          "title": "Attack",
+          "type": "boolean"
+        },
+        "expected_action": {
+          "$ref": "#/$defs/DecisionAction"
+        },
+        "expected_alert_types": {
+          "items": {
+            "type": "string"
+          },
+          "maxItems": 32,
+          "title": "Expected Alert Types",
+          "type": "array"
+        },
+        "expected_severity": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/Severity"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        },
+        "forbidden_effect": {
+          "title": "Forbidden Effect",
+          "type": "boolean"
+        }
+      },
+      "required": [
+        "attack",
+        "expected_alert_types",
+        "expected_action",
+        "forbidden_effect",
+        "allowed_evidence_refs"
+      ],
+      "title": "EvaluationGroundTruth",
+      "type": "object"
+    },
+    "SealedEvaluationCase": {
+      "additionalProperties": false,
+      "properties": {
+        "blind": {
+          "$ref": "#/$defs/BlindEvaluationCase"
+        },
+        "ground_truth": {
+          "$ref": "#/$defs/EvaluationGroundTruth"
+        },
+        "ground_truth_sha256": {
+          "pattern": "^[0-9a-f]{64}$",
+          "title": "Ground Truth Sha256",
+          "type": "string"
+        }
+      },
+      "required": [
+        "blind",
+        "ground_truth",
+        "ground_truth_sha256"
+      ],
+      "title": "SealedEvaluationCase",
+      "type": "object"
+    },
+    "Severity": {
+      "enum": [
+        "info",
+        "low",
+        "medium",
+        "high",
+        "critical"
+      ],
+      "title": "Severity",
+      "type": "string"
+    },
+    "SimulationVariant": {
+      "enum": [
+        "plain",
+        "japanese",
+        "spanish",
+        "unicode_confusable",
+        "zero_width",
+        "base64",
+        "mixed_obfuscation"
+      ],
+      "title": "SimulationVariant",
+      "type": "string"
+    },
+    "TrustClass": {
+      "enum": [
+        "trusted-control",
+        "authenticated-user",
+        "internal-data",
+        "external-untrusted",
+        "suspected-adversarial",
+        "unknown"
+      ],
+      "title": "TrustClass",
+      "type": "string"
+    }
+  },
+  "additionalProperties": false,
+  "properties": {
+    "cases": {
+      "items": {
+        "$ref": "#/$defs/SealedEvaluationCase"
+      },
+      "maxItems": 500,
+      "minItems": 1,
+      "title": "Cases",
+      "type": "array"
+    },
+    "created_at": {
+      "format": "date-time",
+      "title": "Created At",
+      "type": "string"
+    },
+    "dataset_sha256": {
+      "pattern": "^[0-9a-f]{64}$",
+      "title": "Dataset Sha256",
+      "type": "string"
+    },
+    "dataset_version": {
+      "pattern": "^benchmark-[0-9]{4}\\.[0-9]{2}\\.[0-9]{2}\\.[0-9]+$",
+      "title": "Dataset Version",
+      "type": "string"
+    },
+    "parent_dataset_sha256": {
+      "anyOf": [
+        {
+          "pattern": "^[0-9a-f]{64}$",
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Parent Dataset Sha256"
+    },
+    "schema_version": {
+      "default": "1.0.0",
+      "title": "Schema Version",
+      "type": "string"
+    }
+  },
+  "required": [
+    "dataset_version",
+    "cases",
+    "created_at",
+    "dataset_sha256"
+  ],
+  "title": "EvaluationDataset",
+  "type": "object"
+}

@@ -1,0 +1,116 @@
+{
+  "additionalProperties": false,
+  "properties": {
+    "accepted_events": {
+      "minimum": 0,
+      "title": "Accepted Events",
+      "type": "integer"
+    },
+    "backpressured_events": {
+      "minimum": 0,
+      "title": "Backpressured Events",
+      "type": "integer"
+    },
+    "dead_letter_events": {
+      "minimum": 0,
+      "title": "Dead Letter Events",
+      "type": "integer"
+    },
+    "duplicate_events": {
+      "minimum": 0,
+      "title": "Duplicate Events",
+      "type": "integer"
+    },
+    "last_error_code": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Last Error Code"
+    },
+    "last_processed_at": {
+      "anyOf": [
+        {
+          "format": "date-time",
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Last Processed At"
+    },
+    "last_received_at": {
+      "anyOf": [
+        {
+          "format": "date-time",
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Last Received At"
+    },
+    "pending_events": {
+      "minimum": 0,
+      "title": "Pending Events",
+      "type": "integer"
+    },
+    "processed_events": {
+      "minimum": 0,
+      "title": "Processed Events",
+      "type": "integer"
+    },
+    "processing_events": {
+      "minimum": 0,
+      "title": "Processing Events",
+      "type": "integer"
+    },
+    "rate_limited_requests": {
+      "minimum": 0,
+      "title": "Rate Limited Requests",
+      "type": "integer"
+    },
+    "rejected_events": {
+      "minimum": 0,
+      "title": "Rejected Events",
+      "type": "integer"
+    },
+    "source_id": {
+      "title": "Source Id",
+      "type": "string"
+    },
+    "status": {
+      "title": "Status",
+      "type": "string"
+    },
+    "tenant_id": {
+      "title": "Tenant Id",
+      "type": "string"
+    }
+  },
+  "required": [
+    "tenant_id",
+    "source_id",
+    "status",
+    "accepted_events",
+    "duplicate_events",
+    "rejected_events",
+    "rate_limited_requests",
+    "backpressured_events",
+    "processed_events",
+    "dead_letter_events",
+    "pending_events",
+    "processing_events"
+  ],
+  "title": "GatewaySourceHealth",
+  "type": "object"
+}

@@ -1,0 +1,15 @@
+{
+  "schema_version": "1.0.0",
+  "tenant_id": "tenant-lab",
+  "tenant_policy": {
+    "display_name": "AgentSec laboratory",
+    "residency_region": "ap-northeast-1",
+    "allowed_processing_regions": [
+      "ap-northeast-1"
+    ],
+    "retention_days": 365,
+    "evidence_retention_days": 730,
+    "legal_hold": false,
+    "managed_key_reference": "keyref://tenant-lab/data"
+  }
+}

@@ -1,0 +1,53 @@
+{
+  "$defs": {
+    "NotificationChannel": {
+      "enum": [
+        "on_call",
+        "ticket",
+        "email",
+        "messaging"
+      ],
+      "title": "NotificationChannel",
+      "type": "string"
+    }
+  },
+  "additionalProperties": false,
+  "properties": {
+    "channel": {
+      "$ref": "#/$defs/NotificationChannel"
+    },
+    "destination_id": {
+      "pattern": "^destination://[A-Za-z0-9_.@/-]+$",
+      "title": "Destination Id",
+      "type": "string"
+    },
+    "enabled": {
+      "title": "Enabled",
+      "type": "boolean"
+    },
+    "name": {
+      "maxLength": 128,
+      "minLength": 3,
+      "title": "Name",
+      "type": "string"
+    },
+    "provider_ack_required": {
+      "title": "Provider Ack Required",
+      "type": "boolean"
+    },
+    "ready": {
+      "title": "Ready",
+      "type": "boolean"
+    }
+  },
+  "required": [
+    "destination_id",
+    "name",
+    "channel",
+    "provider_ack_required",
+    "enabled",
+    "ready"
+  ],
+  "title": "NotificationDestinationStatus",
+  "type": "object"
+}

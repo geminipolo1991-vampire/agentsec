@@ -1,0 +1,54 @@
+{
+  "additionalProperties": false,
+  "properties": {
+    "active_payloads": {
+      "minimum": 0,
+      "title": "Active Payloads",
+      "type": "integer"
+    },
+    "expired_payloads": {
+      "minimum": 0,
+      "title": "Expired Payloads",
+      "type": "integer"
+    },
+    "first_broken_sequence": {
+      "minimum": 0,
+      "title": "First Broken Sequence",
+      "type": "integer"
+    },
+    "ledger_entries": {
+      "minimum": 0,
+      "title": "Ledger Entries",
+      "type": "integer"
+    },
+    "protected_evidence_blobs": {
+      "minimum": 0,
+      "title": "Protected Evidence Blobs",
+      "type": "integer"
+    },
+    "reason": {
+      "title": "Reason",
+      "type": "string"
+    },
+    "tenant_id": {
+      "title": "Tenant Id",
+      "type": "string"
+    },
+    "valid": {
+      "title": "Valid",
+      "type": "boolean"
+    }
+  },
+  "required": [
+    "tenant_id",
+    "valid",
+    "reason",
+    "first_broken_sequence",
+    "ledger_entries",
+    "active_payloads",
+    "expired_payloads",
+    "protected_evidence_blobs"
+  ],
+  "title": "StorageVerification",
+  "type": "object"
+}

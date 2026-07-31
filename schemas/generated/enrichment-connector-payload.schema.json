@@ -1,0 +1,81 @@
+{
+  "$defs": {
+    "EnrichmentStatus": {
+      "enum": [
+        "complete",
+        "partial",
+        "unavailable",
+        "failed"
+      ],
+      "title": "EnrichmentStatus",
+      "type": "string"
+    }
+  },
+  "additionalProperties": false,
+  "properties": {
+    "affects_triage": {
+      "default": false,
+      "title": "Affects Triage",
+      "type": "boolean"
+    },
+    "evidence_refs": {
+      "items": {
+        "type": "string"
+      },
+      "maxItems": 32,
+      "title": "Evidence Refs",
+      "type": "array"
+    },
+    "facts": {
+      "additionalProperties": {
+        "anyOf": [
+          {
+            "type": "string"
+          },
+          {
+            "type": "boolean"
+          },
+          {
+            "type": "integer"
+          },
+          {
+            "type": "number"
+          },
+          {
+            "items": {
+              "type": "string"
+            },
+            "type": "array"
+          }
+        ]
+      },
+      "maxProperties": 64,
+      "title": "Facts",
+      "type": "object"
+    },
+    "observed_at": {
+      "format": "date-time",
+      "title": "Observed At",
+      "type": "string"
+    },
+    "schema_version": {
+      "default": "1.0.0",
+      "title": "Schema Version",
+      "type": "string"
+    },
+    "source": {
+      "pattern": "^[a-z][a-z0-9_.-]{2,63}$",
+      "title": "Source",
+      "type": "string"
+    },
+    "status": {
+      "$ref": "#/$defs/EnrichmentStatus"
+    }
+  },
+  "required": [
+    "source",
+    "status"
+  ],
+  "title": "EnrichmentConnectorPayload",
+  "type": "object"
+}

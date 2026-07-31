@@ -1,0 +1,92 @@
+{
+  "additionalProperties": false,
+  "properties": {
+    "configured_destinations": {
+      "minimum": 0,
+      "title": "Configured Destinations",
+      "type": "integer"
+    },
+    "dead_letters": {
+      "minimum": 0,
+      "title": "Dead Letters",
+      "type": "integer"
+    },
+    "human_ack_breaches": {
+      "minimum": 0,
+      "title": "Human Ack Breaches",
+      "type": "integer"
+    },
+    "observed_at": {
+      "format": "date-time",
+      "title": "Observed At",
+      "type": "string"
+    },
+    "oldest_pending_seconds": {
+      "anyOf": [
+        {
+          "minimum": 0,
+          "type": "integer"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Oldest Pending Seconds"
+    },
+    "pending_deliveries": {
+      "minimum": 0,
+      "title": "Pending Deliveries",
+      "type": "integer"
+    },
+    "policy_sha256": {
+      "pattern": "^[0-9a-f]{64}$",
+      "title": "Policy Sha256",
+      "type": "string"
+    },
+    "policy_version": {
+      "title": "Policy Version",
+      "type": "string"
+    },
+    "provider_ack_pending": {
+      "minimum": 0,
+      "title": "Provider Ack Pending",
+      "type": "integer"
+    },
+    "ready_destinations": {
+      "minimum": 0,
+      "title": "Ready Destinations",
+      "type": "integer"
+    },
+    "retry_scheduled": {
+      "minimum": 0,
+      "title": "Retry Scheduled",
+      "type": "integer"
+    },
+    "tenant_id": {
+      "title": "Tenant Id",
+      "type": "string"
+    },
+    "total": {
+      "minimum": 0,
+      "title": "Total",
+      "type": "integer"
+    }
+  },
+  "required": [
+    "tenant_id",
+    "total",
+    "pending_deliveries",
+    "retry_scheduled",
+    "provider_ack_pending",
+    "dead_letters",
+    "human_ack_breaches",
+    "configured_destinations",
+    "ready_destinations",
+    "policy_version",
+    "policy_sha256",
+    "observed_at"
+  ],
+  "title": "NotificationHealth",
+  "type": "object"
+}

@@ -1,0 +1,104 @@
+{
+  "$defs": {
+    "EscalationLevel": {
+      "enum": [
+        "none",
+        "review_queue",
+        "soc_urgent",
+        "incident_page"
+      ],
+      "title": "EscalationLevel",
+      "type": "string"
+    }
+  },
+  "additionalProperties": false,
+  "properties": {
+    "acknowledgment_minutes": {
+      "maximum": 1440,
+      "minimum": 1,
+      "title": "Acknowledgment Minutes",
+      "type": "integer"
+    },
+    "alert_types": {
+      "items": {
+        "type": "string"
+      },
+      "maxItems": 32,
+      "title": "Alert Types",
+      "type": "array"
+    },
+    "destination_templates": {
+      "additionalProperties": {
+        "type": "string"
+      },
+      "maxProperties": 16,
+      "minProperties": 1,
+      "title": "Destination Templates",
+      "type": "object"
+    },
+    "enabled": {
+      "default": true,
+      "title": "Enabled",
+      "type": "boolean"
+    },
+    "escalation_levels": {
+      "items": {
+        "$ref": "#/$defs/EscalationLevel"
+      },
+      "maxItems": 3,
+      "minItems": 1,
+      "title": "Escalation Levels",
+      "type": "array"
+    },
+    "max_attempts": {
+      "maximum": 20,
+      "minimum": 1,
+      "title": "Max Attempts",
+      "type": "integer"
+    },
+    "name": {
+      "maxLength": 128,
+      "minLength": 3,
+      "title": "Name",
+      "type": "string"
+    },
+    "on_call_schedule_id": {
+      "pattern": "^schedule://[A-Za-z0-9_.@/-]+$",
+      "title": "On Call Schedule Id",
+      "type": "string"
+    },
+    "priorities": {
+      "items": {
+        "type": "string"
+      },
+      "maxItems": 4,
+      "minItems": 1,
+      "title": "Priorities",
+      "type": "array"
+    },
+    "retry_base_seconds": {
+      "maximum": 3600,
+      "minimum": 1,
+      "title": "Retry Base Seconds",
+      "type": "integer"
+    },
+    "route_id": {
+      "pattern": "^route://[A-Za-z0-9_.@/-]+$",
+      "title": "Route Id",
+      "type": "string"
+    }
+  },
+  "required": [
+    "route_id",
+    "name",
+    "priorities",
+    "escalation_levels",
+    "destination_templates",
+    "on_call_schedule_id",
+    "acknowledgment_minutes",
+    "max_attempts",
+    "retry_base_seconds"
+  ],
+  "title": "NotificationRoute",
+  "type": "object"
+}

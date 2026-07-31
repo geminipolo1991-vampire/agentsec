@@ -1,0 +1,86 @@
+{
+  "$defs": {
+    "SecurityEdgeType": {
+      "enum": [
+        "contains",
+        "uses_model",
+        "uses_tool",
+        "accesses",
+        "influences",
+        "calls",
+        "sends_to",
+        "authorized_by",
+        "produces"
+      ],
+      "title": "SecurityEdgeType",
+      "type": "string"
+    }
+  },
+  "additionalProperties": false,
+  "properties": {
+    "edge_id": {
+      "maxLength": 512,
+      "minLength": 3,
+      "title": "Edge Id",
+      "type": "string"
+    },
+    "edge_type": {
+      "$ref": "#/$defs/SecurityEdgeType"
+    },
+    "evidence_refs": {
+      "items": {
+        "type": "string"
+      },
+      "maxItems": 64,
+      "title": "Evidence Refs",
+      "type": "array"
+    },
+    "observed_at": {
+      "format": "date-time",
+      "title": "Observed At",
+      "type": "string"
+    },
+    "risk_factors": {
+      "items": {
+        "type": "string"
+      },
+      "maxItems": 64,
+      "title": "Risk Factors",
+      "type": "array"
+    },
+    "source_node_id": {
+      "maxLength": 512,
+      "minLength": 3,
+      "title": "Source Node Id",
+      "type": "string"
+    },
+    "source_ref": {
+      "maxLength": 512,
+      "minLength": 1,
+      "title": "Source Ref",
+      "type": "string"
+    },
+    "target_node_id": {
+      "maxLength": 512,
+      "minLength": 3,
+      "title": "Target Node Id",
+      "type": "string"
+    },
+    "weight": {
+      "maximum": 100.0,
+      "minimum": 0.1,
+      "title": "Weight",
+      "type": "number"
+    }
+  },
+  "required": [
+    "edge_id",
+    "source_node_id",
+    "target_node_id",
+    "edge_type",
+    "weight",
+    "source_ref"
+  ],
+  "title": "GraphEdgeInput",
+  "type": "object"
+}

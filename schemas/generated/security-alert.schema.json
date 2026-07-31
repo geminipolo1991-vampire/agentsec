@@ -94,6 +94,13 @@
       "title": "Flow Id",
       "type": "string"
     },
+    "framework_mappings": {
+      "items": {
+        "type": "string"
+      },
+      "title": "Framework Mappings",
+      "type": "array"
+    },
     "operation": {
       "title": "Operation",
       "type": "string"
@@ -110,6 +117,11 @@
     },
     "resource": {
       "title": "Resource",
+      "type": "string"
+    },
+    "rule_version": {
+      "default": "1.0.0",
+      "title": "Rule Version",
       "type": "string"
     },
     "schema_version": {

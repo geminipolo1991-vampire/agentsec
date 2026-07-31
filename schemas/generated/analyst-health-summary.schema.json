@@ -1,0 +1,67 @@
+{
+  "additionalProperties": false,
+  "properties": {
+    "abstained_roles": {
+      "minimum": 0,
+      "title": "Abstained Roles",
+      "type": "integer"
+    },
+    "calculated_at": {
+      "format": "date-time",
+      "title": "Calculated At",
+      "type": "string"
+    },
+    "completed_runs": {
+      "minimum": 0,
+      "title": "Completed Runs",
+      "type": "integer"
+    },
+    "disagreements": {
+      "minimum": 0,
+      "title": "Disagreements",
+      "type": "integer"
+    },
+    "feedback_records": {
+      "minimum": 0,
+      "title": "Feedback Records",
+      "type": "integer"
+    },
+    "partial_runs": {
+      "minimum": 0,
+      "title": "Partial Runs",
+      "type": "integer"
+    },
+    "schema_version": {
+      "default": "1.0.0",
+      "title": "Schema Version",
+      "type": "string"
+    },
+    "tenant_id": {
+      "title": "Tenant Id",
+      "type": "string"
+    },
+    "total_runs": {
+      "minimum": 0,
+      "title": "Total Runs",
+      "type": "integer"
+    },
+    "unavailable_roles": {
+      "minimum": 0,
+      "title": "Unavailable Roles",
+      "type": "integer"
+    }
+  },
+  "required": [
+    "tenant_id",
+    "total_runs",
+    "completed_runs",
+    "partial_runs",
+    "abstained_roles",
+    "unavailable_roles",
+    "disagreements",
+    "feedback_records",
+    "calculated_at"
+  ],
+  "title": "AnalystHealthSummary",
+  "type": "object"
+}

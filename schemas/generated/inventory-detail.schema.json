@@ -1,0 +1,456 @@
+{
+  "$defs": {
+    "ComponentKind": {
+      "enum": [
+        "application",
+        "agent",
+        "model",
+        "tool",
+        "data_store"
+      ],
+      "title": "ComponentKind",
+      "type": "string"
+    },
+    "ComponentPermission": {
+      "additionalProperties": false,
+      "properties": {
+        "approved": {
+          "default": false,
+          "title": "Approved",
+          "type": "boolean"
+        },
+        "effect": {
+          "$ref": "#/$defs/PermissionEffect",
+          "default": "allow"
+        },
+        "operation": {
+          "maxLength": 128,
+          "minLength": 1,
+          "title": "Operation",
+          "type": "string"
+        },
+        "resource_scope": {
+          "maxLength": 512,
+          "minLength": 1,
+          "title": "Resource Scope",
+          "type": "string"
+        },
+        "source_ref": {
+          "maxLength": 512,
+          "minLength": 1,
+          "title": "Source Ref",
+          "type": "string"
+        }
+      },
+      "required": [
+        "operation",
+        "resource_scope",
+        "source_ref"
+      ],
+      "title": "ComponentPermission",
+      "type": "object"
+    },
+    "ComponentStatus": {
+      "enum": [
+        "active",
+        "unmanaged",
+        "retired"
+      ],
+      "title": "ComponentStatus",
+      "type": "string"
+    },
+    "ConfigurationRevision": {
+      "additionalProperties": false,
+      "properties": {
+        "changed_fields": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Changed Fields",
+          "type": "array"
+        },
+        "component_id": {
+          "title": "Component Id",
+          "type": "string"
+        },
+        "configuration": {
+          "additionalProperties": true,
+          "title": "Configuration",
+          "type": "object"
+        },
+        "configuration_digest": {
+          "pattern": "^[0-9a-f]{64}$",
+          "title": "Configuration Digest",
+          "type": "string"
+        },
+        "observed_at": {
+          "format": "date-time",
+          "title": "Observed At",
+          "type": "string"
+        },
+        "previous_digest": {
+          "anyOf": [
+            {
+              "pattern": "^[0-9a-f]{64}$",
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Previous Digest"
+        },
+        "recorded_at": {
+          "format": "date-time",
+          "title": "Recorded At",
+          "type": "string"
+        },
+        "source": {
+          "$ref": "#/$defs/InventorySource"
+        },
+        "tenant_id": {
+          "title": "Tenant Id",
+          "type": "string"
+        },
+        "version": {
+          "minimum": 1,
+          "title": "Version",
+          "type": "integer"
+        }
+      },
+      "required": [
+        "component_id",
+        "tenant_id",
+        "version",
+        "configuration_digest",
+        "configuration",
+        "changed_fields",
+        "source",
+        "observed_at",
+        "recorded_at"
+      ],
+      "title": "ConfigurationRevision",
+      "type": "object"
+    },
+    "InventoryComponent": {
+      "additionalProperties": false,
+      "properties": {
+        "application_id": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Application Id"
+        },
+        "component_id": {
+          "maxLength": 128,
+          "minLength": 5,
+          "title": "Component Id",
+          "type": "string"
+        },
+        "configuration": {
+          "additionalProperties": true,
+          "title": "Configuration",
+          "type": "object"
+        },
+        "configuration_digest": {
+          "pattern": "^[0-9a-f]{64}$",
+          "title": "Configuration Digest",
+          "type": "string"
+        },
+        "configuration_version": {
+          "minimum": 1,
+          "title": "Configuration Version",
+          "type": "integer"
+        },
+        "criticality": {
+          "$ref": "#/$defs/Severity"
+        },
+        "external_ref": {
+          "title": "External Ref",
+          "type": "string"
+        },
+        "first_seen_at": {
+          "format": "date-time",
+          "title": "First Seen At",
+          "type": "string"
+        },
+        "kind": {
+          "$ref": "#/$defs/ComponentKind"
+        },
+        "last_seen_at": {
+          "format": "date-time",
+          "title": "Last Seen At",
+          "type": "string"
+        },
+        "name": {
+          "title": "Name",
+          "type": "string"
+        },
+        "owner_ref": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Owner Ref"
+        },
+        "permissions": {
+          "items": {
+            "$ref": "#/$defs/ComponentPermission"
+          },
+          "title": "Permissions",
+          "type": "array"
+        },
+        "risk_reasons": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Risk Reasons",
+          "type": "array"
+        },
+        "risk_score": {
+          "maximum": 100,
+          "minimum": 0,
+          "title": "Risk Score",
+          "type": "integer"
+        },
+        "source": {
+          "$ref": "#/$defs/InventorySource"
+        },
+        "status": {
+          "$ref": "#/$defs/ComponentStatus"
+        },
+        "tags": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Tags",
+          "type": "array",
+          "uniqueItems": true
+        },
+        "tenant_id": {
+          "maxLength": 128,
+          "minLength": 1,
+          "title": "Tenant Id",
+          "type": "string"
+        },
+        "updated_at": {
+          "format": "date-time",
+          "title": "Updated At",
+          "type": "string"
+        }
+      },
+      "required": [
+        "component_id",
+        "tenant_id",
+        "kind",
+        "name",
+        "external_ref",
+        "criticality",
+        "status",
+        "source",
+        "permissions",
+        "configuration",
+        "configuration_digest",
+        "configuration_version",
+        "tags",
+        "risk_score",
+        "risk_reasons",
+        "first_seen_at",
+        "last_seen_at",
+        "updated_at"
+      ],
+      "title": "InventoryComponent",
+      "type": "object"
+    },
+    "InventoryRelationship": {
+      "additionalProperties": false,
+      "properties": {
+        "first_seen_at": {
+          "format": "date-time",
+          "title": "First Seen At",
+          "type": "string"
+        },
+        "last_seen_at": {
+          "format": "date-time",
+          "title": "Last Seen At",
+          "type": "string"
+        },
+        "relationship": {
+          "$ref": "#/$defs/RelationshipType"
+        },
+        "source_component_id": {
+          "title": "Source Component Id",
+          "type": "string"
+        },
+        "source_ref": {
+          "title": "Source Ref",
+          "type": "string"
+        },
+        "target_component_id": {
+          "title": "Target Component Id",
+          "type": "string"
+        },
+        "tenant_id": {
+          "title": "Tenant Id",
+          "type": "string"
+        }
+      },
+      "required": [
+        "tenant_id",
+        "source_component_id",
+        "relationship",
+        "target_component_id",
+        "source_ref",
+        "first_seen_at",
+        "last_seen_at"
+      ],
+      "title": "InventoryRelationship",
+      "type": "object"
+    },
+    "InventoryRiskRollup": {
+      "additionalProperties": false,
+      "properties": {
+        "calculated_at": {
+          "format": "date-time",
+          "title": "Calculated At",
+          "type": "string"
+        },
+        "component_count": {
+          "minimum": 1,
+          "title": "Component Count",
+          "type": "integer"
+        },
+        "component_id": {
+          "title": "Component Id",
+          "type": "string"
+        },
+        "high_risk_components": {
+          "minimum": 0,
+          "title": "High Risk Components",
+          "type": "integer"
+        },
+        "reasons": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Reasons",
+          "type": "array"
+        },
+        "score": {
+          "maximum": 100,
+          "minimum": 0,
+          "title": "Score",
+          "type": "integer"
+        },
+        "tenant_id": {
+          "title": "Tenant Id",
+          "type": "string"
+        },
+        "unapproved_permissions": {
+          "minimum": 0,
+          "title": "Unapproved Permissions",
+          "type": "integer"
+        },
+        "unowned_components": {
+          "minimum": 0,
+          "title": "Unowned Components",
+          "type": "integer"
+        }
+      },
+      "required": [
+        "component_id",
+        "tenant_id",
+        "score",
+        "component_count",
+        "high_risk_components",
+        "unowned_components",
+        "unapproved_permissions",
+        "reasons",
+        "calculated_at"
+      ],
+      "title": "InventoryRiskRollup",
+      "type": "object"
+    },
+    "InventorySource": {
+      "enum": [
+        "declared",
+        "observed",
+        "imported"
+      ],
+      "title": "InventorySource",
+      "type": "string"
+    },
+    "PermissionEffect": {
+      "enum": [
+        "allow",
+        "deny"
+      ],
+      "title": "PermissionEffect",
+      "type": "string"
+    },
+    "RelationshipType": {
+      "enum": [
+        "contains",
+        "uses_model",
+        "uses_tool",
+        "accesses"
+      ],
+      "title": "RelationshipType",
+      "type": "string"
+    },
+    "Severity": {
+      "enum": [
+        "info",
+        "low",
+        "medium",
+        "high",
+        "critical"
+      ],
+      "title": "Severity",
+      "type": "string"
+    }
+  },
+  "additionalProperties": false,
+  "properties": {
+    "component": {
+      "$ref": "#/$defs/InventoryComponent"
+    },
+    "configuration_history": {
+      "items": {
+        "$ref": "#/$defs/ConfigurationRevision"
+      },
+      "title": "Configuration History",
+      "type": "array"
+    },
+    "relationships": {
+      "items": {
+        "$ref": "#/$defs/InventoryRelationship"
+      },
+      "title": "Relationships",
+      "type": "array"
+    },
+    "risk_rollup": {
+      "$ref": "#/$defs/InventoryRiskRollup"
+    }
+  },
+  "required": [
+    "component",
+    "configuration_history",
+    "relationships",
+    "risk_rollup"
+  ],
+  "title": "InventoryDetail",
+  "type": "object"
+}

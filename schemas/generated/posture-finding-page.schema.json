@@ -1,0 +1,203 @@
+{
+  "$defs": {
+    "ComponentKind": {
+      "enum": [
+        "application",
+        "agent",
+        "model",
+        "tool",
+        "data_store"
+      ],
+      "title": "ComponentKind",
+      "type": "string"
+    },
+    "PostureFinding": {
+      "additionalProperties": false,
+      "properties": {
+        "active_exception_id": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Active Exception Id"
+        },
+        "check_id": {
+          "title": "Check Id",
+          "type": "string"
+        },
+        "check_version": {
+          "title": "Check Version",
+          "type": "string"
+        },
+        "component_id": {
+          "title": "Component Id",
+          "type": "string"
+        },
+        "component_kind": {
+          "$ref": "#/$defs/ComponentKind"
+        },
+        "component_name": {
+          "title": "Component Name",
+          "type": "string"
+        },
+        "evidence_refs": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Evidence Refs",
+          "type": "array"
+        },
+        "finding_id": {
+          "pattern": "^pstf_[0-9a-f]{32}$",
+          "title": "Finding Id",
+          "type": "string"
+        },
+        "first_seen_at": {
+          "format": "date-time",
+          "title": "First Seen At",
+          "type": "string"
+        },
+        "framework_mappings": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Framework Mappings",
+          "type": "array"
+        },
+        "last_seen_at": {
+          "format": "date-time",
+          "title": "Last Seen At",
+          "type": "string"
+        },
+        "observed": {
+          "additionalProperties": {
+            "type": "string"
+          },
+          "title": "Observed",
+          "type": "object"
+        },
+        "remediation": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Remediation",
+          "type": "array"
+        },
+        "resolved_at": {
+          "anyOf": [
+            {
+              "format": "date-time",
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Resolved At"
+        },
+        "risk_score": {
+          "maximum": 100,
+          "minimum": 0,
+          "title": "Risk Score",
+          "type": "integer"
+        },
+        "severity": {
+          "$ref": "#/$defs/Severity"
+        },
+        "status": {
+          "$ref": "#/$defs/PostureFindingStatus"
+        },
+        "tenant_id": {
+          "title": "Tenant Id",
+          "type": "string"
+        },
+        "title": {
+          "title": "Title",
+          "type": "string"
+        }
+      },
+      "required": [
+        "finding_id",
+        "tenant_id",
+        "check_id",
+        "check_version",
+        "component_id",
+        "component_kind",
+        "component_name",
+        "title",
+        "severity",
+        "risk_score",
+        "status",
+        "evidence_refs",
+        "observed",
+        "remediation",
+        "framework_mappings",
+        "first_seen_at",
+        "last_seen_at"
+      ],
+      "title": "PostureFinding",
+      "type": "object"
+    },
+    "PostureFindingStatus": {
+      "enum": [
+        "open",
+        "accepted_exception",
+        "resolved"
+      ],
+      "title": "PostureFindingStatus",
+      "type": "string"
+    },
+    "Severity": {
+      "enum": [
+        "info",
+        "low",
+        "medium",
+        "high",
+        "critical"
+      ],
+      "title": "Severity",
+      "type": "string"
+    }
+  },
+  "additionalProperties": false,
+  "properties": {
+    "findings": {
+      "items": {
+        "$ref": "#/$defs/PostureFinding"
+      },
+      "title": "Findings",
+      "type": "array"
+    },
+    "limit": {
+      "maximum": 200,
+      "minimum": 1,
+      "title": "Limit",
+      "type": "integer"
+    },
+    "offset": {
+      "maximum": 100000,
+      "minimum": 0,
+      "title": "Offset",
+      "type": "integer"
+    },
+    "total": {
+      "minimum": 0,
+      "title": "Total",
+      "type": "integer"
+    }
+  },
+  "required": [
+    "findings",
+    "total",
+    "limit",
+    "offset"
+  ],
+  "title": "PostureFindingPage",
+  "type": "object"
+}

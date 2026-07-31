@@ -1,0 +1,64 @@
+{
+  "$defs": {
+    "AnalystRole": {
+      "enum": [
+        "triage",
+        "investigation",
+        "judge",
+        "escalation",
+        "response_advisor"
+      ],
+      "title": "AnalystRole",
+      "type": "string"
+    }
+  },
+  "additionalProperties": false,
+  "properties": {
+    "code": {
+      "pattern": "^[A-Z][A-Z0-9_]{2,63}$",
+      "title": "Code",
+      "type": "string"
+    },
+    "evidence_ids": {
+      "items": {
+        "type": "string"
+      },
+      "maxItems": 16,
+      "title": "Evidence Ids",
+      "type": "array"
+    },
+    "message": {
+      "maxLength": 256,
+      "minLength": 3,
+      "title": "Message",
+      "type": "string"
+    },
+    "role": {
+      "anyOf": [
+        {
+          "$ref": "#/$defs/AnalystRole"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null
+    },
+    "severity": {
+      "enum": [
+        "warning",
+        "error",
+        "critical"
+      ],
+      "title": "Severity",
+      "type": "string"
+    }
+  },
+  "required": [
+    "code",
+    "severity",
+    "message"
+  ],
+  "title": "JudgmentValidationIssue",
+  "type": "object"
+}

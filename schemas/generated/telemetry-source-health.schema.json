@@ -1,0 +1,117 @@
+{
+  "additionalProperties": false,
+  "properties": {
+    "accepted_events": {
+      "minimum": 0,
+      "title": "Accepted Events",
+      "type": "integer"
+    },
+    "duplicate_events": {
+      "minimum": 0,
+      "title": "Duplicate Events",
+      "type": "integer"
+    },
+    "last_error_code": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Last Error Code"
+    },
+    "last_observed_at": {
+      "anyOf": [
+        {
+          "format": "date-time",
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Last Observed At"
+    },
+    "last_occurred_at": {
+      "anyOf": [
+        {
+          "format": "date-time",
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Last Occurred At"
+    },
+    "last_sequence": {
+      "anyOf": [
+        {
+          "type": "integer"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Last Sequence"
+    },
+    "late_events": {
+      "minimum": 0,
+      "title": "Late Events",
+      "type": "integer"
+    },
+    "observed_sequence_gaps": {
+      "minimum": 0,
+      "title": "Observed Sequence Gaps",
+      "type": "integer"
+    },
+    "omitted_content_fields": {
+      "minimum": 0,
+      "title": "Omitted Content Fields",
+      "type": "integer"
+    },
+    "out_of_order_events": {
+      "minimum": 0,
+      "title": "Out Of Order Events",
+      "type": "integer"
+    },
+    "redaction_count": {
+      "minimum": 0,
+      "title": "Redaction Count",
+      "type": "integer"
+    },
+    "rejected_events": {
+      "minimum": 0,
+      "title": "Rejected Events",
+      "type": "integer"
+    },
+    "source_key": {
+      "title": "Source Key",
+      "type": "string"
+    },
+    "status": {
+      "title": "Status",
+      "type": "string"
+    }
+  },
+  "required": [
+    "source_key",
+    "status",
+    "accepted_events",
+    "duplicate_events",
+    "rejected_events",
+    "late_events",
+    "out_of_order_events",
+    "observed_sequence_gaps",
+    "omitted_content_fields",
+    "redaction_count"
+  ],
+  "title": "TelemetrySourceHealth",
+  "type": "object"
+}

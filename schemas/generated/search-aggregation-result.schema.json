@@ -1,0 +1,55 @@
+{
+  "$defs": {
+    "SearchBucket": {
+      "additionalProperties": false,
+      "properties": {
+        "count": {
+          "minimum": 1,
+          "title": "Count",
+          "type": "integer"
+        },
+        "value": {
+          "title": "Value",
+          "type": "string"
+        }
+      },
+      "required": [
+        "value",
+        "count"
+      ],
+      "title": "SearchBucket",
+      "type": "object"
+    }
+  },
+  "additionalProperties": false,
+  "properties": {
+    "buckets": {
+      "items": {
+        "$ref": "#/$defs/SearchBucket"
+      },
+      "title": "Buckets",
+      "type": "array"
+    },
+    "elapsed_ms": {
+      "minimum": 0.0,
+      "title": "Elapsed Ms",
+      "type": "number"
+    },
+    "field": {
+      "title": "Field",
+      "type": "string"
+    },
+    "query": {
+      "title": "Query",
+      "type": "string"
+    }
+  },
+  "required": [
+    "query",
+    "field",
+    "buckets",
+    "elapsed_ms"
+  ],
+  "title": "AggregationResult",
+  "type": "object"
+}

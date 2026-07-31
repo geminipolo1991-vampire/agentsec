@@ -1,0 +1,123 @@
+{
+  "additionalProperties": false,
+  "properties": {
+    "active_baselines": {
+      "minimum": 0,
+      "title": "Active Baselines",
+      "type": "integer"
+    },
+    "audit_valid": {
+      "title": "Audit Valid",
+      "type": "boolean"
+    },
+    "blocked_runs": {
+      "minimum": 0,
+      "title": "Blocked Runs",
+      "type": "integer"
+    },
+    "calculated_at": {
+      "format": "date-time",
+      "title": "Calculated At",
+      "type": "string"
+    },
+    "candidates": {
+      "minimum": 0,
+      "title": "Candidates",
+      "type": "integer"
+    },
+    "cases_in_latest_dataset": {
+      "minimum": 0,
+      "title": "Cases In Latest Dataset",
+      "type": "integer"
+    },
+    "datasets": {
+      "minimum": 0,
+      "title": "Datasets",
+      "type": "integer"
+    },
+    "direct_learning_enabled": {
+      "const": false,
+      "default": false,
+      "title": "Direct Learning Enabled",
+      "type": "boolean"
+    },
+    "feedback_approved": {
+      "minimum": 0,
+      "title": "Feedback Approved",
+      "type": "integer"
+    },
+    "feedback_candidates": {
+      "minimum": 0,
+      "title": "Feedback Candidates",
+      "type": "integer"
+    },
+    "feedback_promoted": {
+      "minimum": 0,
+      "title": "Feedback Promoted",
+      "type": "integer"
+    },
+    "held_runs": {
+      "minimum": 0,
+      "title": "Held Runs",
+      "type": "integer"
+    },
+    "live_candidates": {
+      "minimum": 0,
+      "title": "Live Candidates",
+      "type": "integer"
+    },
+    "passing_runs": {
+      "minimum": 0,
+      "title": "Passing Runs",
+      "type": "integer"
+    },
+    "runs": {
+      "minimum": 0,
+      "title": "Runs",
+      "type": "integer"
+    },
+    "runtime_policy_mutation_enabled": {
+      "const": false,
+      "default": false,
+      "title": "Runtime Policy Mutation Enabled",
+      "type": "boolean"
+    },
+    "schema_version": {
+      "default": "1.0.0",
+      "title": "Schema Version",
+      "type": "string"
+    },
+    "status": {
+      "enum": [
+        "healthy",
+        "degraded"
+      ],
+      "title": "Status",
+      "type": "string"
+    },
+    "tenant_id": {
+      "title": "Tenant Id",
+      "type": "string"
+    }
+  },
+  "required": [
+    "status",
+    "tenant_id",
+    "datasets",
+    "cases_in_latest_dataset",
+    "candidates",
+    "live_candidates",
+    "runs",
+    "passing_runs",
+    "blocked_runs",
+    "held_runs",
+    "active_baselines",
+    "feedback_candidates",
+    "feedback_approved",
+    "feedback_promoted",
+    "audit_valid",
+    "calculated_at"
+  ],
+  "title": "EvaluationHealth",
+  "type": "object"
+}

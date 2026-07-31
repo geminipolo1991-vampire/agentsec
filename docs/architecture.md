@@ -1,9 +1,9 @@
 # AgentSec detailed architecture specification
 
 Document status: implemented research PoC plus recommended pilot target  
-Architecture version: 1.1  
-Updated: 2026-07-22  
-Primary deployment region: AWS Asia Pacific (Tokyo), `ap-northeast-1`
+Architecture version: 2.0
+Updated: 2026-07-23
+Reference deployment region: AWS Asia Pacific (Tokyo), `ap-northeast-1`
 
 ## 1. Purpose
 
@@ -16,7 +16,7 @@ AI model, and produces an escalation and safe response disposition.
 The executable lifecycle is:
 
 ```text
-Agent event -> Detection -> Ingestion -> Triage -> Judgment
+Agent event -> Detection -> Ingestion -> Enrichment -> Triage -> Judgment
             -> Escalation -> Response -> Finding and incident detail
 ```
 
@@ -24,7 +24,7 @@ This document describes:
 
 - the architecture implemented in this repository;
 - the local analyst UI and its AWS Systems Manager bridge;
-- the private single-instance Tokyo deployment currently used for the demo;
+- the historical private single-instance Tokyo deployment design (currently deleted);
 - technical and deployment requirements;
 - security boundaries and failure behavior;
 - a recommended durable, multi-AZ pilot architecture;
@@ -47,11 +47,12 @@ Every architecture claim uses one of these states:
 | **Target** | Recommended for a pilot or production design; it is not implemented by this repository. |
 | **Out of scope** | Deliberately excluded from this release. |
 
-The current source is newer than the deployed EC2 image. The source returns
-privacy-safe authoritative incident details from the exact pipeline result. The
-currently approved EC2 image continues to expose the older summary response, so
-the local bridge labels reconstructed detail as **MVP REPLAY**. No deployed AWS
-resource or image is changed merely by updating this document or the source.
+There is currently no AgentSec AWS stack, ECR repository, or running EC2 demo.
+The two demo stacks and repository were deleted after the 2026-07-22 POC. The
+source now returns privacy-safe authoritative incident details from the exact
+pipeline result. Historical records without that contract are explicitly
+`summary_only`; the bridge and UI never replay the pipeline or reconstruct a
+score. No AWS resource is created or modified by this source optimization.
 
 ## 3. Architectural goals and non-goals
 
@@ -151,12 +152,14 @@ flowchart TB
       API[Authorization service]
       DE[DetectionEngine]
       LE[In-memory hash-chain ledger]
-      TR[Triager]
+      EN[Enrichment engine]
+      TR[Explainable triager]
       JU[Judge and decision combiner]
       ES[Escalator]
       SR[SafeResponder]
       FS[FindingStore]
-      ID[IncidentDetail builder]
+      ID[IncidentDetail v2 builder]
+      IS[Indexed IncidentStore]
     end
 
     subgraph Supporting[Supporting controls]
@@ -180,8 +183,8 @@ flowchart TB
     FA --> GW
     FG --> API
     GW --> API
-    API --> DE --> LE --> TR --> JU --> ES --> SR
-    SR --> FS --> ID
+    API --> DE --> LE --> EN --> TR --> JU --> ES --> SR
+    SR --> FS --> ID --> IS
     JU -. optional .-> CR
     JU -. optional .-> OA
     JU -. optional .-> AN
@@ -189,17 +192,19 @@ flowchart TB
     AU -. preconditions .-> GW
     PR -. lineage .-> DE
     AB -. drift .-> DE
-    ID --> API
+    IS --> API
     LE --> CP
     API --> CG
     GW --> OR
 ```
 
 The executable `SecurityPipeline` directly composes detection, ingestion,
-triage, judgment, escalation, response, and finding storage. Authority,
-provenance, ABOM, graph, checkpoint, observer, and Splunk components are
-implemented reference controls exercised by tests and the synthetic workflow;
-they are not all invoked by the minimal HTTP `/v1/authorize` path.
+enrichment, triage, judgment, escalation, response, finding storage, and the
+indexed incident projection. The enrichment engine connects authority,
+provenance, ABOM, graph-path, and independent-observation results when trusted
+context is supplied; absent optional context is recorded as partial or
+unavailable. Checkpoint and Splunk components remain separate reference
+controls.
 
 ## 7. End-to-end authorization sequence
 
@@ -210,6 +215,7 @@ sequenceDiagram
     participant API as Authorization service
     participant Detect as Detection engine
     participant Ledger
+    participant Enrich as Enrichment engine
     participant Triage
     participant Model as Optional model reasoner
     participant Judge
@@ -221,7 +227,8 @@ sequenceDiagram
     API->>Detect: Evaluate deterministic rules
     loop For every alert
       Detect->>Ledger: Deduplicate and append canonical alert
-      Ledger->>Triage: Ingestion receipt
+      Ledger->>Enrich: Ingestion receipt plus strict event
+      Enrich->>Triage: Status-bearing enrichment snapshot
       Triage->>Model: Minimized evidence when enabled
       Model-->>Judge: Structured ModelVerdict or unavailable
       Triage->>Judge: Alert and risk assessment
@@ -242,7 +249,7 @@ sequenceDiagram
 Important behavior:
 
 - One event can produce multiple alerts.
-- Each alert traverses all six stages.
+- Each alert traverses all seven stages.
 - The event action is the maximum action rank across all alert judgments.
 - When the event-level action is stricter than an individual alert action, that
   alert's judgment, escalation, response, finding, and timeline are recomputed
@@ -257,24 +264,35 @@ Important behavior:
 | Strict contracts | [`contracts.py`](../src/agentsec/contracts.py) | Typed metadata | Pydantic models | None | Implemented |
 | Detection engine | [`detection.py`](../src/agentsec/detection.py) | `AgentEvent` | Zero or more `SecurityAlert` objects | Rule list | Implemented |
 | Alert ledger | [`ingestion.py`](../src/agentsec/ingestion.py) | `SecurityAlert` | `IngestionReceipt` | Process memory | Implemented |
-| Triager | [`workflow.py`](../src/agentsec/workflow.py) | Alert | Risk score and priority | None | Implemented |
+| Enrichment engine | [`enrichment.py`](../src/agentsec/enrichment.py) | Event plus trusted optional context | Nine-source `EnrichmentSnapshot` | Optional subsystem stores | Implemented |
+| Triager | [`workflow.py`](../src/agentsec/workflow.py) | Alert plus enrichment snapshot | Versioned contributions, score, priority, SLA, route | None | Implemented |
 | Semantic reasoner | [`reasoning.py`](../src/agentsec/reasoning.py) | Alert and triage | `ModelVerdict` | Recording or provider call record | Implemented/supporting |
+| Model registry/router | [`model_registry.py`](../src/agentsec/model_registry.py) | Versioned provider profiles and AI mode | Selected provider-neutral reasoner or explicit failure | Configuration and environment references | Implemented/supporting |
 | Judge | [`workflow.py`](../src/agentsec/workflow.py) | Deterministic action and optional model verdict | `Judgment` | Policy version | Implemented |
 | Escalator | [`workflow.py`](../src/agentsec/workflow.py) | Alert, triage, judgment | Queue, case ID, escalation level | None | Implemented with synthetic routing |
 | Safe responder | [`workflow.py`](../src/agentsec/workflow.py) | Judgment and escalation | `ResponseRecord` | None | Implemented, simulation only |
 | Finding store | [`findings.py`](../src/agentsec/findings.py) | Alert and state transition | `Finding` and audit entries | Process memory | Implemented |
 | Incident builder | [`incidents.py`](../src/agentsec/incidents.py) | Exact `PipelineResult` | Privacy-safe `IncidentDetail` | None | Implemented in current source |
+| Incident store | [`incidents.py`](../src/agentsec/incidents.py) | `IncidentDetail` and lifecycle updates | Indexed detail, summaries, timeline | Process memory | Implemented |
+| Case service | [`cases.py`](../src/agentsec/cases.py) | Pipeline findings, correlated incident IDs, authenticated analyst mutations | Durable case detail, teams, SLA health, collaboration, review, hash-chain audit | Tenant-scoped SQLite WAL/full-sync | Implemented product module |
 | Pipeline orchestrator | [`pipeline.py`](../src/agentsec/pipeline.py) | `AgentEvent` | `EventProcessingResult` | Composed in-memory stores | Implemented |
 | HTTP service | [`service.py`](../src/agentsec/service.py) | Authenticated JSON | `AuthorizationResponse` | One pipeline per process | Implemented |
 | Authority service | [`authority.py`](../src/agentsec/authority.py) | Signed grants | Effective grant or error | Use counters in memory | Implemented reference |
 | Approval service | [`approval.py`](../src/agentsec/approval.py) | Bound approval token and event | Single-use approval decision | Nonces in memory | Implemented reference |
 | Provenance store | [`provenance.py`](../src/agentsec/provenance.py) | Source/tool/handoff/memory lineage | Conservative trust class | Process memory | Implemented reference |
 | ABOM registry | [`abom.py`](../src/agentsec/abom.py) | Signed manifest and runtime observation | `AbomDiff` | Process memory | Implemented reference |
-| Causal graph | [`graph.py`](../src/agentsec/graph.py) | Event processing results | Source-to-sink paths | Process memory | Implemented reference |
+| AI security graph | [`graph.py`](../src/agentsec/graph.py) | Inventory topology and event processing results | Temporal snapshots, reachability, blast radius, weighted attack paths | Tenant-scoped durable SQLite reference adapter | Implemented product module |
 | Checkpoint anchor | [`checkpoints.py`](../src/agentsec/checkpoints.py) | Ledger head | Signed checkpoint and verification | Process memory | Implemented reference |
 | Effect observer | [`observation.py`](../src/agentsec/observation.py) | SDK and gateway reports | Telemetry inconsistency findings | None | Implemented reference |
 | Privacy transformer | [`privacy.py`](../src/agentsec/privacy.py) | Alert/result metadata | Model and SOC allowlist projections | None | Implemented |
-| Splunk client | [`splunk.py`](../src/agentsec/splunk.py) | `SocFindingExport` | Delivery receipt or dead letter | In-memory sent set/dead letters | Implemented with fake tests; live disabled |
+| External API and SIEM plane | [`integrations.py`](../src/agentsec/integrations.py) | Allowlisted `SocFindingExport`, scoped client requests, destination policy | Digest-bound stream, delivery/ack receipts, dead letters, public resource API | Tenant-scoped SQLite outbox/audit; runtime credentials | Implemented single-node reference; vendor destinations disabled |
+
+These 24 components form the bounded research-PoC module catalog. Their
+implementation evidence, automated verification evidence, limitations, and
+next maturity boundary are maintained in
+[`module-maturity-matrix.md`](module-maturity-matrix.md) and checked by
+`make module-audit`. A verified PoC module is not a claim of pilot or production
+readiness.
 
 ## 9. Input and contract architecture
 
@@ -305,10 +323,12 @@ returns `400 invalid_request` from the HTTP service.
 
 | Contract | Version | Description |
 | --- | --- | --- |
-| `AuthorizationResponse` | 1.1.0 in current source | Overall action, effect flag, alert summaries, incident details, and ledger status. |
+| `AuthorizationResponse` | 2.0.0 | Overall action, effect flag, alert summaries, incident details, and ledger status. |
 | `SecurityAlert` | 1.0.0 | Detector result and deterministic recommendation. |
-| `PipelineResult` | Generated schema | Exact record across all six workflow stages for one alert. |
-| `IncidentDetail` | 1.0.0 | Allowlisted analyst explanation built from a `PipelineResult`. |
+| `PipelineResult` | Generated schema | Exact record across all seven workflow stages for one alert. |
+| `IncidentDetail` | 2.0.0 | Allowlisted authoritative explanation or honest `summary_only` history. |
+| `EnrichmentSnapshot` | Generated schema | Status-bearing facts, evidence references, latency, triage effect, and failure effect. |
+| `TriageAssessment` | Generated schema | Reproducible contributions, priority, SLA, route, warnings, and narrative. |
 | `ModelVerdict` | Generated schema | Provider-neutral structured semantic recommendation. |
 | `Finding` | 1.0.0 | Deduplicated analyst case with immutable audit transitions. |
 | `SocFindingExport` | 1.0.0 | Minimized SIEM projection. |
@@ -368,54 +388,134 @@ The target design persists canonical records transactionally, writes signed
 checkpoint heads to a separate immutable store, and pages on any integrity
 failure.
 
-## 12. Triage architecture
+## 12. Enrichment and explainable triage architecture
 
-Triage is deterministic and reproducible.
+### 12.1 Authoritative enrichment snapshot
 
-### 12.1 Score calculation
+Enrichment runs after the ledger receipt and before triage. It receives the
+strict event plus an optional trusted EnrichmentContext; the browser cannot
+supply this context. Each source returns:
 
-```text
-risk = severity base
-     + 3 when confidence >= 0.95
-     + 2 when provenance is external-untrusted or suspected-adversarial
-risk = min(risk, 100)
-```
+- status: complete, partial, unavailable, or failed;
+- observed_at, status-derived confidence, and measured latency_ms;
+- metadata-only facts;
+- hashed or opaque evidence_refs;
+- affects_triage;
+- failure_effect, fixed to state that missing context cannot relax
+  deterministic enforcement.
 
-| Severity | Base score |
+The nine ordered sources are:
+
+| Source | Connected control | Complete when | Triage signal |
+| --- | --- | --- | --- |
+| provenance | ProvenanceStore plus event trust | lineage IDs resolve | untrusted/unknown trust or cross-session memory |
+| effective_authority | AuthorityService plus grant | signed grant is supplied and checked | operation or full scope is outside the grant |
+| data_classification | strict event metadata | always for a valid event | secret/restricted/credential classification |
+| destination_classification | normalized destination metadata | always for a valid event | external network destination |
+| abom_tool_drift | AbomRegistry or event schema digests | manifest or sufficient digests exist | tool/schema/operation/destination drift |
+| agent_model_profile | trusted owner/profile/asset context | all profile facts are supplied | model-profile mismatch or critical asset |
+| independent_observations | ObservationReconciler | SDK/gateway observations are supplied | observed effect disagreement |
+| causal_path | recorded CausalPath | trusted path is supplied | investigation context; no implicit authorization |
+| repeat_frequency | ledger duplicate receipt plus pipeline flow/type counter | always | duplicate fingerprint or repeated same-type finding in one flow |
+
+Unexpected source exceptions are converted into a failed result. Four sources
+are mandatory for the snapshot completeness signal: provenance, effective
+authority, data classification, and destination classification. A mandatory
+failure adds risk; no enrichment failure changes the deterministic detector
+recommendation to a weaker action.
+
+### 12.1.1 Governed live connector runtime
+
+Module 13 retains those nine deterministic built-ins and adds a bounded
+connector SDK for live inventory, reputation, identity, vulnerability, and
+other metadata services. A connector registers an immutable name/version,
+required input fields, allowed output fact keys, deadline, fresh TTL, maximum
+stale horizon, and mandatory-context flag. Callable adapters support native
+clients; the production-facing JSON adapter requires an exact credential-free
+HTTPS URL, refuses redirects, uses the platform TLS verifier, caps responses at
+1 MiB, and validates the same strict payload contract.
+
+The engine runs connector calls concurrently in a bounded worker pool. Each
+connector has its own absolute deadline, so one slow service does not serialize
+or indefinitely hold the rest. `collect_async` provides an awaitable facade for
+async applications while the synchronous authorization pipeline uses the same
+bounded execution semantics. Timed-out work cannot change a later pipeline
+decision.
+
+Connector access is tenant scoped and requires separate read, execute, and
+admin permissions. Runtime policy explicitly names allowed connectors and
+input fields. The request builder contains only selected metadata: hashed
+event/flow/agent/source/resource/destination/tool references plus bounded
+classifications such as operation, resource class, trust, and data classes.
+Raw prompt content, tool arguments/results, raw resource/destination values,
+headers, and credentials are not connector inputs. Required fields denied by
+policy produce a visible `policy_denied` source result rather than implicit
+fallback. Output facts and hashed evidence references are separately
+allowlisted, schema validated, and size bounded.
+
+The configured SQLite WAL/full-sync store retains only a hashed input cache
+key, validated metadata response, freshness timestamps, and per-connector
+health counters. A fresh match avoids a network call. After expiry, a failed or
+timed-out refresh may return the prior response only until its explicit maximum
+stale horizon; that response becomes `partial`, is labeled `stale`, records its
+age, and increments stale-fallback health. It never masquerades as fresh.
+
+Consecutive failures open a durable circuit for a configured cooldown. While
+open, the engine uses an eligible labeled stale entry or returns unavailable;
+it does not repeatedly call the source. A successful half-open call after the
+cooldown closes the circuit. Authenticated `GET /v1/enrichment/health` exposes
+success/failure/timeout/cache/stale counters, last outcome/latency, cache entry
+counts, and current circuit state without returning requests, secrets, or raw
+identifiers. Every snapshot additionally records connector count, cache/stale/
+timeout counts, per-source cache/freshness/policy evidence, and a SHA-256 digest
+of the effective connector policy.
+
+Local assembly requires both `AGENTSEC_ENRICHMENT_DB` and
+`AGENTSEC_ENRICHMENT_CONFIG`. The bounded JSON configuration stores endpoint
+and environment-variable *names* only; bearer values are read from the named
+environment variables and are never serialized into requests, cache state,
+health, or snapshots. The tenant is explicit or inherited from another product
+store and must align with every configured module.
+
+### 12.2 Versioned contribution model
+
+Triage version triage-2026-07-23.2 starts with the detector severity base and
+adds evidence-linked contributions:
+
+| Contribution | Delta |
 | --- | ---: |
-| Info | 10 |
-| Low | 25 |
-| Medium | 50 |
-| High | 75 |
-| Critical | 95 |
+| Severity base: info / low / medium / high / critical | 10 / 25 / 50 / 75 / 95 |
+| Detector confidence at least 0.95 | +3 |
+| Untrusted, suspected-adversarial, or unknown provenance | +2 |
+| Persistent/cross-session memory influence | +5 |
+| Sensitive data involved | +10 |
+| External destination | +5 |
+| Requested authority exceeds effective grant | +10 |
+| Destructive/containment operation | +8 |
+| Tool or ABOM drift | +8 |
+| Model-profile drift | +5 |
+| High/critical asset | +5 |
+| Repeated same-flow alert | +5 |
+| SDK/gateway observation disagreement | +10 |
+| Mandatory enrichment unavailable or failed | +5 |
+| Score ceiling | negative delta required to make the sum exactly 100 |
 
-| Final score | Priority |
-| --- | --- |
-| 90-100 | P0 |
-| 70-89 | P1 |
-| 40-69 | P2 |
-| 0-39 | P3 |
+Every contribution has a category, label, signed delta, at least one evidence
+reference, and rationale. The IncidentDetail validator rejects a complete
+record unless the contribution sum equals the stored risk score. The score
+cannot change deterministic authorization; it drives priority, SLA, and analyst
+routing.
 
-`IncidentDetail.risk_contributions` records every contribution and, when
-necessary, a negative score-ceiling contribution. Construction fails if the
-contributions do not exactly reproduce the stored triage score. The scoring
-contract is versioned as `triage-2026-07-22.1` in the incident detail.
+| Final score | Priority | SLA | Route |
+| --- | --- | ---: | --- |
+| 90-100 | P0 | 15 minutes | soc-critical |
+| 70-89 | P1 | 60 minutes | soc-urgent |
+| 40-69 | P2 | 240 minutes | soc-review |
+| 0-39 | P3 | 1,440 minutes | security-observation |
 
-### 12.2 Enrichment
-
-The authoritative incident builder produces six metadata-only enrichments:
-
-1. source provenance;
-2. authority intersection;
-3. data classification;
-4. destination class;
-5. tool contract drift;
-6. memory persistence.
-
-Each enrichment includes a status, summarized value, evidence reference,
-source, and impact. Sensitive source, resource, destination, and detector
-evidence values are represented by truncated SHA-256 references rather than raw
-values.
+The recorded assessment also contains source warnings and a concise narrative.
+The UI renders these values; it does not independently calculate a score,
+priority, SLA, route, or explanation.
 
 ## 13. Judgment and model architecture
 
@@ -481,6 +581,150 @@ residency.
 | Model suggests weaker action | Record `MODEL_RELAXATION_REJECTED`. | Same; invariant test required at release. |
 | Model unavailable in semantic hold | Deterministic action continues. | Policy owner must explicitly approve this availability/safety tradeoff. |
 
+### 13.5 Bounded five-role AI analyst
+
+Module 14 runs after deterministic judgment, escalation, and response have
+already been recorded. It therefore cannot sit in the effect-authority path.
+For each alert, `AiAnalystService` executes exactly five ordered roles:
+
+1. triage assesses urgency, confidence, missing context, and routing;
+2. investigation forms and challenges a bounded security hypothesis;
+3. judge proposes a non-executive action;
+4. escalation advises human routing and urgency; and
+5. response advisor proposes safe, reversible options without executing them.
+
+Each role receives a purpose-specific result from the read-only
+`evidence.query` tool. The manifest is built from a strict allowlist over the
+recorded alert, detector evidence, enrichment facts/freshness, triage
+contributions, ledger receipt, deterministic judgment, escalation, and response.
+Raw event attributes, prompt/model text, memory, tool arguments/results,
+credentials, raw identifiers, and ungoverned evidence are excluded. Every tool
+call has a digest-bound receipt. A role result is accepted only when its role,
+provider, model ID, schema, and all citations match the governed request.
+
+Completed roles must supply a summary, confidence, cited evidence, at least one
+alternative, and explicit uncertainty. A role may abstain; timeout, malformed
+output, identity mismatch, or fabricated citations become `unavailable`.
+Neither state is silently converted into a conclusion. The run records
+cross-role conflicts, judge-versus-policy tightening or rejected relaxation,
+abstention, unavailability, and whether human review is required.
+
+The deterministic action remains authoritative. `advisory_action` is the more
+restrictive of deterministic policy and an accepted judge proposal;
+`executive_authority` is structurally fixed to false. The role engine can never
+grant authority, create approval, execute containment, suppress an alert, or
+weaken the recorded action. An engine outage leaves the completed deterministic
+pipeline unchanged.
+
+Runs and feedback are tenant-scoped SQLite WAL/full-sync records with canonical
+SHA-256 integrity checks, idempotency by alert, bounded pagination, exact
+read/run/feedback permissions, and aggregate health. Feedback is recursively
+redacted and structurally marked `applied_to_model=false`; Module 23 owns any
+future evaluated learning loop. The checked-in
+`configs/codex-analyst-evaluation.json` is a reproducible recorded Codex test,
+not a live API call. Provider routing, qualification, budgets, privacy routing,
+and secret lifecycle are implemented by Module 15.
+
+### 13.6 Governed live model gateway
+
+ModelGatewayService is the only supported live-provider control plane. It
+stores immutable prompt and route revisions, secret fingerprints (never secret
+values), exact-model qualification evidence with bounded expiry, lifecycle
+history, provider health/circuit state, transactional budgets, sanitized call
+receipts, and hash-only audit entries in a tenant-scoped SQLite WAL database.
+
+A route becomes selectable only after candidate → passed qualification → shadow
+→ active. Qualification binds route digest, prompt digest, exact returned model
+ID, evaluation-suite version, evidence digest, executor/reviewer separation, and
+expiry. Activation independently verifies review separation and current secret
+fingerprint. Rollback can restore only a current qualified prior revision.
+
+Routing evaluates workload, AI mode, and data-classification subset before any
+provider object is constructed. Secret egress and secret/credential/PII markers
+force restricted classification. A fallback is never a bypass: it must be
+independently active, qualified, privacy-compatible, budget-available, and
+healthy.
+
+Request/minute, tokens/day, and concurrency reservations occur atomically.
+Failure opens a per-route circuit after the configured threshold and stores only
+a normalized error code. The call ledger binds model, prompt, route, mode,
+privacy, usage, latency, provider request ID, and output digest; it excludes raw
+evidence, prompt/output content, headers, tokens, and credentials.
+
+Live OpenAI and Anthropic adapters implement both the legacy security verdict
+and Module 14 role protocol. Responses are accepted only after exact model,
+strict local schema, evidence-citation, role, and non-relaxation validation.
+Provider unavailability leaves deterministic enforcement unchanged.
+
+### 13.7 Model gateway and AI governance
+
+Module 15 replaces static provider readiness with a tenant-scoped model control
+plane. Its durable objects are immutable prompt versions, environment-backed
+secret-version metadata, immutable route revisions, time-bounded qualification
+records, provider-health/circuit state, route lifecycle history, sanitized call
+receipts, and audit digests. Raw prompts, role payloads, model output, and secret
+values are deliberately absent from that database.
+
+The selection sequence is fail closed:
+
+```text
+workload + AI mode + data classes
+  -> active route
+  -> exact route/prompt/model qualification (unexpired)
+  -> closed circuit
+  -> active matching secret fingerprint
+  -> atomic request/token/concurrency reservation
+  -> exact provider adapter
+  -> local schema/identity/citation/action validation
+  -> sanitized completion or failure receipt
+  -> configured fallback, if eligible
+```
+
+Known workloads are `security_verdict` and `analyst_role`; each prompt must bind
+the locally computed output-schema digest. Routes bind an exact official HTTPS
+endpoint, exact model ID, prompt and secret version, privacy classes, AI modes,
+region label, priority/fallback, and bounded request, token, concurrency, output,
+and timeout policy. Secret/credential/PII findings are classified `restricted`
+before route selection. Privacy incompatibility therefore occurs before provider
+construction or credential resolution.
+
+Route release is candidate → shadow → active → retired. Qualification requires
+strict evidence metrics and a reviewer distinct from the executing actor;
+activation requires separation from that reviewer. Qualifications expire after
+one to 720 hours. Rollback can restore only a prior retired revision whose exact
+qualification remains current and whose secret fingerprint resolves. Failed
+calls consume their conservative token reservation, preventing failure-based
+budget evasion. Repeated failures open the per-route circuit and permit only an
+independently eligible fallback.
+
+The service exposes authenticated registry, health, call, audit, and lifecycle
+APIs. The loopback bridge exposes only a fixed read aggregate, and the UI renders
+authoritative route, qualification, budget, circuit, prompt, and call evidence
+with explicit empty/offline states. The example configuration creates candidate
+definitions only. Automated tests use fake transports; no real provider/model
+qualification is claimed.
+
+### 13.8 Evidence validation and human judgment gates
+
+Module 16 adds a deterministic boundary between schema-valid model output and a
+supported security conclusion. Every completed role emits typed claims over an
+allowlisted evidence fact. The validator checks the declared operator against
+the exact cited manifest item, enforces role-specific mandatory evidence,
+records matched/conflicting sources, detects mutually exclusive equality claims,
+screens instruction-like model/evidence data, and caps confidence from recorded
+support quality.
+
+The resulting `JudgmentValidationReport` is bound to the deterministic action,
+fixes automation eligibility to false, carries explicit human-gate reasons, and
+is digest-verified with the containing analyst run. It is exposed through the
+same analyst and incident contracts; the UI does not synthesize support.
+
+The earlier single-verdict path receives a smaller validation before semantic
+tightening. Unknown evidence, relaxation, instruction content, or confidence
+above the evidence ceiling prevents automatic tightening and preserves the
+deterministic hold for human review. This is consistency validation over typed
+metadata—not proof that an upstream source or model assertion is true.
+
 ## 14. Escalation, response, and findings
 
 ### 14.1 Escalation matrix
@@ -532,18 +776,18 @@ The current source builds the analyst record directly from the exact
 `PipelineResult` that produced the authoritative action. It does not run the
 event through a second pipeline.
 
-`IncidentDetail` contains:
+`IncidentDetail` 2.0.0 contains:
 
 - event context with hashed source/resource/destination references;
 - alert identity, detector, confidence, reason codes, and hashed evidence;
 - ledger sequence and chain hashes;
 - triage score, priority, reasons, and reproducible contributions;
-- six enrichment facts;
+- the exact nine-source enrichment snapshot and explicit source failures;
 - deterministic, model, and final judgments;
 - escalation routing and case ID;
 - response actions and whether the effect was allowed;
 - finding status and audit history;
-- the ordered six-stage timeline;
+- the ordered seven-stage timeline;
 - validation assertions;
 - redaction-policy version and reference count.
 
@@ -552,13 +796,20 @@ event.” It does not claim that a synthetic event proves a real-world compromis
 The complete contract is
 [`incident-detail.schema.json`](../schemas/generated/incident-detail.schema.json).
 
-### 15.1 Trace modes
+Complete records must contain every required section. The Pydantic validator
+rejects partial records labeled complete, mismatched finding/alert identifiers,
+out-of-order stages, mismatched contribution copies, and non-reproducible scores.
+The in-memory `IncidentStore` is keyed by finding ID and maintains secondary
+indexes for event ID, flow ID, alert type, agent ID, severity, priority, status,
+and creation time. It stores only the post-response record and updates finding
+status/audit atomically under the service process lock.
+
+### 15.1 Detail availability
 
 | UI label | Source | Assurance |
 | --- | --- | --- |
-| `AUTHORITATIVE TRACE` | Incident returned by the updated service from the exact `PipelineResult`. | Highest available PoC assurance. |
-| `MVP REPLAY` | Detail reconstructed inside the existing EC2 container and compared with service alert types and final action. | Presentation fallback, not the original record. |
-| `SUMMARY ONLY` | Sanitized authorization summary from an older SSM invocation. | No detailed stage evidence. |
+| `complete` / `AUTHORITATIVE PIPELINE RESULT` | Incident recorded from the exact `PipelineResult` after response/finding update. | Highest available PoC assurance. |
+| `summary_only` / `HISTORICAL SUMMARY ONLY` | Sanitized summary that predates or lacks IncidentDetail 2.0.0. | No enrichment, score, timeline, judgment, or response evidence is synthesized. |
 
 ## 16. Supporting security controls
 
@@ -635,8 +886,12 @@ letters and use indexer acknowledgment before calling delivery durable.
 | Store | Persistence | Contents |
 | --- | --- | --- |
 | Pipeline process memory | Until restart | Ledger, findings, authority counters, approvals, provenance, ABOM observations, graph, checkpoints. |
+| Module 2 intake SQLite | Durable local transaction/WAL | Signed-request nonces, safe telemetry envelopes, idempotency, queue leases, retry/DLQ, source health. |
+| Module 4 canonical SQLite | Durable local transaction/WAL | Versioned canonical records, per-tenant hash chains, ciphertext evidence, signed checkpoints, retention tombstones, and backup metadata. |
+| Module 5 search SQLite | Durable local derived index | Allowlisted canonical projections, typed search fields, signed cursors, saved hunts, and tenant-bound audit metadata. It contains no protected evidence blob content. |
+| Module 6 inventory SQLite | Durable local transaction/WAL | Discovered and declared AI applications, agents, models, tools, data stores, relationships, effective permissions, configuration revisions, governance, risk rollups, and audit metadata. |
 | Local bridge memory | Until restart | Recently forged rich alerts and a short polling cache. |
-| SSM command history | AWS-managed temporary history | Sanitized remote command output used by the demo UI. |
+| SSM command history | AWS-managed temporary history when a demo is deployed | Sanitized remote command output; not a current data source or durable store. |
 | Repository reports | Durable in source tree | Synthetic evaluation and deployment evidence with no secret values. |
 
 ### 17.3 Recommended pilot persistence
@@ -669,8 +924,10 @@ the only tenant check.
 
 ### 17.4 Retention targets
 
-Retention is not implemented. Initial pilot policy should be approved by legal,
-privacy, and security owners. A reasonable starting proposal is:
+Module 4 implements a versioned local reference retention engine, legal holds,
+payload/ciphertext erasure, and auditable tombstones. Production durations must
+still be approved by legal, privacy, and security owners. A reasonable starting
+proposal is:
 
 | Record | Hot retention | Archive retention | Notes |
 | --- | ---: | ---: | --- |
@@ -680,6 +937,210 @@ privacy, and security owners. A reasonable starting proposal is:
 | SSM command output | Minimize | None for normal data plane | SSM is not a production event store. |
 | Synthetic evaluation reports | Repository lifetime | Release archive | Non-sensitive fixtures only. |
 
+### 17.5 Temporal AI security graph
+
+The Module 7 reference adapter stores graph nodes and edges as temporal
+revisions keyed by tenant, entity identity, version, `valid_from`, and
+`valid_to`. Current-version uniqueness prevents competing heads. Each revision
+has a canonical SHA-256 digest, source reference, and audit entry. Chronological
+updates close the prior interval; late or conflicting same-time mutations fail
+closed instead of rewriting history.
+
+Inventory applications, agents, pinned models, tools, data stores, and their
+contains/uses/accesses relationships seed the entity topology. Every live
+authorization adds privacy-safe source, agent, resource, destination, decision,
+and finding nodes plus influence, call, authorization, send, and evidence
+relationships. A blocked effect remains visible as a potential path through its
+decision node; the restrictive decision adds path cost and reason codes rather
+than being incorrectly drawn after the destination.
+
+All traversal is bounded. Reachability has direction, depth, and node limits;
+blast radius is derived from bounded downstream reachability; weighted attack
+paths use a priority queue, reject cycles, limit depth/path count/explored
+states, and return explicit truncation. Historical analysis evaluates the graph
+at one timezone-aware timestamp. Label keys are allowlisted metadata and reject
+prompt-, content-, argument-, result-, token-, secret-, password-, credential-,
+authorization-, and API-key-shaped fields.
+
+### 17.6 AI security posture state
+
+Module 8 evaluates the current tenant inventory through immutable versioned
+posture checks. The local adapter persists check definitions and digests,
+deduplicated findings, accepted-risk records, scan results, and audit events in
+one SQLite database using WAL and full synchronization. Search, inventory,
+graph, and posture principals must agree on tenant identity before application
+startup.
+
+Each finding is deterministically keyed by tenant, check, and component. It
+retains the exact check version, safe observed values, inventory and
+configuration-digest evidence references, calculated risk, remediation steps,
+framework mappings, and first/last/resolved times. Re-scans update current
+facts and resolve corrected or retired components without deleting history.
+Posture score is the rounded percentage of passing applicable evaluations;
+trend records preserve both results and current open/accepted counts.
+
+An accepted-risk record never changes the check result. It changes the finding
+workflow state for a maximum of 366 days, requires reason/owner/approver, is
+unique while active, expires automatically, and can be explicitly revoked.
+Expiry or revocation reopens a still-unresolved finding. All scans, queries,
+pages, strings, and exception windows are bounded, and all writes are atomic.
+
+### 17.7 Versioned detection runtime
+
+Module 9 defines detection rules as strict data contracts rather than
+executable source. Definitions contain a fixed rule kind, execution mode,
+allowlisted metadata predicates, bounded grouping/window parameters, alert
+contract, evidence fields, and OWASP/MITRE/NIST mappings. Canonical SHA-256
+digests and natural version ordering make versions immutable and auditable.
+The six original controls are expressed declaratively; the legacy Python rule
+protocol remains only as a compatibility extension boundary.
+
+The local adapter stores rule history, sanitized events, execution audit, and
+health inputs transactionally in SQLite. Before storage, the arbitrary event
+attributes map is replaced with an empty map. Tenant/time indexes support a
+maximum 10,000-event window; an observed-event-time watermark prunes records
+outside the seven-day maximum rule horizon and a hard count cap prevents
+unbounded historical or stale-timestamp input.
+
+Event rules evaluate one record. Sequence rules reconstruct ordered distinct
+events; threshold rules count matching events in a fixed group/window;
+correlation rules assign distinct events to unordered predicates. Streaming
+evaluation anchors a match to the current event. Scheduled evaluation replays
+the durable window at a timezone-aware timestamp. Semantic rules have a fixed
+prefilter/profile/confidence contract and accept only a normalized verdict that
+cites known event references. Provider failure becomes one sanitized rule
+error while deterministic rules continue.
+
+### 17.8 Signed detection-content control plane
+
+Module 10 places a separate lifecycle store in front of the Module 9 live rule
+registry. A rule is append-only signed content with author, status, timestamps,
+review identity/comment, definition, deterministic validation, backtest, shadow
+result, record digest, and signature. The local adapter uses SQLite WAL/full
+synchronization and a separately configured HMAC key. Reads recompute canonical
+SHA-256 and verify the signature before returning a record.
+
+The release state machine is `draft -> in_review -> approved -> shadow ->
+published`; rejection returns content to an editable path and publication
+retires the prior published record. Every edit creates a revision and clears
+all derived evidence. Submission requires a passing exact-outcome suite for the
+current definition digest. The reviewer must differ from the author. Shadow
+deployment requires approval; publication requires an error-free shadow result
+and the caller's exact current-definition digest acknowledgement.
+
+Backtest, validation, and shadow execution reuse an isolated Module 9 service
+and accept at most 1,000 strict events. Stored results include only event IDs,
+counts, alert types, errors, duration, digest, and timestamp. Signed packs bind
+each entry digest and the complete pack; import verifies signature, tenant, and
+version uniqueness and creates inactive drafts. Rollback clones a previously
+published reviewed definition under a strictly increasing version.
+
+Content and live rule registries remain separate local databases. Validation
+and duplicate preflight occur before live mutation, but this adapter does not
+claim distributed atomicity. A transactional outbox, managed key custody, SSO
+identity, and distributed recovery are Module 24 platform responsibilities.
+
+### 17.9 Behavioral analytics and composite risk
+
+Module 11 adds a separate tenant-scoped behavioral service alongside the
+deterministic Module 9 engine. Its input is the already validated `AgentEvent`,
+but its feature extractor copies only fixed metadata: operation,
+resource/destination class, trust class, UTC hour, effect and approval flags,
+sensitive-data class, authority gap, and tool-schema drift. Agent, source, tool,
+and destination identities become namespace-qualified truncated SHA-256
+references before durable state is created. Raw prompts, model text, arbitrary
+attributes, tool payloads/results, URLs, headers, tokens, and credentials are
+structurally absent from its contracts.
+
+The event sequence is intentionally asymmetric:
+
+```text
+validated event
+  -> evaluate against prior accepted-event baseline
+  -> emit typed assessment and optional behavioral alert
+  -> deterministic detection, enrichment, triage, judgment, response
+  -> learn only when final outcome is allowed and no alert exists
+     otherwise record final rejected-learning receipt
+```
+
+For each hashed entity, the engine computes smoothed categorical probabilities
+for operation, destination class, source trust, and UTC hour, plus rare boolean
+rates for authority gap, sensitive data, and schema drift. Each deviation has a
+bounded weight, rationale, observed/expected values, probability, and known
+evidence references. The event anomaly score is the highest entity score; a
+bounded context component produces the composite risk. Fewer than the minimum
+observations is an explicit cold-start learning state and cannot independently
+raise an anomaly.
+
+SQLite WAL/full synchronization persists configurations, baselines,
+assessments, per-entity scores, and audit records. Baselines and immutable
+increasing-version tuning records have canonical SHA-256 digests verified on
+read. Observation counts have a hard cap with deterministic decay; recent
+assessment windows drive tenant and entity drift; retention, pagination,
+configuration, and window sizes are bounded. Conflicting reuse of an event ID
+fails closed. A behavior outage does not suppress deterministic rules: the
+pipeline records unavailable context, applies a conservative triage
+contribution, and never learns the failed event.
+
+The local Risk Analytics workspace reads these authoritative records through
+fixed loopback routes. It exposes assessment/learning receipts, complete factor
+proof, entity scores, baseline digests/distributions, drift, health, and
+governed tuning history without fallback records or raw identities.
+
+### 17.10 Finding correlation and first-class incidents
+
+Module 12 adds a post-response correlation boundary. Each authoritative
+`PipelineResult` becomes a metadata-only signal with finding/alert/event IDs,
+risk and decision labels, attack stage, and hashed flow/entity/evidence
+references. Because this runs after response, correlation outage or suppression
+cannot change the event's detection, most-restrictive judgment, effect status,
+or existing per-finding investigation trace.
+
+Candidates are restricted to the tenant and a bounded recent window. The
+versioned policy scores exact flow, hashed agent, shared hashed entities, alert
+family, and attack-stage extension. The complete candidate list, selected score,
+reasons, threshold outcome, and canonical decision digest are durable. Active
+incidents use a four-hour window; a closed match can reopen within seven days;
+no incident can exceed 500 findings.
+
+A first-class incident owns ordered unique finding links, a reconstructed
+attack-stage sequence, entity/evidence references, bounded risk/severity/
+priority rollup, revision, lifecycle, reopen count, parent/supersession links,
+audit entries, and a canonical digest. Merge retains each source as `merged`
+and points it to the selected target. Split moves a proper finding subset to a
+new parent-linked child. Time-bounded alert-type/optional hashed-agent
+suppression creates a digest-bound decision receipt without deleting or
+changing the finding.
+
+The SQLite adapter uses WAL/full synchronization, unique tenant/finding links,
+indexed status/time reads, exact permissions, pagination and governance bounds,
+and read-time digest checks. The local Incidents workbench displays live risk,
+sequence, link reasons, correlation decisions, digests, audit, merge, split,
+and lifecycle with no fixture fallback.
+
+### 17.11 Durable human case management
+
+Module 17 creates or reuses one tenant-scoped case for every pipeline finding
+after correlation, preserving its finding reference and any first-class
+incident reference. Case work is post-decision: storage failure is surfaced as
+a sanitized advisory error and cannot alter deterministic authorization.
+
+The case owns priority, queue, durable team and assignee, separate
+acknowledgment and resolution deadlines, attributed lifecycle timestamps,
+optimistic version, and a digest binding the complete audit count and head.
+Bounded child records provide redacted comments, tasks, metadata-only
+attachments and scanner verdicts, typed relationships, independent reviews,
+and a sequence-numbered hash chain. Assignment and task ownership require team
+membership; open tasks or any non-clean attachment block approval; the actor
+requesting resolution cannot approve it.
+
+All mutation requests reject unknown fields, require a server-held principal,
+and derive a deterministic operation identity. Exact retries return the
+original signed result, while competing writes to the same version conflict.
+SQLite `BEGIN IMMEDIATE`, WAL, and full synchronization make this true across
+independent local service connections. This is a single-node reference
+adapter, not distributed durability or production human identity.
+
 ## 18. HTTP and integration interfaces
 
 ### 18.1 Authorization service
@@ -688,6 +1149,51 @@ privacy, and security owners. A reasonable starting proposal is:
 | --- | --- | --- | --- |
 | `GET /healthz` | None on loopback-only interface | Liveness probe | `200` with service status. |
 | `POST /v1/authorize` | Bearer token, at least 32 characters | Evaluate one strict `AgentEvent` | `200 AuthorizationResponse`. |
+| `POST /v1/telemetry` | HMAC workload signature | Validate, normalize, deduplicate, and durably enqueue one `TelemetryInput` | `202 GatewayReceipt`; duplicate is `200`. |
+| `POST /v1/telemetry/batch` | HMAC workload signature | Bounded partial-outcome ingestion of up to 1,000 telemetry records | `202 GatewayBatchResponse`; partial failure is `207`. |
+| `GET /v1/telemetry/sources` | Private admin bearer | Read sanitized source intake/queue health with exact tenant/source filters | `200` source-health envelope. |
+| `POST /v1/search` | Private admin bearer mapped to a fixed tenant principal | Execute a bounded, parsed canonical-record query with signed pagination | `200 SearchPage`. |
+| `POST /v1/search/aggregate` | Same fixed tenant principal | Count a bounded allowlisted field over a validated query | `200 AggregationResult`. |
+| `GET`, `POST`, `PUT`, `DELETE /v1/hunts` | Same principal; writes require hunt permission and owner checks | Saved-hunt lifecycle and execution | Typed saved hunt or search page. |
+| `GET /v1/evidence/{id}/pivot` | Search read plus evidence read | Return evidence metadata and indexed related records, never protected blob content | `200 EvidencePivot`. |
+| `GET /v1/inventory`, `/summary`, `/{component_id}` | Private admin bearer mapped to a fixed tenant inventory principal | List/filter inventory, summarize risk, and read a component dossier with history and relationships | Typed inventory contracts. |
+| `POST /v1/inventory/discover` | Inventory discovery permission | Ingest one strict metadata-only discovery observation | `200 DiscoveryResult`. |
+| `POST /v1/inventory/{component_id}/governance` | Inventory admin permission | Set exact owner, criticality, and lifecycle state without accepting arbitrary mutation | `200 InventoryComponent`. |
+| `GET /v1/graph`, `/summary` | Graph read permission on the fixed tenant principal | Read a current or timezone-aware historical graph snapshot and aggregate risk counts | Typed graph snapshot or summary. |
+| `POST /v1/graph/reachability` | Graph analysis permission | Traverse one origin with exact direction/depth/node bounds | `200 ReachabilityResult`. |
+| `POST /v1/graph/blast-radius` | Graph analysis permission | Calculate bounded downstream impact and risk counts | `200 BlastRadiusResult`. |
+| `POST /v1/graph/attack-paths` | Graph analysis permission | Reconstruct bounded, weighted, cycle-safe paths between exact nodes | `200 AttackPathResult`. |
+| `GET /v1/posture/summary`, `/checks`, `/findings`, `/findings/{finding_id}`, `/trends` | Posture read permission on the fixed tenant principal | Read posture metrics, versioned content, remediation queue, dossiers, and bounded history | Typed posture contracts. |
+| `POST /v1/posture/scans` | Posture scan permission | Evaluate all or an exact bounded set of enabled checks against the current inventory | `200 PostureScanResult`. |
+| `POST /v1/posture/findings/{finding_id}/exceptions` | Posture admin permission | Create one time-bounded accepted-risk record with exact governance fields | `200 PostureException`. |
+| `POST /v1/posture/exceptions/{exception_id}/revoke` | Posture admin permission | Revoke one active exception with an audit reason and reopen unresolved risk | `200 PostureException`. |
+| `GET /v1/detection/rules` | Detection read permission on the fixed tenant principal | Read current immutable rule records and mappings | Versioned rule envelope. |
+| `GET /v1/detection/health` | Detection read permission | Read persisted evaluation, match, error, and last-run health | Rule-health envelope. |
+| `POST /v1/detection/scheduled` | Detection run permission | Replay all or an exact bounded rule set at an optional timezone-aware timestamp | `200 DetectionBatchResult`. |
+| `GET /v1/detection/content`, `/health`, `/packs`, `/{content_id}`, `/{content_id}/history` | Content read permission on the fixed tenant principal | Read verified signed lifecycle state, results, health, packs, and append-only history | Typed content contracts. |
+| `POST /v1/detection/content`, `PUT /v1/detection/content/{content_id}` | Content write permission | Create or revise a strict declarative draft; identity/version remain immutable on update | `200 RuleContentRecord`. |
+| `POST /v1/detection/content/{content_id}/{validate|backtest|submit}` | Content write permission | Record bounded deterministic evidence and submit a passing revision | `200 RuleContentRecord`. |
+| `POST /v1/detection/content/{content_id}/review` | Content review permission and distinct reviewer identity | Approve or reject with an exact comment | `200 RuleContentRecord`. |
+| `POST /v1/detection/content/{content_id}/{shadow|shadow-evaluate|publish|rollback}` | Content publish permission | Gate shadow execution, exact-digest publication, or increasing-version rollback | `200 RuleContentRecord`. |
+| `POST /v1/detection/content/packs/{export|import}` | Content publish or write permission | Export or verify/import a tenant-bound signed content pack | Typed signed pack or draft envelope. |
+| `GET /v1/behavior/baselines`, `/assessments`, `/assessments/{assessment_id}` | Behavior read permission on the fixed tenant principal | Read bounded privacy-safe baselines and explainable event/entity assessments | Typed behavior contracts. |
+| `GET /v1/behavior/health`, `/config`, `/drift` | Behavior read permission | Read service/learning health, immutable tuning history, and tenant or hashed-entity drift | Typed health, config envelope, or drift summary. |
+| `POST /v1/behavior/config` | Behavior admin permission | Activate one exact bounded increasing-version tuning record with reason | `200 BehaviorTuningConfig`. |
+| `GET /v1/correlation/incidents`, `/{incident_id}`, `/decisions`, `/health`, `/suppressions` | Correlation read permission on the fixed tenant principal | Read first-class incidents, grouping proof, health, and suppression history | Typed correlation contracts. |
+| `POST /v1/correlation/incidents/{incident_id}/{transition|split}`, `/incidents/merge` | Correlation write or admin permission | Apply exact audited lifecycle, merge, or split governance | Typed incident or split result. |
+| `POST /v1/correlation/suppressions`, `/{suppression_id}/revoke` | Correlation admin permission | Create or revoke one time-bounded correlation-only suppression | `200 SuppressionRule`. |
+| `GET /v1/cases`, `/health`, `/{case_id}`, and `GET /v1/case-teams` | Case read permission on the fixed tenant principal | Read integrity-verified cases, collaboration, SLA health, and visible teams | Typed case page, detail, health, or team envelope. |
+| `POST /v1/case-teams` | Case admin permission | Create one durable team or replay the identical definition | `200 CaseTeam`; conflicting redefinition is `409`. |
+| `POST /v1/cases/{case_id}/{assign|acknowledge|comments|tasks|attachments|relationships|start|request-review|review|close}` | Exact case permission and fixed server identity | Apply one version-checked, replay-safe collaboration or lifecycle mutation | Typed case or child record; stale/conflicting state is `409`. |
+| `POST /v1/cases/{case_id}/tasks/{task_id}/transition`, `/attachments/{attachment_id}/scan` | Case task or attachment permission | Transition one task or record one final scanner verdict | Typed task or attachment metadata. |
+| `GET /v1/analyst/runs`, `/runs/{run_id}`, `/findings/{finding_id}` | Analyst read permission on the fixed tenant principal | List bounded AI analyst runs or retrieve one integrity-verified run by run/finding ID | Typed `AiAnalystRun` contract. |
+| `GET /v1/analyst/health`, `/feedback` | Analyst read permission | Read aggregate role/run health or bounded redacted feedback | Typed health or feedback envelope. |
+| `POST /v1/analyst/runs/{run_id}/feedback` | Analyst feedback permission | Record one exact redacted rating/reason that is never applied directly to the model | `200 AnalystFeedback`. |
+| `GET /v1/telemetry/queue` | Private admin bearer | Read aggregate pending, processing, success, dead-letter, and capacity state | `200 GatewayQueueSummary`. |
+| `GET /v1/incidents` | Bearer token | List summaries using allowlisted exact-match filters | `200 IncidentListResponse`. |
+| `GET /v1/incidents/{finding_id}` | Bearer token | Read one recorded incident | `200 IncidentDetail`. |
+| `GET /v1/incidents/{finding_id}/timeline` | Bearer token | Read the recorded ordered timeline | `200` timeline envelope. |
+| `POST /v1/incidents/{finding_id}/transition` | Bearer token | Apply an allowlisted audited lifecycle transition | `200 IncidentDetail`. |
 
 Request controls:
 
@@ -695,34 +1201,61 @@ Request controls:
 - `application/json` required;
 - maximum request size 1 MiB;
 - constant-time bearer comparison;
+- HMAC-SHA256 workload signatures over method, path, body digest, timestamp,
+  and nonce;
+- durable nonce replay protection and credential-resolved tenant/source binding;
+- per-credential token-bucket admission, transactional queue reservations, and
+  explicit backpressure;
 - `Cache-Control: no-store`;
 - no default request logging;
 - invalid body or schema returns a generic error without echoing the event.
 
-Current limitations are one shared bearer token, no user/role authorization,
-no rate limit, no replay nonce, no request signature, no TLS at the process
-boundary, and no distributed concurrency control. Loopback placement is
-therefore mandatory for the PoC.
+Authorization, incident, and telemetry-admin routes still use one shared admin
+bearer and have no user/role authorization. Telemetry intake has workload
+signatures, replay defense, tenant/source binding, quotas, and a durable SQLite
+queue, but transport TLS still terminates outside this development HTTP process
+and production broker/database clustering is not implemented. Loopback or a
+trusted TLS reverse proxy remains mandatory.
 
 ### 18.2 Local live UI bridge
 
 | Method and path | Purpose |
 | --- | --- |
 | `GET /health` | Local bridge liveness. |
-| `GET /api/alerts` | Read sanitized recent SSM decisions. |
+| `GET /api/alerts` | Read sanitized recent service decisions. |
+| `GET /api/alerts/{finding_id}` | Read authoritative detail, or return an honest summary-only state. |
 | `POST /api/forge` | Submit exactly one allowlisted synthetic preset. |
+| `POST /api/alerts/{finding_id}/transition` | Forward exact action, actor, and reason fields to the incident service. |
+| `GET /api/posture/summary`, `/checks`, `/findings`, `/findings/{finding_id}`, `/trends` | Read live posture state through fixed upstream routes. |
+| `POST /api/posture/scans` | Run a bounded inventory posture scan. |
+| `POST /api/posture/findings/{finding_id}/exceptions` | Create an exact time-bounded exception. |
+| `POST /api/posture/exceptions/{exception_id}/revoke` | Revoke an active exception with an exact reason. |
+| `GET /api/detection/content`, `/health`, `/packs`, `/{content_id}`, `/{content_id}/history` | Read verified live Rule Studio content. |
+| `POST /api/detection/content`, `PUT /api/detection/content/{content_id}` | Create or revise one strict definition. |
+| `POST /api/detection/content/{content_id}/{validate|backtest|submit|review|shadow|shadow-evaluate|publish|rollback}` | Apply an exact lifecycle action; evaluation expands only allowlisted presets. |
+| `POST /api/detection/content/packs/{export|import}` | Forward exact signed-pack lifecycle payloads. |
+| `GET /api/behavior/baselines`, `/assessments`, `/anomalies`, `/assessments/{assessment_id}`, `/health`, `/config`, `/drift` | Read fixed privacy-safe behavioral evidence and monitoring routes. |
+| `POST /api/behavior/config` | Forward exactly one complete bounded tuning input and review reason. |
+| `GET /api/correlation/incidents`, `/{incident_id}`, `/health`, `/decisions` | Read live first-class incident and grouping proof. |
+| `POST /api/correlation/incidents/{incident_id}/{transition|split}`, `/incidents/merge` | Forward exact analyst incident governance; arbitrary mutation is rejected. |
 
 Bridge controls:
 
 - binds to loopback on port 8765;
 - accepts only `localhost:8765` or `127.0.0.1:8765` host headers;
-- CORS allowlist contains only the local UI origins on port 3000;
-- accepts only an object containing the `preset` key;
+- CORS allowlist contains only the local UI origins on ports 3000 and 3001;
+- accepts only an object containing the `preset` key on forge requests;
+- accepts only `action`, `actor`, and `reason` on transition requests and never
+  arbitrary mutation or command fields;
 - allows five fixed presets and never arbitrary shell input;
-- invokes AWS CLI with argument arrays and `shell=false`;
-- keeps AWS credentials and the EC2 ingest token out of the browser;
-- emits generic AWS/remote failure errors;
-- caches reads for four seconds and caps displayed remote alerts at 100.
+- uses the same five presets for Rule Studio validation/backtest/shadow and
+  expands them server-side; the browser cannot supply arbitrary test events;
+- validates behavior assessment IDs and hashed entity references and accepts
+  only the exact complete behavior-tuning field set plus bounded reason;
+- restricts the default upstream to a literal loopback HTTP origin;
+- keeps the service ingest token out of the browser;
+- emits generic upstream failure errors;
+- caches reads for four seconds and caps displayed alerts at 100.
 
 The bridge is a demo adapter, not a production API tier.
 
@@ -735,14 +1268,34 @@ eight seconds.
 Main views:
 
 - Overview and incident queue;
-- detailed incident tabs for overview, triage, enrichment, decision, response;
+- detailed incident tabs for Summary, Timeline, Enrichment, Triage, Judgment,
+  AI Analyst, and Response & Audit;
+- live Rule Studio for signed authoring, proof, review, shadow, publication,
+  rollback, packs, health, and append-only history;
+- live Risk Analytics for privacy-safe baselines, anomaly factor proof,
+  entity/composite scores, learning receipts, drift, governed tuning, and
+  immutable history;
+- live first-class Incidents workbench for campaign risk rollup, ordered attack
+  sequence, finding link reasons/scores, decision ledger, audit, lifecycle,
+  merge, and split;
+- live Cases workbench for ownership, acknowledgment/resolution SLA,
+  collaboration, metadata-only evidence, relationships, independent review,
+  close/reopen, and the record-bound audit chain;
 - policy catalog;
 - evaluation results;
 - provider and infrastructure integration status.
 
-The incident view explicitly displays trace assurance level and why the event is
-considered a policy violation. It also states whether response was simulated and
-that the event is not proof of a real-world compromise.
+The incident view explicitly displays trace assurance level, why the event was
+triaged as a policy violation, the nine-source status snapshot, contribution
+math, SLA/route, detector recommendation, deterministic action, Codex recorded
+shadow, final most-restrictive action, response effect, audit entries, and the
+privacy receipt. When configured, the AI Analyst tab shows the five role
+outcomes, evidence citations, alternatives, uncertainty, response/escalation
+advice, tool receipts, disagreement register, human-review flag, digests, and
+the explicit lack of executive authority. Loading, complete, summary-only,
+unavailable, and failed states are distinct. Missing AI analysis is not
+reconstructed. The UI also states whether response was simulated and that the
+event is not proof of a real-world compromise.
 
 The checked-in vinext/Cloudflare worker scaffold and optional D1 adapter are not
 used by the current demo: `.openai/hosting.json` has no D1 or R2 binding, the UI
@@ -833,8 +1386,6 @@ workers, request deadlines, connection limits, TLS, and graceful shutdown.
 - Node.js 22.13 or later, preferably current LTS;
 - npm matching the selected Node distribution;
 - Docker for container verification;
-- AWS CLI v2 for the live Tokyo bridge;
-- configured `agentsec-deploy` profile with only the required SSM permissions;
 - network access to npm only during dependency installation;
 - no provider credentials for the default recorded-Codex mode.
 
@@ -843,20 +1394,31 @@ workers, request deadlines, connection limits, TLS, and graceful shutdown.
 ```text
 Browser :3000 -> vinext development server
 Browser :3000 -> loopback bridge :8765
-Bridge :8765 -> AWS CLI/SSM -> private Tokyo EC2 -> agentsec container :8080
+Bridge :8765 -> local AgentSec service :8080
 ```
 
-For a backend-only local run:
+Start the backend with an explicit local bearer token:
 
 ```bash
 AGENTSEC_INGEST_TOKEN='replace-with-at-least-32-random-characters' \
+  AGENTSEC_AI_MODE=shadow \
   PYTHONPATH=src python3 -m agentsec serve --host 127.0.0.1 --port 8080
 ```
 
-For the local UI and existing Tokyo service, use the two-terminal procedure in
-[`ui/README.md`](../ui/README.md).
+Start the bridge with the same token, then start the UI in a third terminal. The
+bridge defaults to the strict `http://127.0.0.1:8080` local service origin. See
+[`ui/README.md`](../ui/README.md) for the exact complete-product commands. The
+dashboard deliberately shows an offline/empty state rather than fixture alerts
+when either local process is unavailable.
 
-## 22. Current AWS Tokyo deployment
+## 22. Historical AWS Tokyo deployment design (currently deleted)
+
+The 2026-07-22 demo infrastructure was removed after its POC. Both
+CloudFormation stacks are `DELETE_COMPLETE`; the ECR repository no longer
+exists, and the runtime secret is scheduled for deletion. The following
+topology and hardening controls document the reproducible reference design, not
+current running resources. Any redeployment requires a new explicit approval
+and must use newly discovered stack outputs and instance identifiers.
 
 ### 22.1 Foundation topology
 
@@ -941,9 +1503,9 @@ The EC2 role has:
 It does not need permission to create, update, tag, or delete infrastructure.
 Deployment credentials and runtime credentials are separate concerns.
 
-### 22.5 Deployed snapshot
+### 22.5 Historical deployed snapshot
 
-The approved 2026-07-22 snapshot records:
+The retained, sanitized 2026-07-22 report records the state before deletion:
 
 - both stacks at `CREATE_COMPLETE`;
 - instance type `t3.small`;
@@ -959,7 +1521,7 @@ The approved 2026-07-22 snapshot records:
 Resource IDs, exact image digest, and sanitized evidence are in
 [`ec2-tokyo-20260722.json`](../reports/deployment/ec2-tokyo-20260722.json).
 
-## 23. Local UI-to-AWS data path
+## 23. Local UI-to-AWS data path when separately deployed
 
 ```mermaid
 sequenceDiagram
@@ -979,15 +1541,17 @@ sequenceDiagram
     AWS->>Node: Fixed base64 runner and event
     Node->>Container: docker exec fixed Python script
     Container->>Container: POST loopback /v1/authorize
-    Container-->>Node: Sanitized authorization result
+    Container-->>Node: Sanitized authorization plus recorded incidents
     Node-->>AWS: SSM command output
     AWS-->>Bridge: Invocation result
     Bridge-->>Browser: Alert and incident projection
 ```
 
-AWS credentials remain in the operator's local AWS configuration. The ingest
-token is read only inside the container environment. Neither value is sent to
-the browser.
+When deployed, AWS credentials remain in the operator's local AWS
+configuration. The ingest token is read only inside the container environment.
+Neither value is sent to the browser. The fixed bridge scripts call only the
+authorize, incident-read, and transition service routes; they do not import or
+replay the pipeline.
 
 ## 24. Recommended pilot deployment
 
@@ -1165,6 +1729,11 @@ High-impact actions require step-up authentication and separation of duties.
 | `AGENTSEC_MODEL_PROFILE` | When AI enabled | Selected model profile. |
 | `AGENTSEC_MODEL_REGISTRY` | No | Model registry JSON path. |
 | `AGENTSEC_CODEX_RECORDING` | Recorded Codex mode | Recording JSON path. |
+| `AGENTSEC_ANALYST_DB` | Five-role analyst enabled | Durable local analyst run/feedback SQLite path. |
+| `AGENTSEC_ANALYST_RECORDING` | Five-role analyst enabled | Bounded recorded Codex role configuration path. |
+| `AGENTSEC_ANALYST_TENANT` | Optional with another product tenant | Explicit analyst tenant; inherited tenant must match. |
+| `AGENTSEC_CASE_DB` | Case management enabled | Durable local tenant-scoped case SQLite path. |
+| `AGENTSEC_CASE_TENANT` | Optional with another product tenant | Explicit case tenant; inherited tenant must match. |
 | `OPENAI_MODEL_ID` | Live OpenAI profile | Exact evaluated model ID; no source default. |
 | `OPENAI_API_KEY` | Live OpenAI profile | Provider credential. |
 | `ANTHROPIC_MODEL_ID` | Live Anthropic profile | Exact evaluated model ID; no source default. |
@@ -1199,14 +1768,17 @@ High-impact actions require step-up authentication and separation of duties.
 | FR-010 | Keep deterministic enforcement operational when AI is off or unavailable. | Implemented. |
 | FR-011 | Prevent AI from weakening a deterministic action. | Implemented and tested. |
 | FR-012 | Validate all provider verdicts against one local contract. | Implemented. |
-| FR-013 | Export only allowlisted finding metadata to a SIEM. | Implemented contract; live delivery not enabled. |
+| FR-013 | Export only allowlisted finding metadata to a SIEM. | Implemented durable local connector plane; checked-in vendor delivery remains disabled. |
 | FR-014 | Detect contradictory SDK/gateway effect observations. | Implemented reference. |
 | FR-015 | Verify ledger and checkpoint integrity. | Implemented in memory. |
 | FR-016 | Present live alert summary and detailed investigation views. | Implemented local UI. |
 | FR-017 | Restrict event forging to safe fixed presets. | Implemented local bridge. |
-| FR-018 | Persist incidents, approvals, counters, and outbox across restart. | Target. |
+| FR-018 | Persist incidents, approvals, counters, and outbox across restart. | Partially implemented: canonical/case/workflow/integration stores are durable; legacy incident, approval, and authority reference stores remain process-local. |
 | FR-019 | Authenticate analysts and authorize actions by role and tenant. | Target. |
 | FR-020 | Execute real containment only through separately approved connectors. | Target and explicitly disabled. |
+| FR-021 | Run bounded triage, investigation, judge, escalation, and response-advisor roles with evidence receipts, alternatives, uncertainty, abstention, and disagreement. | Implemented with recorded Codex evaluation. |
+| FR-022 | Preserve durable tenant-scoped AI analyst runs, health, and feedback without directly learning from feedback. | Implemented in local SQLite adapter. |
+| FR-023 | Preserve durable tenant-scoped case ownership, collaboration, dual SLA, independent closure review, replay-safe mutations, and tamper-evident audit. | Implemented in local SQLite adapter. |
 
 ## 29. Security requirements
 
@@ -1329,7 +1901,7 @@ Pilot design rules:
 | Model unavailable | Deterministic fallback. | Same with bounded timeout and circuit breaker. |
 | Ledger invalid | Response reports false. | Stop or hold protected effects according to fail-closed policy. |
 | Database unavailable | Not applicable. | Fail closed or apply an explicitly approved emergency policy; never silently allow. |
-| Queue/SIEM unavailable | In-memory dead letter for Splunk reference. | Durable outbox/DLQ; authorization may continue if enforcement record committed. |
+| Queue/SIEM unavailable | Durable single-node outbox, bounded retry, explicit dead letter/redrive, and post-decision health; authorization is unchanged. | Distributed leased workers/DLQ, uncertain-delivery reconciliation, managed audit, and SLOs. |
 | Response connector fails | No real connector. | Keep effect blocked, record failure, retry safely, escalate to human. |
 | Duplicate request | Alert deduplicated in process. | Durable idempotency response across tasks/restarts. |
 | EC2/container restart | In-memory evidence lost. | Multi-AZ tasks and durable state. |
@@ -1477,19 +2049,21 @@ two AgentSec stacks. Existing account resources are never cleanup targets.
 
 ## 37. Migration from PoC to pilot
 
-### Phase 0: presentation MVP — complete in source
+### Phase 0: investigation MVP — complete in source
 
 - Live local UI with SSM-backed alert feed.
-- Six investigation tabs and validity explanation.
-- Authoritative incident-detail contract in source.
+- Six investigation tabs covering all seven recorded stages and validity explanation.
+- Authoritative IncidentDetail 2.0.0 plus honest summary-only handling.
+- Formal nine-source enrichment and explainable triage contributions.
+- Indexed in-memory incident store and audited lifecycle endpoints.
 - Recorded Codex shadow judgment.
 - Safe synthetic alert presets.
 
-### Phase 1: authoritative service update
+### Phase 1: optional authoritative demo redeployment
 
 - Build, scan, and deploy the updated service image by digest after separate
   approval.
-- Verify `AuthorizationResponse` 1.1.0 and `AUTHORITATIVE TRACE` end to end.
+- Verify `AuthorizationResponse` 2.0.0 and complete authoritative detail end to end.
 - Add runtime-check assertions for incident details and privacy metadata.
 - Preserve the current image digest as the rollback target.
 
@@ -1571,7 +2145,7 @@ completion.
 | No-ingress EC2 | Minimizes demo attack surface. | Makes normal UI/API access depend on SSM and unsuitable for multiple users. |
 | Immutable image digest | Reproducible deployment and rollback. | Updates require deliberate replacement. |
 | PostgreSQL recommended for pilot | Strong transactions simplify idempotency, audit, and outbox consistency. | Requires migration, backup, and scaling operations. |
-| Asynchronous SOC integrations | Keeps authorization available when SIEM/ticket systems fail. | Requires queue, DLQ, eventual-consistency, and idempotency design. |
+| Local durable intake queue and DLQ | Makes telemetry admission restart-safe and testable without infrastructure dependencies. | Production still requires a clustered broker/database adapter and worker fleet. |
 
 ## 40. Known gaps and risks
 
@@ -1581,12 +2155,18 @@ completion.
 3. Detection is rule/metadata based and does not provide token-level taint or
    covert-channel analysis.
 4. No-detector-match currently means allow.
-5. State is process-local and lost on restart.
+5. Telemetry intake and case management are durable local modules; most
+   authorization, finding, legacy incident-detail, and enforcement state is
+   still process-local and lost on restart.
 6. Hash-chain and checkpoint signing are not independently durable.
-7. The service uses a shared bearer token and a development-grade HTTP server.
-8. The local UI bridge uses SSM history as a temporary feed.
+7. Admin/analyst routes use a shared bearer token and the service uses a
+   development-grade HTTP server; workload telemetry uses signed credentials.
+8. The local UI bridge can use SSM history only after a separately approved
+   deployment; no AWS AgentSec service is currently running.
 9. Current live provider tests use fake transports; Codex is a recorded review.
-10. Response and escalation connectors are simulated.
+10. Response connectors are simulated. Notification delivery uses tested
+    provider-neutral HTTPS gateway contracts, but no external vendor/account is
+    qualified and the checked-in endpoints are deliberately non-routable.
 11. The synthetic corpus is small and repository-visible.
 12. Broad outbound HTTPS remains on the PoC security group.
 13. The single EC2 node, NAT gateway, and one-AZ layout have no HA.
@@ -1604,6 +2184,8 @@ accepted by accountable owners. The full inventory is maintained in
 | --- | --- |
 | Backend implementation | [`src/agentsec`](../src/agentsec/) |
 | Incident detail | [`src/agentsec/incidents.py`](../src/agentsec/incidents.py) |
+| Case management | [`src/agentsec/cases.py`](../src/agentsec/cases.py) |
+| Escalation and notification | [`src/agentsec/notifications.py`](../src/agentsec/notifications.py) |
 | HTTP service | [`src/agentsec/service.py`](../src/agentsec/service.py) |
 | Model profiles | [`configs/model-profiles.json`](../configs/model-profiles.json) |
 | Recorded Codex review | [`configs/codex-evaluation.json`](../configs/codex-evaluation.json) |
@@ -1641,3 +2223,611 @@ This architecture document does not authorize deployment, provider enablement,
 public exposure, real containment, modification of existing AWS resources, or
 cleanup. Each infrastructure or operational change requires its own reviewed
 change set, scoped credentials, verification plan, and explicit approval.
+
+## 44. Evidence validation and judgment engine
+
+Module 16 adds two deterministic validation points. Before escalation, the
+policy judge validates an optional model verdict against the exact
+privacy-transformed evidence IDs, the deterministic action order, bounded
+instruction signals, and an evidence-derived confidence ceiling. A model can
+tighten only when that record is valid; all other advice is recorded without
+changing the deterministic action and with an explicit human gate.
+
+After the safe response is recorded, the five-role analyst creates structured
+claims over the bounded evidence manifest. The validator enforces role-specific
+mandatory evidence, exact typed fact operators, independent supporting-source
+counts, conservative calibration, injection isolation, equality-claim
+contradiction checks, P0/P1 gates, and complete role order. Its report is
+non-executive: machine action equals deterministic action and automation is
+structurally ineligible. The report and enclosing analyst run have independent
+canonical SHA-256 digests, both verified when read.
+
+The Judgment UI shows model-verdict validation before enforcement. The AI
+Analyst UI shows all five mandatory checks, per-claim matched/conflicting IDs,
+confidence before and after calibration, contradictions, issues, gate reasons,
+and the report digest from the authoritative incident—not a browser replay.
+
+## 45. Durable incident and case management
+
+Module 17 adds a post-response case plane beside the existing authoritative
+incident detail. A new pipeline finding is mapped idempotently to one durable
+case; duplicate event processing returns the same case. The case service owns
+tenant/team visibility, assignment, acknowledgment and resolution deadlines,
+comments, tasks, safe attachment metadata, typed relationships, independent
+resolution review, close/reopen state, health summaries, and exact operation
+replay.
+
+Each mutation runs inside an immediate SQLite transaction, compares the
+caller's expected version, persists its child record and operation result, adds
+a hash-chained audit entry, and commits the resulting audit count/head into the
+case digest. Reads validate the case, every returned child digest, and the
+complete audit chain. The failure boundary is after authorization: a case
+database error produces a sanitized advisory error and cannot change a
+deterministic allow/hold/deny result.
+
+The HTTP service exposes only strict case request models. The loopback bridge
+adds fixed route patterns and body allowlists rather than a general upstream
+proxy; its bearer token never crosses into browser JavaScript. The Cases UI is
+a live workbench with an explicit empty/offline state and no reconstructed or
+static case evidence.
+
+This is a single-node reference architecture. The local shared service token
+maps workflow steps to fixed requester/reviewer service identities, proving
+four-eyes state-machine enforcement but not two-human authentication. Module 24
+owns SSO/MFA, per-user RBAC, managed keys, clustered storage, independent audit
+checkpoints, backup/restore, and HA. Verified Module 18 owns escalation
+delivery; Module 19 owns guarded response execution.
+
+## 46. Durable escalation and notification
+
+Module 18 adds a post-response transactional outbox between deterministic
+escalation and external human/system delivery. A qualifying pipeline finding is
+matched against one exact versioned route and on-call schedule, rendered through
+fixed-field templates, and committed as one notification plus one delivery per
+configured destination. A unique tenant/finding identity and stable per-
+destination idempotency key make retries and restarts non-duplicating.
+
+```text
+authoritative finding + case + escalation
+                    |
+                    v
+       route + on-call + safe templates
+                    |
+                    v
+          SQLite transactional outbox
+            |       |       |       |
+         on-call  ticket   email  messaging
+            \       |       |       /
+             delivery attempts / receipts
+                    |
+          retry -> DLQ -> governed redrive
+                    |
+     provider ACK + human ownership ACK/SLA
+                    |
+           hash-chained delivery audit
+```
+
+The policy is canonical-digest bound and contains destinations, exact HTTPS
+hosts, environment-variable credential references, schedules, templates,
+routes, retry limits, and acknowledgment targets. Endpoint validation rejects
+non-HTTPS schemes, ports other than 443, URL credentials, query/fragment data,
+localhost, and non-global addresses. The transport revalidates public DNS,
+disables redirects, enforces time and response-size bounds, validates content
+type, and records no provider body.
+
+Workers claim due rows with `BEGIN IMMEDIATE` and a bounded in-flight lease.
+They recover abandoned leases after restart, apply exponential retry, enter a
+dead-letter state after the route limit, and permit only bounded audited redrive.
+Provider acceptance and provider acknowledgment are distinct from authenticated
+human on-call acknowledgment. Health exposes pending/retry/DLQ/provider-ACK and
+human-SLA counts plus credential readiness without endpoints or secret names.
+
+Private product interfaces are `GET /v1/notifications`, its `/health` and
+`/{notification_id}` detail, `GET /v1/notification-destinations`, bounded
+`POST /v1/notifications/process`, human acknowledgment, provider
+acknowledgment, and dead-letter redrive. The loopback bridge mirrors only these
+fixed patterns and holds the bearer server-side. The Escalations workspace has
+no fixtures: it renders live route/owner/delivery/attempt/receipt/SLA/audit
+evidence or an explicit empty/offline state.
+
+Runtime assembly requires `AGENTSEC_NOTIFICATION_DB` and
+`AGENTSEC_NOTIFICATION_CONFIG` together. `AGENTSEC_NOTIFICATION_TENANT` is
+explicit or inherited and must match all other product stores. Connector
+credentials are optional at startup and resolved from the four environment
+names in policy; absence is visible as not ready. A routing or delivery outage
+is captured as sanitized post-response advisory state and can never alter the
+deterministic authorization action.
+
+This implementation defines and tests typed provider-neutral gateway contracts;
+it does not claim vendor certification. Delivery scheduling is manually invoked
+in the local reference service, and provider acknowledgment uses the private
+service API rather than vendor-signed public callbacks. Module 24 owns managed
+secrets, per-human identity, managed signing, clustered queue/storage, callback
+edge security, scheduler/worker HA, backup/restore, and operational SLOs.
+
+## 47. Guarded response and playbook automation
+
+Module 19 adds a distinct downstream containment control plane. The original
+agent authorization decision remains final and cannot be replayed or weakened.
+For deny and approval-required findings, the response service selects one active
+reviewed playbook and commits an inert dry run over privacy-safe target
+references. No connector is contacted during pipeline processing.
+
+```text
+deterministic finding + judgment + case
+                  |
+                  v
+       active digest-bound playbook
+                  |
+                  v
+       inert tenant/finding dry run
+                  |
+        fixed requester identity
+                  |
+          exact plan approval
+     (different fixed approver)
+                  |
+        single-use executor claim
+     (different fixed executor)
+                  |
+      typed connector operation
+                  |
+       verify expected state
+                  |
+       durable step checkpoint
+          /              \
+     next step        stop failed
+          |
+   independently approved reverse-order rollback
+
+tenant kill switch is checked at request, approval, claim, and between steps
+```
+
+The durable store contains canonical playbook revisions, execution plans,
+single-use approvals, attempts, step outcomes, audit entries, and tenant control
+state. Every record has a canonical SHA-256 commitment. Execution binds audit
+count/head, and reads reject altered records or an incomplete/reordered audit
+chain. A stale running lease is recovered to an explicit failed state; it is
+never silently replayed.
+
+Playbooks contain only a closed operation enum: session quarantine/restore,
+agent pause/resume, identity suspend/restore, network destination
+block/unblock, and ticket annotation. Each step specifies a connector, target
+selector, expected state, mandatory approval, timeout, and optional inverse
+operation/state. Draft authoring, review, activation, and retirement use
+different fixed service roles. Only active revisions participate in matching.
+
+The production connector boundary is an HTTPS response gateway with an
+environment-held bearer. Policy supplies the exact endpoint, public host
+allowlist, supported operations, and timeout; it never stores a credential
+value. The adapter rejects redirects, non-HTTPS or non-443 destinations, URL
+credentials/query/fragment, local/non-global addresses, unexpected content
+type, oversized or malformed bodies, and mismatched operation results. Raw
+provider references and verification evidence are immediately hashed.
+
+Forward execution is ordered. A connector acceptance is insufficient: its
+verification must report the exact expected state, and that result is committed
+before the next external action starts. Failure, missing connector, or kill
+switch stops the sequence. Rollback requires a new requester and independent
+exact-plan approval, traverses only verified reversible steps in reverse order,
+verifies each inverse state, and checkpoints each outcome.
+
+Private APIs expose fixed execution list/detail/health/connectors/control and
+playbook reads plus exact live-request, approve, execute, rollback, kill-switch,
+draft, and lifecycle mutations. The loopback bridge mirrors only these routes,
+validates exact IDs and bodies, and never accepts an actor or arbitrary upstream
+path. The Response workspace renders only those verified records or an explicit
+empty/offline state.
+
+Runtime assembly requires `AGENTSEC_RESPONSE_DB` and
+`AGENTSEC_RESPONSE_CONFIG` together. `AGENTSEC_RESPONSE_TENANT` is explicit or
+inherited and must match the other product stores. Missing connector
+credentials create a visible not-ready state while preserving inert dry-run
+evidence and deterministic authorization availability.
+
+The checked-in endpoints are reserved `.invalid` hosts and no real containment
+provider is qualified. Module 24 owns managed connector isolation/egress,
+per-human SSO/MFA/RBAC, privileged approvals, managed secret/signing custody,
+clustered execution leases/storage, backup/restore, HA/DR, and operational SLOs.
+
+## 47. Guarded response and playbook automation
+
+Module 19 introduces a response plane after deterministic enforcement and keeps
+it structurally separate from the synchronous simulated `SafeResponse`. The
+pipeline can idempotently select an active immutable playbook and persist an
+inert dry run, but its principal holds only response read/operate authority and
+`create_from_pipeline` contains no connector call. An automation outage is
+captured as sanitized post-decision advisory state and cannot alter the original
+allow, hold, or deny.
+
+```text
+finding + case + deterministic decision
+                  |
+                  v
+       immutable playbook selection
+                  |
+       signed inert dry run (no egress)
+                  |
+      live request / readiness / control
+                  |
+       exact digest-bound approval
+                  |
+       distinct leased executor
+        /                     \
+ typed operation          kill switch
+        |                     |
+ signed checkpoint            +-- block before every effect
+        |
+ verify expected state -- mismatch --> fail closed
+        |
+ success --> separately request/approve reverse rollback
+```
+
+The policy declares exact gateway hosts, environment credential references,
+allowed operations, timeouts, trigger predicates, target selectors, ordered
+steps, expected states, and compensating operations. Definitions and policy are
+canonical-digest bound. Session, agent, resource, and destination targets are
+hashed before persistence; a governed case ID is the only direct target type.
+Missing credentials create a visible connector-not-ready warning and do not
+prevent authorization or inert planning.
+
+Live execution uses three server-held identities: the request operator, an
+independent approver, and a separate executor. An approval is expiring,
+single-use, scope-specific, and bound to tenant, execution/finding, policy and
+playbook digests, ordered operations, connector IDs, hashed targets, and
+expected states. The same approval cannot authorize rollback, and the approver
+cannot claim the executor lease.
+
+The executor exposes only `execute`, `verify`, and `rollback` on typed connector
+objects. There is no shell, file, command, dynamic import, or arbitrary URL
+executor. Each external result is recorded and its signed step checkpoint is
+committed before another effect starts. Connector acceptance is insufficient:
+the observed state must equal the immutable expected state. Failure stops later
+steps. Rollback reverses only successful steps with declared compensations and
+requires its own request and approval.
+
+SQLite tables persist playbook revisions, executions, approvals, attempts,
+audit, and the tenant control record with WAL/full synchronous commits and
+immediate mutation transactions. A bounded running lease makes abandoned work
+visible as failed instead of blindly replaying an uncertain effect. The signed
+execution commits audit count/head, signed steps commit terminal attempt counts,
+and reads validate exact attempt membership plus the full lifecycle chain.
+
+Private `/v1/response` routes and their loopback `/api/response` projections
+have fixed patterns, strict request models, optimistic versions, and fixed
+server-side actors. The live Response workspace renders only verified service
+records: dry runs, digests, readiness, approvals, attempts, expected/verified
+state, rollback, kill switch, connectors, lifecycle audit, and reviewed
+playbooks. It has explicit empty/offline states and no fixture fallback.
+
+The example configuration uses reserved `.invalid` hosts, no credentials, and
+therefore cannot change an external asset. Production requires qualified
+provider gateways, managed egress/secrets/workload identity, per-human SSO/MFA
+and step-up authorization, managed signing/audit, clustered workflow/storage,
+uncertain-effect reconciliation, backup/DR, and SLOs; those controls are
+assigned to Modules 20 and 24 rather than implied by this single-node adapter.
+
+## 48. Analyst control room and fixed platform BFF
+
+Module 20 consolidates the previously delivered product workspaces into a live
+analyst control room and adds one read-only platform projection. The browser
+does not call the product service directly. It calls fixed loopback `/api/*`
+routes; the bridge owns the upstream bearer, restricts browser origins, and
+forwards only route-specific requests.
+
+`GET /api/platform` has no path or query-controlled selector. It independently
+probes 17 product planes, converts each response to bounded safe scalar/count
+metrics, and reports failures as unavailable. It also loads exactly three
+repository-controlled records—release audit, evaluation manifest, and module
+catalog—under fixed names, size bounds, object checks, and SHA-256 commitments.
+There is no generic proxy, report runner, or filesystem API.
+
+```text
+accessible analyst UI
+        |
+        v
+fixed loopback BFF (origin allowlist, server-held bearer)
+        |
+        +-- fixed product reads/mutations --> governed module services
+        |
+        `-- fixed /api/platform
+              +-- 17 health probes --> bounded metrics
+              `-- 3 fixed JSON reports --> exact digests
+```
+
+Reports renders only committed release/evaluation/module evidence and states
+the production non-claim. Administration renders service readiness and a trust
+receipt that distinguishes upstream service authentication from absent human
+identity assurance. Overview consumes the same snapshot for evaluation rates.
+All surfaces show explicit loading, empty, partial, or offline states; the
+browser has no fixture fallback.
+
+The shell provides skip navigation, a focusable main landmark, `aria-current`,
+live operational status, semantic report tables, visible keyboard focus,
+reduced-motion handling, and small-screen layouts. These are testable UI
+contracts, not a claim of formal accessibility certification. Module 24 still
+owns per-human SSO/MFA/RBAC, step-up authorization, access review, managed
+sessions, and production audit.
+
+## 49. Versioned external API and durable SIEM integration plane
+
+Module 21 adds a post-decision integration plane that is structurally unable to
+weaken deterministic authorization. Pipeline findings are first minimized into
+digest-bound `ExternalSecurityEvent` records, then committed to a durable
+tenant event stream and per-destination outbox.
+
+```text
+signed workload telemetry --> deterministic AgentSec pipeline
+                                      |
+                            committed result + ledger proof
+                                      |
+                         privacy allowlist projection
+                                      |
+                         durable event stream/outbox
+                           /      |       |       \
+                    Splunk     Elastic  webhook  OTLP / TLS logs
+                  event+ack    item ack   HMAC    protocol acceptance
+
+external client bearer --> client ID + tenant + exact scope
+                                      |
+                     fixed /api/v1 resource router
+                       events/search/entities/rules
+                       findings/incidents/integrations
+```
+
+The outbox has stable event/delivery IDs, canonical commitments, bounded
+attempts, exponential retry, explicit acknowledgment-pending, dead letter,
+governed redrive, and a chained audit ledger. Raw provider references are held
+only as private delivery state needed for Splunk polling; all returned and
+audited references are SHA-256 commitments. Credential values exist only in
+runtime connector memory.
+
+Splunk, Elastic, signed webhook, OTLP HTTP JSON, RFC 5424 TLS, and CEF TLS share
+one connector boundary with exact endpoint policy, public-host validation,
+certificate verification, time/size bounds, no redirects, and normalized
+failure codes. Syslog/CEF success is correctly labeled transport acceptance;
+Splunk index success requires its separate indexer-ack response.
+
+Private `/v1/external/*` operator routes retain the service bearer. Public
+`/api/v1/*` clients use a different runtime registry and exact resource scopes;
+client tenant must match the product tenant, and the two credential classes are
+not interchangeable. Signed `/v1/telemetry` single/batch ingestion remains a
+separate workload identity boundary.
+
+The checked-in policies are disabled and use reserved `.invalid` hosts. This is
+a verified single-node reference implementation, not vendor qualification or
+production identity, key custody, distributed delivery, HA, or disaster
+recovery assurance.
+
+## 50. Durable adversarial simulation and validation lab
+
+Module 22 adds a separate validation plane around the existing deterministic
+workflow. It does not alter the five-scenario release benchmark used by the
+committed Module 23 evaluation records.
+
+```text
+versioned built-in scenario -----------+
+                                        |
+imported unreviewed draft --> strict metadata validator
+                                        |
+base scenario + fixed variant --> signed derived scenario
+                                        |
+                           tenant/RBAC SQLite catalog
+                                        |
+              protected / control / comparison run
+                           /                    \
+              deterministic pipeline       mock gateway only
+                           \                    /
+                   expected-vs-observed ground truth
+                                        |
+             signed run + sandbox receipt + audit chain
+                                        |
+                    fixed loopback BFF --> Validation Lab UI
+```
+
+Scenario records bind semantic version, source and parent lineage, variant,
+dataset split, mappings, tags, canonical metadata events, ground truth, tenant,
+author, time, and digest. Imported ground truth is always unreviewed. Mutations
+are selected from a fixed multilingual/obfuscation profile enum and change only
+stimulus commitments plus stable event/flow identifiers; no arbitrary content
+or code enters the service.
+
+The runner creates a fresh controlled gateway and mock tool set for each mode.
+Protected results must meet deterministic ground truth and complete no
+forbidden effect. Attack controls must reach only the declared mock forbidden
+effect, while benign controls must complete their declared safe operation.
+Each run contains step-level expected/observed alerts, actions, operations,
+finding/alert references, reasons, and a digest-bound isolation receipt stating
+that network, filesystem, and shell are disabled.
+
+SQLite persists idempotent scenarios and runs plus a hash-chained audit. Replay
+binds the original scenario digest and cannot substitute a scenario. The
+private API exposes catalog/list/detail/mutate/import/run/replay/audit; the BFF
+exposes only the fixed subset needed by the UI and validates all fields and IDs
+before using its server-held bearer.
+
+## 50. Simulation and validation lab
+
+Module 22 turns the original synthetic fixtures into a durable product
+validation plane without expanding their authority. A strict tenant catalog
+commits scenario identity/version, normalized metadata-only steps, ground
+truth, framework mappings, stimulus digests, lineage, trust state, and a record
+digest.
+
+```text
+trusted built-in scenario ----+
+                              +--> constrained variant --> immutable scenario
+strict external draft import -+        (import stays unreviewed)
+                                             |
+                                             v
+                                  local mock-effect sandbox
+                                  /                       \
+                         protected reference monitor   control without monitor
+                                  \                       /
+                                   expected vs observed
+                              alerts + actions + effects + IDs
+                                             |
+                            signed run + sandbox receipt + audit
+                                             |
+                                   exact-digest replay lineage
+```
+
+Scenario validation permits only four mock operations, content-free references,
+reserved HTTPS `.invalid` destinations, closed source/data/indicator labels,
+contiguous bounded steps, and coherent attack/effect ground truth. It rejects
+raw or arbitrary attributes and offers no shell, file, dynamic code, connector,
+or network interface. Multilingual and obfuscation variants change deterministic
+stimulus commitments after normalization; they do not claim raw-input evasion
+coverage.
+
+SQLite provides request-idempotent scenarios/runs and a chained tenant audit.
+Replay binds the original scenario digest, mode, and lineage. The private API,
+fixed loopback BFF, and Validation Lab UI expose the complete expected/observed
+proof and explicit sandbox boundary. This lab is independent of live provider,
+SIEM, response, and enterprise assets.
+
+## 51. Evaluation and continuous improvement
+
+Module 23 preserves the original five-scenario effect/ablation benchmark and
+adds a separate governed evaluation control plane. The new plane materializes
+42 metadata-only cases from the validation lab: six AI-security use cases across
+seven fixed variants, split into 6 development, 12 validation, and 24 holdout
+cases. Each case is divided into a candidate-visible `BlindEvaluationCase` and
+a separately committed `EvaluationGroundTruth`. The candidate protocol has no
+field through which labels or gate thresholds can be passed.
+
+```text
+normalized validation scenario + fixed variant
+                       |
+              sealed dataset revision
+               /                 \
+      blind candidate input      ground-truth commitment
+               \                 /
+                post-run scoring
+                       |
+     precision / recall / effect / benign completion
+     severity / action / evidence / abstention / calibration
+                       |
+       overall + per-use-case + per-split metrics
+                       |
+         absolute gate + approved-baseline drift
+                       |
+               PASS / BLOCK / HOLD
+                       |
+  durable runs + baselines + feedback + chained audit
+```
+
+`EvaluationCandidateMetadata` binds candidate kind, provider, exact model ID,
+route digest, qualification digest, live-call disclosure, and the invariant
+that evaluation candidates have no runtime authority. Deterministic and
+recorded-Codex tracks construct a fresh security pipeline for every case. A live
+track requires an explicit qualification commitment and performs no provider
+call until an authorized evaluation run.
+
+The digest-bound threshold policy covers corpus size, precision/recall,
+forbidden and benign effects, severity, evidence citations, safe action,
+abstention, Brier score, calibration error, schema validity, and per-use-case
+minimums. An independently approved baseline is scoped to dataset version and
+candidate kind. Subsequent runs contain signed metric deltas and block when any
+permitted regression is exceeded.
+
+SQLite persists immutable dataset revisions, idempotent runs, approved
+baselines, feedback state, and a hash-chained audit under one tenant. Feedback
+promotion requires three distinct identities: submitter, reviewer, and
+publisher. Promotion creates the exact next dataset revision with parent
+lineage; `applied_to_model` and `applied_to_runtime_policy` are structurally
+false. The feedback workflow cannot update detectors, rules, model routes,
+authorization decisions, playbooks, or responses.
+
+The private `/v1/evaluations/*` surface exposes fixed catalog, health, run,
+baseline, feedback, promotion, and audit operations with explicit RBAC and
+tenant checks. The browser does not receive this administrative mutation
+surface. Its Evaluations workspace reads only the two committed continuous
+release records through the fixed BFF allowlist and displays candidate identity,
+gate/drift state, calibration, per-use-case metrics, and dataset commitments.
+
+CI regenerates the deterministic baseline and recorded-Codex candidate at a
+fixed evaluation timestamp with performance timing excluded. Both artifacts
+are bound into the release manifest. `make continuous-evaluate` verifies file,
+record, policy, baseline, corpus, holdout, provider, gate, and drift commitments
+and exits non-zero on any mismatch.
+
+## 52. Administration, platform security, and audit
+
+Module 24 adds a separate tenant-scoped control plane around the 23 functional
+modules. It governs identity and assurance metadata; it does not acquire the
+authority to change security judgments or execute response actions.
+
+```text
+provisioned human identity + signed assertion
+                  |
+       tenant match + role subset + expiry
+                  |
+          MFA / fresh step-up gate
+                  |
+     optimistic version + separation of duty
+                  |
+ tenant policy / workload / key / access review
+                  |
+        append-only hash-chained admin audit
+                  |
+             signed checkpoint
+
+SLO result -----+
+recovery drill -+--> assurance snapshot --> fixed BFF --> read-only UI
+SBOM/provenance +
+```
+
+`AdministrationService` uses a single tenant per service instance and rejects
+cross-tenant principals. Six human roles map to exact permissions: viewer,
+analyst, incident commander, policy owner, platform administrator, and security
+auditor. High-impact mutations require a fresh MFA/step-up receipt. Key
+activation and release verification require independent actors; access review
+cannot be performed by the subject or the original grantor. Versions prevent
+lost updates.
+
+Signed identity assertions bind issuer, audience, tenant, subject, session,
+roles, MFA state, authentication context, issue/expiry times, and assertion ID.
+The verifier checks the provisioned role subset and records assertion IDs to
+deny replay. The repository implementation uses HMAC solely as a deterministic
+local test adapter. `external_idp_federated` remains structurally false.
+
+Workloads store only external credential references and fingerprints. Managed
+keys store only external provider references and fingerprints, with pending,
+active, retired, and revoked lifecycle states. No password, token, private key,
+or encryption material belongs in the administration database or browser
+projection. External KMS/HSM custody is not inferred from a reference.
+
+Tenant policy commits residency region, allowed processing regions, record and
+evidence retention, legal hold, encryption requirement, external key reference,
+version, actor, time, and digest. It is an enforceable product configuration
+contract, but geographic placement remains unverified until an independent
+deployment control attests actual storage and processing locations.
+
+Administrative mutations append canonical details as SHA-256 commitments to a
+tenant hash chain. SQLite triggers reject update and delete operations. A
+signed checkpoint commits sequence and chain head so tail deletion is
+detectable. This supplies single-node tamper evidence; it is not an external
+transparency log, managed WORM archive, trusted timestamp, or non-repudiation
+claim.
+
+SLO measurements recompute their pass state from objective and observation.
+Recovery drills pass only when restored and source checkpoints match, integrity
+is verified, and observed RPO/RTO meet targets. Supply-chain attestations pass
+only when dependency scan, secret scan, and signature verification all pass
+and builder differs from verifier. Their schemas reject inconsistent pass
+claims.
+
+Private authenticated reads expose `/v1/administration`, `/health`, and bounded
+`/audit`; checkpoint creation accepts only an empty body. Other mutations stay
+in the core service until a production human-session/BFF integration exists.
+The loopback UI receives only counts, policy metadata, assurance states, and
+digests. Credential/key references and secret configuration never reach the
+browser.
+
+`AdministrationHealth` distinguishes reference-control health from production
+assurance. Local adapter is always true while external IdP federation, external
+key custody, geographic residency verification, distributed HA, and
+`production_ready` are literal false values. Production adapters must create
+new independently verified contracts rather than changing these flags based on
+configuration presence.

@@ -1,0 +1,83 @@
+{
+  "$defs": {
+    "ResponseOperation": {
+      "enum": [
+        "session.quarantine",
+        "session.restore",
+        "agent.pause",
+        "agent.resume",
+        "identity.suspend",
+        "identity.restore",
+        "network.block_destination",
+        "network.unblock_destination",
+        "ticket.annotate"
+      ],
+      "title": "ResponseOperation",
+      "type": "string"
+    }
+  },
+  "additionalProperties": false,
+  "properties": {
+    "case_id": {
+      "anyOf": [
+        {
+          "pattern": "^case_[0-9a-f]{32}$",
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Case Id"
+    },
+    "execution_id": {
+      "pattern": "^rex_[0-9a-f]{32}$",
+      "title": "Execution Id",
+      "type": "string"
+    },
+    "expected_state": {
+      "title": "Expected State",
+      "type": "string"
+    },
+    "idempotency_key": {
+      "pattern": "^response_[0-9a-f]{64}$",
+      "title": "Idempotency Key",
+      "type": "string"
+    },
+    "operation": {
+      "$ref": "#/$defs/ResponseOperation"
+    },
+    "request_sha256": {
+      "pattern": "^[0-9a-f]{64}$",
+      "title": "Request Sha256",
+      "type": "string"
+    },
+    "requested_at": {
+      "format": "date-time",
+      "title": "Requested At",
+      "type": "string"
+    },
+    "step_id": {
+      "pattern": "^step://[A-Za-z0-9_.@/-]+$",
+      "title": "Step Id",
+      "type": "string"
+    },
+    "target_ref": {
+      "title": "Target Ref",
+      "type": "string"
+    }
+  },
+  "required": [
+    "execution_id",
+    "step_id",
+    "operation",
+    "target_ref",
+    "expected_state",
+    "idempotency_key",
+    "requested_at",
+    "request_sha256"
+  ],
+  "title": "ResponseConnectorRequest",
+  "type": "object"
+}

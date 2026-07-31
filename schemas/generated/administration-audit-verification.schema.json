@@ -1,0 +1,37 @@
+{
+  "additionalProperties": false,
+  "properties": {
+    "checkpoint_sequence": {
+      "minimum": 0,
+      "title": "Checkpoint Sequence",
+      "type": "integer"
+    },
+    "entries": {
+      "minimum": 0,
+      "title": "Entries",
+      "type": "integer"
+    },
+    "first_broken_sequence": {
+      "minimum": 0,
+      "title": "First Broken Sequence",
+      "type": "integer"
+    },
+    "reason": {
+      "title": "Reason",
+      "type": "string"
+    },
+    "valid": {
+      "title": "Valid",
+      "type": "boolean"
+    }
+  },
+  "required": [
+    "valid",
+    "reason",
+    "first_broken_sequence",
+    "entries",
+    "checkpoint_sequence"
+  ],
+  "title": "AdministrationAuditVerification",
+  "type": "object"
+}

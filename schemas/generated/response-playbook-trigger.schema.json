@@ -1,0 +1,61 @@
+{
+  "$defs": {
+    "DecisionAction": {
+      "enum": [
+        "allow",
+        "allow_with_obligations",
+        "require_approval",
+        "deny"
+      ],
+      "title": "DecisionAction",
+      "type": "string"
+    },
+    "EscalationLevel": {
+      "enum": [
+        "none",
+        "review_queue",
+        "soc_urgent",
+        "incident_page"
+      ],
+      "title": "EscalationLevel",
+      "type": "string"
+    }
+  },
+  "additionalProperties": false,
+  "properties": {
+    "alert_types": {
+      "items": {
+        "type": "string"
+      },
+      "maxItems": 32,
+      "title": "Alert Types",
+      "type": "array"
+    },
+    "decisions": {
+      "items": {
+        "$ref": "#/$defs/DecisionAction"
+      },
+      "maxItems": 4,
+      "title": "Decisions",
+      "type": "array"
+    },
+    "escalation_levels": {
+      "items": {
+        "$ref": "#/$defs/EscalationLevel"
+      },
+      "maxItems": 4,
+      "title": "Escalation Levels",
+      "type": "array"
+    },
+    "priorities": {
+      "items": {
+        "type": "string"
+      },
+      "maxItems": 4,
+      "title": "Priorities",
+      "type": "array"
+    }
+  },
+  "title": "PlaybookTrigger",
+  "type": "object"
+}

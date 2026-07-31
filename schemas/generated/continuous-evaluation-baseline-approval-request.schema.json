@@ -1,0 +1,15 @@
+{
+  "additionalProperties": false,
+  "properties": {
+    "reason_sha256": {
+      "pattern": "^[0-9a-f]{64}$",
+      "title": "Reason Sha256",
+      "type": "string"
+    }
+  },
+  "required": [
+    "reason_sha256"
+  ],
+  "title": "EvaluationBaselineApprovalRequest",
+  "type": "object"
+}

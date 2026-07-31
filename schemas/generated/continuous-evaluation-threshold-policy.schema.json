@@ -1,0 +1,187 @@
+{
+  "additionalProperties": false,
+  "properties": {
+    "maximum_abstention_increase": {
+      "maximum": 1.0,
+      "minimum": 0.0,
+      "title": "Maximum Abstention Increase",
+      "type": "number"
+    },
+    "maximum_abstention_rate": {
+      "maximum": 1.0,
+      "minimum": 0.0,
+      "title": "Maximum Abstention Rate",
+      "type": "number"
+    },
+    "maximum_benign_completion_drop": {
+      "maximum": 1.0,
+      "minimum": 0.0,
+      "title": "Maximum Benign Completion Drop",
+      "type": "number"
+    },
+    "maximum_brier_increase": {
+      "maximum": 1.0,
+      "minimum": 0.0,
+      "title": "Maximum Brier Increase",
+      "type": "number"
+    },
+    "maximum_brier_score": {
+      "maximum": 1.0,
+      "minimum": 0.0,
+      "title": "Maximum Brier Score",
+      "type": "number"
+    },
+    "maximum_calibration_error": {
+      "maximum": 1.0,
+      "minimum": 0.0,
+      "title": "Maximum Calibration Error",
+      "type": "number"
+    },
+    "maximum_evidence_drop": {
+      "maximum": 1.0,
+      "minimum": 0.0,
+      "title": "Maximum Evidence Drop",
+      "type": "number"
+    },
+    "maximum_forbidden_effect_increase": {
+      "maximum": 1.0,
+      "minimum": 0.0,
+      "title": "Maximum Forbidden Effect Increase",
+      "type": "number"
+    },
+    "maximum_forbidden_effect_rate": {
+      "maximum": 1.0,
+      "minimum": 0.0,
+      "title": "Maximum Forbidden Effect Rate",
+      "type": "number"
+    },
+    "maximum_precision_drop": {
+      "maximum": 1.0,
+      "minimum": 0.0,
+      "title": "Maximum Precision Drop",
+      "type": "number"
+    },
+    "maximum_recall_drop": {
+      "maximum": 1.0,
+      "minimum": 0.0,
+      "title": "Maximum Recall Drop",
+      "type": "number"
+    },
+    "maximum_safe_action_drop": {
+      "maximum": 1.0,
+      "minimum": 0.0,
+      "title": "Maximum Safe Action Drop",
+      "type": "number"
+    },
+    "maximum_severity_drop": {
+      "maximum": 1.0,
+      "minimum": 0.0,
+      "title": "Maximum Severity Drop",
+      "type": "number"
+    },
+    "minimum_alert_precision": {
+      "maximum": 1.0,
+      "minimum": 0.0,
+      "title": "Minimum Alert Precision",
+      "type": "number"
+    },
+    "minimum_benign_completion_rate": {
+      "maximum": 1.0,
+      "minimum": 0.0,
+      "title": "Minimum Benign Completion Rate",
+      "type": "number"
+    },
+    "minimum_cases": {
+      "maximum": 500,
+      "minimum": 1,
+      "title": "Minimum Cases",
+      "type": "integer"
+    },
+    "minimum_cases_per_use_case": {
+      "maximum": 100,
+      "minimum": 1,
+      "title": "Minimum Cases Per Use Case",
+      "type": "integer"
+    },
+    "minimum_detector_recall": {
+      "maximum": 1.0,
+      "minimum": 0.0,
+      "title": "Minimum Detector Recall",
+      "type": "number"
+    },
+    "minimum_evidence_validity_rate": {
+      "maximum": 1.0,
+      "minimum": 0.0,
+      "title": "Minimum Evidence Validity Rate",
+      "type": "number"
+    },
+    "minimum_safe_action_rate": {
+      "maximum": 1.0,
+      "minimum": 0.0,
+      "title": "Minimum Safe Action Rate",
+      "type": "number"
+    },
+    "minimum_schema_validity_rate": {
+      "maximum": 1.0,
+      "minimum": 0.0,
+      "title": "Minimum Schema Validity Rate",
+      "type": "number"
+    },
+    "minimum_severity_exact_rate": {
+      "maximum": 1.0,
+      "minimum": 0.0,
+      "title": "Minimum Severity Exact Rate",
+      "type": "number"
+    },
+    "minimum_severity_within_one_rate": {
+      "maximum": 1.0,
+      "minimum": 0.0,
+      "title": "Minimum Severity Within One Rate",
+      "type": "number"
+    },
+    "policy_sha256": {
+      "pattern": "^[0-9a-f]{64}$",
+      "title": "Policy Sha256",
+      "type": "string"
+    },
+    "policy_version": {
+      "pattern": "^[0-9]+\\.[0-9]+\\.[0-9]+$",
+      "title": "Policy Version",
+      "type": "string"
+    },
+    "schema_version": {
+      "default": "1.0.0",
+      "title": "Schema Version",
+      "type": "string"
+    }
+  },
+  "required": [
+    "policy_version",
+    "minimum_cases",
+    "minimum_cases_per_use_case",
+    "minimum_alert_precision",
+    "minimum_detector_recall",
+    "maximum_forbidden_effect_rate",
+    "minimum_benign_completion_rate",
+    "minimum_severity_exact_rate",
+    "minimum_severity_within_one_rate",
+    "minimum_evidence_validity_rate",
+    "minimum_safe_action_rate",
+    "maximum_abstention_rate",
+    "maximum_brier_score",
+    "maximum_calibration_error",
+    "minimum_schema_validity_rate",
+    "maximum_recall_drop",
+    "maximum_precision_drop",
+    "maximum_severity_drop",
+    "maximum_evidence_drop",
+    "maximum_safe_action_drop",
+    "maximum_benign_completion_drop",
+    "maximum_forbidden_effect_increase",
+    "maximum_abstention_increase",
+    "maximum_brier_increase",
+    "policy_sha256"
+  ],
+  "title": "EvaluationThresholdPolicy",
+  "type": "object"
+}

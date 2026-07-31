@@ -1,0 +1,111 @@
+{
+  "$defs": {
+    "HumanRole": {
+      "enum": [
+        "viewer",
+        "analyst",
+        "incident_commander",
+        "policy_owner",
+        "platform_administrator",
+        "security_auditor"
+      ],
+      "title": "HumanRole",
+      "type": "string"
+    }
+  },
+  "additionalProperties": false,
+  "properties": {
+    "assertion_id": {
+      "pattern": "^assertion_[0-9a-f]{32}$",
+      "title": "Assertion Id",
+      "type": "string"
+    },
+    "audience": {
+      "maxLength": 256,
+      "minLength": 3,
+      "title": "Audience",
+      "type": "string"
+    },
+    "authentication_context": {
+      "pattern": "^(standard|step_up)$",
+      "title": "Authentication Context",
+      "type": "string"
+    },
+    "expires_at": {
+      "format": "date-time",
+      "title": "Expires At",
+      "type": "string"
+    },
+    "issued_at": {
+      "format": "date-time",
+      "title": "Issued At",
+      "type": "string"
+    },
+    "issuer": {
+      "maxLength": 256,
+      "minLength": 3,
+      "title": "Issuer",
+      "type": "string"
+    },
+    "mfa_verified": {
+      "title": "Mfa Verified",
+      "type": "boolean"
+    },
+    "roles": {
+      "items": {
+        "$ref": "#/$defs/HumanRole"
+      },
+      "maxItems": 6,
+      "minItems": 1,
+      "title": "Roles",
+      "type": "array",
+      "uniqueItems": true
+    },
+    "schema_version": {
+      "default": "1.0.0",
+      "title": "Schema Version",
+      "type": "string"
+    },
+    "session_id": {
+      "pattern": "^session_[0-9a-f]{32}$",
+      "title": "Session Id",
+      "type": "string"
+    },
+    "signature": {
+      "default": "",
+      "title": "Signature",
+      "type": "string"
+    },
+    "signature_algorithm": {
+      "default": "hmac-sha256-poc",
+      "title": "Signature Algorithm",
+      "type": "string"
+    },
+    "subject": {
+      "pattern": "^analyst://[A-Za-z0-9_.@/-]+$",
+      "title": "Subject",
+      "type": "string"
+    },
+    "tenant_id": {
+      "maxLength": 128,
+      "minLength": 1,
+      "title": "Tenant Id",
+      "type": "string"
+    }
+  },
+  "required": [
+    "assertion_id",
+    "issuer",
+    "audience",
+    "tenant_id",
+    "subject",
+    "session_id",
+    "roles",
+    "mfa_verified",
+    "authentication_context",
+    "issued_at",
+    "expires_at"
+  ],
+  "title": "SignedIdentityAssertion",
+  "type": "object"
+}

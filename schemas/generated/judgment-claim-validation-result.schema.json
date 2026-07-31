@@ -1,0 +1,100 @@
+{
+  "$defs": {
+    "AnalystRole": {
+      "enum": [
+        "triage",
+        "investigation",
+        "judge",
+        "escalation",
+        "response_advisor"
+      ],
+      "title": "AnalystRole",
+      "type": "string"
+    },
+    "ClaimValidationStatus": {
+      "enum": [
+        "verified",
+        "partial",
+        "unsupported",
+        "contradicted",
+        "rejected"
+      ],
+      "title": "ClaimValidationStatus",
+      "type": "string"
+    }
+  },
+  "additionalProperties": false,
+  "properties": {
+    "calibrated_confidence": {
+      "maximum": 1.0,
+      "minimum": 0.0,
+      "title": "Calibrated Confidence",
+      "type": "number"
+    },
+    "claim_id": {
+      "pattern": "^acm_[0-9a-f]{32}$",
+      "title": "Claim Id",
+      "type": "string"
+    },
+    "claimed_confidence": {
+      "maximum": 1.0,
+      "minimum": 0.0,
+      "title": "Claimed Confidence",
+      "type": "number"
+    },
+    "conflicting_evidence_ids": {
+      "items": {
+        "type": "string"
+      },
+      "maxItems": 16,
+      "title": "Conflicting Evidence Ids",
+      "type": "array"
+    },
+    "evidence_ids": {
+      "items": {
+        "type": "string"
+      },
+      "maxItems": 16,
+      "title": "Evidence Ids",
+      "type": "array"
+    },
+    "independent_sources": {
+      "maximum": 16,
+      "minimum": 0,
+      "title": "Independent Sources",
+      "type": "integer"
+    },
+    "matched_evidence_ids": {
+      "items": {
+        "type": "string"
+      },
+      "maxItems": 16,
+      "title": "Matched Evidence Ids",
+      "type": "array"
+    },
+    "reason_codes": {
+      "items": {
+        "type": "string"
+      },
+      "maxItems": 16,
+      "title": "Reason Codes",
+      "type": "array"
+    },
+    "role": {
+      "$ref": "#/$defs/AnalystRole"
+    },
+    "status": {
+      "$ref": "#/$defs/ClaimValidationStatus"
+    }
+  },
+  "required": [
+    "claim_id",
+    "role",
+    "status",
+    "independent_sources",
+    "claimed_confidence",
+    "calibrated_confidence"
+  ],
+  "title": "ClaimValidationResult",
+  "type": "object"
+}

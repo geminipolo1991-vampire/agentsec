@@ -1,0 +1,75 @@
+{
+  "additionalProperties": false,
+  "properties": {
+    "allowed_fact_keys": {
+      "items": {
+        "type": "string"
+      },
+      "maxItems": 64,
+      "minItems": 1,
+      "title": "Allowed Fact Keys",
+      "type": "array",
+      "uniqueItems": true
+    },
+    "cache_ttl_seconds": {
+      "default": 300,
+      "maximum": 86400,
+      "minimum": 0,
+      "title": "Cache Ttl Seconds",
+      "type": "integer"
+    },
+    "description": {
+      "maxLength": 512,
+      "minLength": 3,
+      "title": "Description",
+      "type": "string"
+    },
+    "mandatory": {
+      "default": false,
+      "title": "Mandatory",
+      "type": "boolean"
+    },
+    "max_stale_seconds": {
+      "default": 3600,
+      "maximum": 604800,
+      "minimum": 0,
+      "title": "Max Stale Seconds",
+      "type": "integer"
+    },
+    "name": {
+      "pattern": "^[a-z][a-z0-9_.-]{2,63}$",
+      "title": "Name",
+      "type": "string"
+    },
+    "required_fields": {
+      "items": {
+        "type": "string"
+      },
+      "maxItems": 15,
+      "title": "Required Fields",
+      "type": "array",
+      "uniqueItems": true
+    },
+    "timeout_ms": {
+      "default": 1000,
+      "maximum": 10000,
+      "minimum": 10,
+      "title": "Timeout Ms",
+      "type": "integer"
+    },
+    "version": {
+      "maxLength": 64,
+      "minLength": 1,
+      "title": "Version",
+      "type": "string"
+    }
+  },
+  "required": [
+    "name",
+    "version",
+    "description",
+    "allowed_fact_keys"
+  ],
+  "title": "EnrichmentConnectorSpec",
+  "type": "object"
+}

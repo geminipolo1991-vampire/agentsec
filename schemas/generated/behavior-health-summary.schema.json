@@ -1,0 +1,324 @@
+{
+  "$defs": {
+    "BehaviorDriftSummary": {
+      "additionalProperties": false,
+      "properties": {
+        "anomaly_count": {
+          "minimum": 0,
+          "title": "Anomaly Count",
+          "type": "integer"
+        },
+        "anomaly_rate": {
+          "maximum": 1.0,
+          "minimum": 0.0,
+          "title": "Anomaly Rate",
+          "type": "number"
+        },
+        "average_score": {
+          "maximum": 100.0,
+          "minimum": 0.0,
+          "title": "Average Score",
+          "type": "number"
+        },
+        "calculated_at": {
+          "format": "date-time",
+          "title": "Calculated At",
+          "type": "string"
+        },
+        "config_version": {
+          "title": "Config Version",
+          "type": "string"
+        },
+        "drift_score": {
+          "maximum": 100,
+          "minimum": 0,
+          "title": "Drift Score",
+          "type": "integer"
+        },
+        "entity_ref": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Entity Ref"
+        },
+        "reasons": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Reasons",
+          "type": "array"
+        },
+        "state": {
+          "$ref": "#/$defs/DriftState"
+        },
+        "tenant_id": {
+          "title": "Tenant Id",
+          "type": "string"
+        },
+        "window_size": {
+          "minimum": 0,
+          "title": "Window Size",
+          "type": "integer"
+        }
+      },
+      "required": [
+        "tenant_id",
+        "window_size",
+        "anomaly_count",
+        "anomaly_rate",
+        "average_score",
+        "drift_score",
+        "state",
+        "reasons",
+        "config_version",
+        "calculated_at"
+      ],
+      "title": "BehaviorDriftSummary",
+      "type": "object"
+    },
+    "BehaviorTuningConfig": {
+      "additionalProperties": false,
+      "properties": {
+        "active": {
+          "default": true,
+          "title": "Active",
+          "type": "boolean"
+        },
+        "anomaly_threshold": {
+          "default": 55,
+          "maximum": 95,
+          "minimum": 30,
+          "title": "Anomaly Threshold",
+          "type": "integer"
+        },
+        "authority_weight": {
+          "default": 15,
+          "maximum": 40,
+          "minimum": 0,
+          "title": "Authority Weight",
+          "type": "integer"
+        },
+        "config_id": {
+          "default": "BHV-DEFAULT",
+          "pattern": "^BHV-[A-Z0-9-]{3,64}$",
+          "title": "Config Id",
+          "type": "string"
+        },
+        "config_sha256": {
+          "pattern": "^[0-9a-f]{64}$",
+          "title": "Config Sha256",
+          "type": "string"
+        },
+        "created_at": {
+          "format": "date-time",
+          "title": "Created At",
+          "type": "string"
+        },
+        "created_by": {
+          "title": "Created By",
+          "type": "string"
+        },
+        "destination_weight": {
+          "default": 15,
+          "maximum": 40,
+          "minimum": 0,
+          "title": "Destination Weight",
+          "type": "integer"
+        },
+        "drift_critical_rate": {
+          "default": 0.5,
+          "maximum": 0.95,
+          "minimum": 0.1,
+          "title": "Drift Critical Rate",
+          "type": "number"
+        },
+        "drift_warning_rate": {
+          "default": 0.25,
+          "maximum": 0.8,
+          "minimum": 0.05,
+          "title": "Drift Warning Rate",
+          "type": "number"
+        },
+        "drift_window_size": {
+          "default": 50,
+          "maximum": 500,
+          "minimum": 10,
+          "title": "Drift Window Size",
+          "type": "integer"
+        },
+        "maximum_observations": {
+          "default": 100000,
+          "maximum": 1000000,
+          "minimum": 100,
+          "title": "Maximum Observations",
+          "type": "integer"
+        },
+        "minimum_observations": {
+          "default": 5,
+          "maximum": 1000,
+          "minimum": 5,
+          "title": "Minimum Observations",
+          "type": "integer"
+        },
+        "operation_weight": {
+          "default": 25,
+          "maximum": 50,
+          "minimum": 0,
+          "title": "Operation Weight",
+          "type": "integer"
+        },
+        "rare_probability": {
+          "default": 0.1,
+          "maximum": 0.4,
+          "minimum": 0.01,
+          "title": "Rare Probability",
+          "type": "number"
+        },
+        "reason": {
+          "maxLength": 1024,
+          "minLength": 10,
+          "title": "Reason",
+          "type": "string"
+        },
+        "retention_days": {
+          "default": 30,
+          "maximum": 365,
+          "minimum": 1,
+          "title": "Retention Days",
+          "type": "integer"
+        },
+        "schema_drift_weight": {
+          "default": 10,
+          "maximum": 30,
+          "minimum": 0,
+          "title": "Schema Drift Weight",
+          "type": "integer"
+        },
+        "sensitive_weight": {
+          "default": 10,
+          "maximum": 30,
+          "minimum": 0,
+          "title": "Sensitive Weight",
+          "type": "integer"
+        },
+        "source_trust_weight": {
+          "default": 15,
+          "maximum": 40,
+          "minimum": 0,
+          "title": "Source Trust Weight",
+          "type": "integer"
+        },
+        "tenant_id": {
+          "title": "Tenant Id",
+          "type": "string"
+        },
+        "time_weight": {
+          "default": 10,
+          "maximum": 30,
+          "minimum": 0,
+          "title": "Time Weight",
+          "type": "integer"
+        },
+        "version": {
+          "pattern": "^[A-Za-z0-9][A-Za-z0-9._-]{0,63}$",
+          "title": "Version",
+          "type": "string"
+        }
+      },
+      "required": [
+        "version",
+        "tenant_id",
+        "created_by",
+        "reason",
+        "created_at",
+        "config_sha256"
+      ],
+      "title": "BehaviorTuningConfig",
+      "type": "object"
+    },
+    "DriftState": {
+      "enum": [
+        "insufficient_data",
+        "stable",
+        "warning",
+        "critical"
+      ],
+      "title": "DriftState",
+      "type": "string"
+    }
+  },
+  "additionalProperties": false,
+  "properties": {
+    "active_baselines": {
+      "minimum": 0,
+      "title": "Active Baselines",
+      "type": "integer"
+    },
+    "active_config": {
+      "$ref": "#/$defs/BehaviorTuningConfig"
+    },
+    "anomalies": {
+      "minimum": 0,
+      "title": "Anomalies",
+      "type": "integer"
+    },
+    "calculated_at": {
+      "format": "date-time",
+      "title": "Calculated At",
+      "type": "string"
+    },
+    "drift": {
+      "$ref": "#/$defs/BehaviorDriftSummary"
+    },
+    "learned": {
+      "minimum": 0,
+      "title": "Learned",
+      "type": "integer"
+    },
+    "learning_baselines": {
+      "minimum": 0,
+      "title": "Learning Baselines",
+      "type": "integer"
+    },
+    "rejected_learning": {
+      "minimum": 0,
+      "title": "Rejected Learning",
+      "type": "integer"
+    },
+    "tenant_id": {
+      "title": "Tenant Id",
+      "type": "string"
+    },
+    "total_assessments": {
+      "minimum": 0,
+      "title": "Total Assessments",
+      "type": "integer"
+    },
+    "total_baselines": {
+      "minimum": 0,
+      "title": "Total Baselines",
+      "type": "integer"
+    }
+  },
+  "required": [
+    "tenant_id",
+    "total_baselines",
+    "learning_baselines",
+    "active_baselines",
+    "total_assessments",
+    "anomalies",
+    "learned",
+    "rejected_learning",
+    "drift",
+    "active_config",
+    "calculated_at"
+  ],
+  "title": "BehaviorHealthSummary",
+  "type": "object"
+}

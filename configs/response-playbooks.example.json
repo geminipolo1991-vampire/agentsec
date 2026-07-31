@@ -1,0 +1,154 @@
+{
+  "schema_version": "1.0.0",
+  "policy_version": "response-policy-2026-07-24.1",
+  "connectors": [
+    {
+      "connector_id": "connector://response/control-plane",
+      "name": "Agent control-plane response gateway",
+      "endpoint": "https://response-control.example.invalid/v1/agentsec",
+      "allowed_hosts": ["response-control.example.invalid"],
+      "credential_env": "AGENTSEC_RESPONSE_CONTROL_TOKEN",
+      "operations": [
+        "session.quarantine",
+        "session.restore",
+        "agent.pause",
+        "agent.resume"
+      ],
+      "timeout_seconds": 5.0,
+      "enabled": true
+    },
+    {
+      "connector_id": "connector://response/identity",
+      "name": "Identity response gateway",
+      "endpoint": "https://response-identity.example.invalid/v1/agentsec",
+      "allowed_hosts": ["response-identity.example.invalid"],
+      "credential_env": "AGENTSEC_RESPONSE_IDENTITY_TOKEN",
+      "operations": ["identity.suspend", "identity.restore"],
+      "timeout_seconds": 5.0,
+      "enabled": true
+    },
+    {
+      "connector_id": "connector://response/network",
+      "name": "Network policy response gateway",
+      "endpoint": "https://response-network.example.invalid/v1/agentsec",
+      "allowed_hosts": ["response-network.example.invalid"],
+      "credential_env": "AGENTSEC_RESPONSE_NETWORK_TOKEN",
+      "operations": ["network.block_destination", "network.unblock_destination"],
+      "timeout_seconds": 5.0,
+      "enabled": true
+    },
+    {
+      "connector_id": "connector://response/ticket",
+      "name": "Response ticket annotation gateway",
+      "endpoint": "https://response-ticket.example.invalid/v1/agentsec",
+      "allowed_hosts": ["response-ticket.example.invalid"],
+      "credential_env": "AGENTSEC_RESPONSE_TICKET_TOKEN",
+      "operations": ["ticket.annotate"],
+      "timeout_seconds": 5.0,
+      "enabled": true
+    }
+  ],
+  "playbooks": [
+    {
+      "schema_version": "1.0.0",
+      "playbook_id": "playbook://response/critical-session-containment",
+      "version": 1,
+      "name": "Critical session and agent containment",
+      "description": "Quarantine the affected session and pause the hashed agent after independent approval.",
+      "priority": 10,
+      "trigger": {
+        "priorities": ["P0"],
+        "escalation_levels": ["incident_page"],
+        "alert_types": [],
+        "decisions": ["deny"]
+      },
+      "steps": [
+        {
+          "step_id": "step://critical/quarantine-session",
+          "name": "Quarantine affected session",
+          "operation": "session.quarantine",
+          "connector_id": "connector://response/control-plane",
+          "target_selector": "session",
+          "expected_state": "quarantined",
+          "rollback_operation": "session.restore",
+          "rollback_expected_state": "active",
+          "timeout_seconds": 5.0,
+          "requires_approval": true
+        },
+        {
+          "step_id": "step://critical/pause-agent",
+          "name": "Pause affected agent",
+          "operation": "agent.pause",
+          "connector_id": "connector://response/control-plane",
+          "target_selector": "agent",
+          "expected_state": "paused",
+          "rollback_operation": "agent.resume",
+          "rollback_expected_state": "active",
+          "timeout_seconds": 5.0,
+          "requires_approval": true
+        }
+      ],
+      "enabled": true,
+      "definition_sha256": "0000000000000000000000000000000000000000000000000000000000000000"
+    },
+    {
+      "schema_version": "1.0.0",
+      "playbook_id": "playbook://response/deny-session-containment",
+      "version": 1,
+      "name": "Denied action session containment",
+      "description": "Pause the affected agent for a denied high-risk action after approval.",
+      "priority": 20,
+      "trigger": {
+        "priorities": ["P1", "P2", "P3"],
+        "escalation_levels": ["soc_urgent"],
+        "alert_types": [],
+        "decisions": ["deny"]
+      },
+      "steps": [
+        {
+          "step_id": "step://deny/pause-agent",
+          "name": "Pause affected agent",
+          "operation": "agent.pause",
+          "connector_id": "connector://response/control-plane",
+          "target_selector": "agent",
+          "expected_state": "paused",
+          "rollback_operation": "agent.resume",
+          "rollback_expected_state": "active",
+          "timeout_seconds": 5.0,
+          "requires_approval": true
+        }
+      ],
+      "enabled": true,
+      "definition_sha256": "0000000000000000000000000000000000000000000000000000000000000000"
+    },
+    {
+      "schema_version": "1.0.0",
+      "playbook_id": "playbook://response/approval-hold-annotation",
+      "version": 1,
+      "name": "Approval hold annotation",
+      "description": "Annotate the governed case while the original action remains held for approval.",
+      "priority": 30,
+      "trigger": {
+        "priorities": ["P0", "P1", "P2", "P3"],
+        "escalation_levels": ["review_queue"],
+        "alert_types": [],
+        "decisions": ["require_approval"]
+      },
+      "steps": [
+        {
+          "step_id": "step://approval/annotate-case",
+          "name": "Annotate approval case",
+          "operation": "ticket.annotate",
+          "connector_id": "connector://response/ticket",
+          "target_selector": "case",
+          "expected_state": "annotated",
+          "timeout_seconds": 5.0,
+          "requires_approval": true
+        }
+      ],
+      "enabled": true,
+      "definition_sha256": "0000000000000000000000000000000000000000000000000000000000000000"
+    }
+  ],
+  "policy_sha256": "0000000000000000000000000000000000000000000000000000000000000000"
+}

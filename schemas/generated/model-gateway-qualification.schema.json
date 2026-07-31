@@ -1,0 +1,150 @@
+{
+  "$defs": {
+    "QualificationMetrics": {
+      "additionalProperties": false,
+      "properties": {
+        "citation_valid_rate": {
+          "maximum": 1.0,
+          "minimum": 0.0,
+          "title": "Citation Valid Rate",
+          "type": "number"
+        },
+        "deterministic_relaxation_rate": {
+          "maximum": 1.0,
+          "minimum": 0.0,
+          "title": "Deterministic Relaxation Rate",
+          "type": "number"
+        },
+        "fallback_test_passed": {
+          "title": "Fallback Test Passed",
+          "type": "boolean"
+        },
+        "fixture_count": {
+          "maximum": 1000000,
+          "minimum": 1,
+          "title": "Fixture Count",
+          "type": "integer"
+        },
+        "forbidden_effect_rate": {
+          "maximum": 1.0,
+          "minimum": 0.0,
+          "title": "Forbidden Effect Rate",
+          "type": "number"
+        },
+        "privacy_canary_leak_rate": {
+          "maximum": 1.0,
+          "minimum": 0.0,
+          "title": "Privacy Canary Leak Rate",
+          "type": "number"
+        },
+        "schema_valid_rate": {
+          "maximum": 1.0,
+          "minimum": 0.0,
+          "title": "Schema Valid Rate",
+          "type": "number"
+        }
+      },
+      "required": [
+        "fixture_count",
+        "schema_valid_rate",
+        "citation_valid_rate",
+        "forbidden_effect_rate",
+        "privacy_canary_leak_rate",
+        "fallback_test_passed",
+        "deterministic_relaxation_rate"
+      ],
+      "title": "QualificationMetrics",
+      "type": "object"
+    }
+  },
+  "additionalProperties": false,
+  "properties": {
+    "evidence_sha256": {
+      "pattern": "^[0-9a-f]{64}$",
+      "title": "Evidence Sha256",
+      "type": "string"
+    },
+    "exact_model_id": {
+      "title": "Exact Model Id",
+      "type": "string"
+    },
+    "executed_by": {
+      "title": "Executed By",
+      "type": "string"
+    },
+    "metrics": {
+      "$ref": "#/$defs/QualificationMetrics"
+    },
+    "passed": {
+      "title": "Passed",
+      "type": "boolean"
+    },
+    "prompt_sha256": {
+      "pattern": "^[0-9a-f]{64}$",
+      "title": "Prompt Sha256",
+      "type": "string"
+    },
+    "qualification_id": {
+      "pattern": "^mql_[0-9a-f]{32}$",
+      "title": "Qualification Id",
+      "type": "string"
+    },
+    "qualified_at": {
+      "format": "date-time",
+      "title": "Qualified At",
+      "type": "string"
+    },
+    "reviewed_by": {
+      "title": "Reviewed By",
+      "type": "string"
+    },
+    "route_id": {
+      "title": "Route Id",
+      "type": "string"
+    },
+    "route_revision": {
+      "minimum": 1,
+      "title": "Route Revision",
+      "type": "integer"
+    },
+    "route_sha256": {
+      "pattern": "^[0-9a-f]{64}$",
+      "title": "Route Sha256",
+      "type": "string"
+    },
+    "tenant_id": {
+      "title": "Tenant Id",
+      "type": "string"
+    },
+    "test_suite_version": {
+      "maxLength": 128,
+      "minLength": 1,
+      "title": "Test Suite Version",
+      "type": "string"
+    },
+    "valid_until": {
+      "format": "date-time",
+      "title": "Valid Until",
+      "type": "string"
+    }
+  },
+  "required": [
+    "qualification_id",
+    "tenant_id",
+    "route_id",
+    "route_revision",
+    "route_sha256",
+    "prompt_sha256",
+    "exact_model_id",
+    "test_suite_version",
+    "evidence_sha256",
+    "metrics",
+    "passed",
+    "executed_by",
+    "reviewed_by",
+    "qualified_at",
+    "valid_until"
+  ],
+  "title": "ModelQualification",
+  "type": "object"
+}

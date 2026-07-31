@@ -1,0 +1,167 @@
+{
+  "$defs": {
+    "DecisionAction": {
+      "enum": [
+        "allow",
+        "allow_with_obligations",
+        "require_approval",
+        "deny"
+      ],
+      "title": "DecisionAction",
+      "type": "string"
+    },
+    "SimulationStepResult": {
+      "additionalProperties": false,
+      "properties": {
+        "alert_ids": {
+          "items": {
+            "type": "string"
+          },
+          "maxItems": 32,
+          "title": "Alert Ids",
+          "type": "array"
+        },
+        "completed_operations": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Completed Operations",
+          "type": "array"
+        },
+        "effect_completed": {
+          "title": "Effect Completed",
+          "type": "boolean"
+        },
+        "expectation_met": {
+          "title": "Expectation Met",
+          "type": "boolean"
+        },
+        "expected_action": {
+          "$ref": "#/$defs/DecisionAction"
+        },
+        "expected_alert_types": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Expected Alert Types",
+          "type": "array"
+        },
+        "finding_ids": {
+          "items": {
+            "type": "string"
+          },
+          "maxItems": 32,
+          "title": "Finding Ids",
+          "type": "array"
+        },
+        "forbidden_effects_completed": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Forbidden Effects Completed",
+          "type": "array"
+        },
+        "ground_truth_passed": {
+          "title": "Ground Truth Passed",
+          "type": "boolean"
+        },
+        "observed_action": {
+          "title": "Observed Action",
+          "type": "string"
+        },
+        "observed_alert_types": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Observed Alert Types",
+          "type": "array"
+        },
+        "reasons": {
+          "items": {
+            "type": "string"
+          },
+          "maxItems": 16,
+          "title": "Reasons",
+          "type": "array"
+        },
+        "required_effects_missing": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Required Effects Missing",
+          "type": "array"
+        },
+        "sequence": {
+          "maximum": 8,
+          "minimum": 1,
+          "title": "Sequence",
+          "type": "integer"
+        },
+        "step_id": {
+          "title": "Step Id",
+          "type": "string"
+        }
+      },
+      "required": [
+        "step_id",
+        "sequence",
+        "expected_alert_types",
+        "observed_alert_types",
+        "expected_action",
+        "observed_action",
+        "effect_completed",
+        "completed_operations",
+        "forbidden_effects_completed",
+        "required_effects_missing",
+        "alert_ids",
+        "finding_ids",
+        "ground_truth_passed",
+        "expectation_met",
+        "reasons"
+      ],
+      "title": "SimulationStepResult",
+      "type": "object"
+    }
+  },
+  "additionalProperties": false,
+  "properties": {
+    "detected_alert_count": {
+      "maximum": 128,
+      "minimum": 0,
+      "title": "Detected Alert Count",
+      "type": "integer"
+    },
+    "expectation_met": {
+      "title": "Expectation Met",
+      "type": "boolean"
+    },
+    "forbidden_effect_count": {
+      "maximum": 8,
+      "minimum": 0,
+      "title": "Forbidden Effect Count",
+      "type": "integer"
+    },
+    "protected": {
+      "title": "Protected",
+      "type": "boolean"
+    },
+    "steps": {
+      "items": {
+        "$ref": "#/$defs/SimulationStepResult"
+      },
+      "maxItems": 8,
+      "minItems": 1,
+      "title": "Steps",
+      "type": "array"
+    }
+  },
+  "required": [
+    "protected",
+    "steps",
+    "expectation_met",
+    "forbidden_effect_count",
+    "detected_alert_count"
+  ],
+  "title": "SimulationModeResult",
+  "type": "object"
+}

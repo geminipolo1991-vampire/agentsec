@@ -1,0 +1,34 @@
+{
+  "additionalProperties": false,
+  "properties": {
+    "client_id": {
+      "maxLength": 256,
+      "pattern": "^client://[A-Za-z0-9_.@/-]+$",
+      "title": "Client Id",
+      "type": "string"
+    },
+    "scopes": {
+      "items": {
+        "type": "string"
+      },
+      "maxItems": 16,
+      "minItems": 1,
+      "title": "Scopes",
+      "type": "array",
+      "uniqueItems": true
+    },
+    "tenant_id": {
+      "maxLength": 128,
+      "minLength": 1,
+      "title": "Tenant Id",
+      "type": "string"
+    }
+  },
+  "required": [
+    "client_id",
+    "tenant_id",
+    "scopes"
+  ],
+  "title": "ExternalApiPrincipal",
+  "type": "object"
+}

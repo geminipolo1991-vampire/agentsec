@@ -7,6 +7,7 @@ import argparse
 import hashlib
 import json
 import sys
+from datetime import datetime, timezone
 from pathlib import Path
 from typing import Dict, Tuple
 
@@ -14,6 +15,13 @@ ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT / "src"))
 
 from agentsec.crypto import canonical_bytes  # noqa: E402
+from agentsec.continuous_evaluation import (  # noqa: E402
+    ContinuousEvaluationEngine,
+    built_in_evaluation_dataset,
+    deterministic_candidate,
+    load_evaluation_policy,
+    recorded_codex_candidate,
+)
 from agentsec.evaluation import (  # noqa: E402
     AblationReport,
     EvaluationArtifact,
@@ -26,11 +34,15 @@ from agentsec.evaluation import (  # noqa: E402
 REPORT_DIR = ROOT / "reports" / "evaluation"
 INPUTS = (
     "configs/codex-evaluation.json",
+    "configs/continuous-evaluation-policy.json",
+    "src/agentsec/continuous_evaluation.py",
     "src/agentsec/detection.py",
     "src/agentsec/evaluation.py",
     "src/agentsec/scenarios.py",
+    "src/agentsec/simulation.py",
     "src/agentsec/synthetic.py",
 )
+CONTINUOUS_EVALUATED_AT = datetime(2026, 7, 24, tzinfo=timezone.utc)
 
 
 def _render(value: object) -> str:
@@ -54,6 +66,38 @@ def _reports() -> Dict[str, Tuple[object, str]]:
     records["ablation.json"] = (
         ablation.model_dump(mode="json"),
         ablation.record_digest,
+    )
+    policy = load_evaluation_policy(
+        ROOT / "configs" / "continuous-evaluation-policy.json"
+    )
+    continuous = ContinuousEvaluationEngine(policy)
+    dataset = built_in_evaluation_dataset()
+    baseline = continuous.run(
+        dataset,
+        deterministic_candidate(fixed_latency_ms=0),
+        evaluated_at=CONTINUOUS_EVALUATED_AT,
+    )
+    if baseline.gate.state.value != "pass":
+        raise RuntimeError("continuous deterministic baseline failed its release gate")
+    records["continuous-baseline.json"] = (
+        baseline.model_dump(mode="json"),
+        baseline.record_digest,
+    )
+    candidate = continuous.run(
+        dataset,
+        recorded_codex_candidate(
+            ROOT / "configs" / "codex-evaluation.json", fixed_latency_ms=0
+        ),
+        evaluated_at=CONTINUOUS_EVALUATED_AT,
+        baseline=baseline,
+    )
+    if candidate.gate.state.value != "pass" or not (
+        candidate.gate.drift is not None and candidate.gate.drift.passed
+    ):
+        raise RuntimeError("continuous recorded-model evaluation failed its drift gate")
+    records["continuous.json"] = (
+        candidate.model_dump(mode="json"),
+        candidate.record_digest,
     )
     return records
 

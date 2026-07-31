@@ -1,0 +1,143 @@
+{
+  "$defs": {
+    "ComponentKind": {
+      "enum": [
+        "application",
+        "agent",
+        "model",
+        "tool",
+        "data_store"
+      ],
+      "title": "ComponentKind",
+      "type": "string"
+    },
+    "PostureEvaluator": {
+      "enum": [
+        "owner_required",
+        "managed_status_required",
+        "no_unapproved_permissions",
+        "effectful_permission_review",
+        "tool_schema_required",
+        "model_prompt_version_required",
+        "agent_policy_binding_required",
+        "max_component_risk"
+      ],
+      "title": "PostureEvaluator",
+      "type": "string"
+    },
+    "Severity": {
+      "enum": [
+        "info",
+        "low",
+        "medium",
+        "high",
+        "critical"
+      ],
+      "title": "Severity",
+      "type": "string"
+    }
+  },
+  "additionalProperties": false,
+  "properties": {
+    "applicable_kinds": {
+      "items": {
+        "$ref": "#/$defs/ComponentKind"
+      },
+      "title": "Applicable Kinds",
+      "type": "array",
+      "uniqueItems": true
+    },
+    "check_id": {
+      "title": "Check Id",
+      "type": "string"
+    },
+    "created_at": {
+      "format": "date-time",
+      "title": "Created At",
+      "type": "string"
+    },
+    "definition_sha256": {
+      "pattern": "^[0-9a-f]{64}$",
+      "title": "Definition Sha256",
+      "type": "string"
+    },
+    "description": {
+      "title": "Description",
+      "type": "string"
+    },
+    "enabled": {
+      "title": "Enabled",
+      "type": "boolean"
+    },
+    "evaluator": {
+      "$ref": "#/$defs/PostureEvaluator"
+    },
+    "framework_mappings": {
+      "items": {
+        "type": "string"
+      },
+      "title": "Framework Mappings",
+      "type": "array"
+    },
+    "parameters": {
+      "additionalProperties": {
+        "type": "integer"
+      },
+      "title": "Parameters",
+      "type": "object"
+    },
+    "remediation": {
+      "items": {
+        "type": "string"
+      },
+      "title": "Remediation",
+      "type": "array"
+    },
+    "severity": {
+      "$ref": "#/$defs/Severity"
+    },
+    "superseded_at": {
+      "anyOf": [
+        {
+          "format": "date-time",
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Superseded At"
+    },
+    "tenant_id": {
+      "title": "Tenant Id",
+      "type": "string"
+    },
+    "title": {
+      "title": "Title",
+      "type": "string"
+    },
+    "version": {
+      "title": "Version",
+      "type": "string"
+    }
+  },
+  "required": [
+    "tenant_id",
+    "check_id",
+    "version",
+    "title",
+    "description",
+    "evaluator",
+    "severity",
+    "applicable_kinds",
+    "parameters",
+    "remediation",
+    "framework_mappings",
+    "enabled",
+    "definition_sha256",
+    "created_at"
+  ],
+  "title": "PostureCheckRecord",
+  "type": "object"
+}

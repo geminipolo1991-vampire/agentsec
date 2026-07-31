@@ -1,0 +1,75 @@
+{
+  "additionalProperties": false,
+  "properties": {
+    "created_at": {
+      "format": "date-time",
+      "title": "Created At",
+      "type": "string"
+    },
+    "description": {
+      "default": "",
+      "maxLength": 2048,
+      "title": "Description",
+      "type": "string"
+    },
+    "hunt_id": {
+      "maxLength": 128,
+      "minLength": 5,
+      "title": "Hunt Id",
+      "type": "string"
+    },
+    "name": {
+      "maxLength": 128,
+      "minLength": 1,
+      "title": "Name",
+      "type": "string"
+    },
+    "owner_id": {
+      "maxLength": 256,
+      "minLength": 1,
+      "title": "Owner Id",
+      "type": "string"
+    },
+    "query": {
+      "maxLength": 4096,
+      "minLength": 1,
+      "title": "Query",
+      "type": "string"
+    },
+    "sort_by": {
+      "default": "created_at",
+      "maxLength": 64,
+      "minLength": 1,
+      "title": "Sort By",
+      "type": "string"
+    },
+    "sort_order": {
+      "default": "desc",
+      "pattern": "^(asc|desc)$",
+      "title": "Sort Order",
+      "type": "string"
+    },
+    "tenant_id": {
+      "maxLength": 128,
+      "minLength": 1,
+      "title": "Tenant Id",
+      "type": "string"
+    },
+    "updated_at": {
+      "format": "date-time",
+      "title": "Updated At",
+      "type": "string"
+    }
+  },
+  "required": [
+    "hunt_id",
+    "tenant_id",
+    "name",
+    "query",
+    "owner_id",
+    "created_at",
+    "updated_at"
+  ],
+  "title": "SavedHunt",
+  "type": "object"
+}

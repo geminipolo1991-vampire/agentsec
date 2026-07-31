@@ -1,0 +1,1470 @@
+{
+  "$defs": {
+    "ActionRecord": {
+      "additionalProperties": false,
+      "properties": {
+        "action_id": {
+          "maxLength": 128,
+          "minLength": 5,
+          "title": "Action Id",
+          "type": "string"
+        },
+        "action_type": {
+          "maxLength": 128,
+          "minLength": 1,
+          "title": "Action Type",
+          "type": "string"
+        },
+        "approval_ref": {
+          "anyOf": [
+            {
+              "maxLength": 256,
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Approval Ref"
+        },
+        "completed_at": {
+          "anyOf": [
+            {
+              "format": "date-time",
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Completed At"
+        },
+        "created_at": {
+          "format": "date-time",
+          "title": "Created At",
+          "type": "string"
+        },
+        "evidence_ids": {
+          "items": {
+            "maxLength": 256,
+            "minLength": 1,
+            "type": "string"
+          },
+          "maxItems": 1024,
+          "title": "Evidence Ids",
+          "type": "array"
+        },
+        "executor_ref": {
+          "maxLength": 256,
+          "minLength": 1,
+          "title": "Executor Ref",
+          "type": "string"
+        },
+        "incident_id": {
+          "maxLength": 128,
+          "minLength": 5,
+          "title": "Incident Id",
+          "type": "string"
+        },
+        "judgment_id": {
+          "maxLength": 128,
+          "minLength": 5,
+          "title": "Judgment Id",
+          "type": "string"
+        },
+        "labels": {
+          "items": {
+            "type": "string"
+          },
+          "maxItems": 64,
+          "title": "Labels",
+          "type": "array",
+          "uniqueItems": true
+        },
+        "record_type": {
+          "const": "action",
+          "default": "action",
+          "title": "Record Type",
+          "type": "string"
+        },
+        "requested_at": {
+          "format": "date-time",
+          "title": "Requested At",
+          "type": "string"
+        },
+        "result_code": {
+          "anyOf": [
+            {
+              "maxLength": 128,
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Result Code"
+        },
+        "schema_version": {
+          "const": "1.0.0",
+          "default": "1.0.0",
+          "title": "Schema Version",
+          "type": "string"
+        },
+        "simulated": {
+          "title": "Simulated",
+          "type": "boolean"
+        },
+        "status": {
+          "$ref": "#/$defs/ActionStatus"
+        },
+        "target_entity_ids": {
+          "items": {
+            "maxLength": 256,
+            "minLength": 1,
+            "type": "string"
+          },
+          "maxItems": 1024,
+          "title": "Target Entity Ids",
+          "type": "array"
+        },
+        "tenant_id": {
+          "maxLength": 128,
+          "minLength": 1,
+          "title": "Tenant Id",
+          "type": "string"
+        }
+      },
+      "required": [
+        "tenant_id",
+        "action_id",
+        "incident_id",
+        "judgment_id",
+        "action_type",
+        "status",
+        "simulated",
+        "executor_ref"
+      ],
+      "title": "ActionRecord",
+      "type": "object"
+    },
+    "ActionStatus": {
+      "enum": [
+        "proposed",
+        "awaiting_approval",
+        "approved",
+        "executing",
+        "succeeded",
+        "failed",
+        "rolled_back",
+        "cancelled"
+      ],
+      "title": "ActionStatus",
+      "type": "string"
+    },
+    "AlertRecord": {
+      "additionalProperties": false,
+      "properties": {
+        "alert_id": {
+          "maxLength": 128,
+          "minLength": 5,
+          "title": "Alert Id",
+          "type": "string"
+        },
+        "alert_type": {
+          "maxLength": 128,
+          "minLength": 1,
+          "title": "Alert Type",
+          "type": "string"
+        },
+        "confidence": {
+          "maximum": 1.0,
+          "minimum": 0.0,
+          "title": "Confidence",
+          "type": "number"
+        },
+        "created_at": {
+          "format": "date-time",
+          "title": "Created At",
+          "type": "string"
+        },
+        "detected_at": {
+          "format": "date-time",
+          "title": "Detected At",
+          "type": "string"
+        },
+        "detector_id": {
+          "maxLength": 128,
+          "minLength": 1,
+          "title": "Detector Id",
+          "type": "string"
+        },
+        "event_id": {
+          "maxLength": 128,
+          "minLength": 5,
+          "title": "Event Id",
+          "type": "string"
+        },
+        "evidence_ids": {
+          "items": {
+            "maxLength": 256,
+            "minLength": 1,
+            "type": "string"
+          },
+          "maxItems": 256,
+          "minItems": 1,
+          "title": "Evidence Ids",
+          "type": "array"
+        },
+        "framework_mappings": {
+          "items": {
+            "maxLength": 256,
+            "minLength": 1,
+            "type": "string"
+          },
+          "maxItems": 128,
+          "title": "Framework Mappings",
+          "type": "array"
+        },
+        "labels": {
+          "items": {
+            "type": "string"
+          },
+          "maxItems": 64,
+          "title": "Labels",
+          "type": "array",
+          "uniqueItems": true
+        },
+        "reason_codes": {
+          "items": {
+            "maxLength": 128,
+            "minLength": 1,
+            "type": "string"
+          },
+          "maxItems": 128,
+          "title": "Reason Codes",
+          "type": "array"
+        },
+        "recommended_action": {
+          "$ref": "#/$defs/DecisionAction"
+        },
+        "record_type": {
+          "const": "alert",
+          "default": "alert",
+          "title": "Record Type",
+          "type": "string"
+        },
+        "rule_version": {
+          "maxLength": 64,
+          "minLength": 1,
+          "title": "Rule Version",
+          "type": "string"
+        },
+        "schema_version": {
+          "const": "1.0.0",
+          "default": "1.0.0",
+          "title": "Schema Version",
+          "type": "string"
+        },
+        "severity": {
+          "$ref": "#/$defs/Severity"
+        },
+        "status": {
+          "$ref": "#/$defs/AlertStatus",
+          "default": "open"
+        },
+        "tenant_id": {
+          "maxLength": 128,
+          "minLength": 1,
+          "title": "Tenant Id",
+          "type": "string"
+        },
+        "title": {
+          "maxLength": 512,
+          "minLength": 1,
+          "title": "Title",
+          "type": "string"
+        }
+      },
+      "required": [
+        "tenant_id",
+        "alert_id",
+        "event_id",
+        "detector_id",
+        "rule_version",
+        "alert_type",
+        "title",
+        "severity",
+        "confidence",
+        "evidence_ids",
+        "recommended_action"
+      ],
+      "title": "AlertRecord",
+      "type": "object"
+    },
+    "AlertStatus": {
+      "enum": [
+        "open",
+        "suppressed",
+        "promoted",
+        "closed"
+      ],
+      "title": "AlertStatus",
+      "type": "string"
+    },
+    "DecisionAction": {
+      "enum": [
+        "allow",
+        "allow_with_obligations",
+        "require_approval",
+        "deny"
+      ],
+      "title": "DecisionAction",
+      "type": "string"
+    },
+    "EntityRecord": {
+      "additionalProperties": false,
+      "properties": {
+        "attributes": {
+          "additionalProperties": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "integer"
+              },
+              {
+                "type": "number"
+              },
+              {
+                "type": "boolean"
+              }
+            ]
+          },
+          "title": "Attributes",
+          "type": "object"
+        },
+        "created_at": {
+          "format": "date-time",
+          "title": "Created At",
+          "type": "string"
+        },
+        "criticality": {
+          "$ref": "#/$defs/Severity",
+          "default": "medium"
+        },
+        "entity_id": {
+          "maxLength": 256,
+          "minLength": 3,
+          "title": "Entity Id",
+          "type": "string"
+        },
+        "entity_type": {
+          "$ref": "#/$defs/EntityType"
+        },
+        "external_ref": {
+          "anyOf": [
+            {
+              "maxLength": 512,
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "External Ref"
+        },
+        "first_seen_at": {
+          "format": "date-time",
+          "title": "First Seen At",
+          "type": "string"
+        },
+        "labels": {
+          "items": {
+            "type": "string"
+          },
+          "maxItems": 64,
+          "title": "Labels",
+          "type": "array",
+          "uniqueItems": true
+        },
+        "last_seen_at": {
+          "format": "date-time",
+          "title": "Last Seen At",
+          "type": "string"
+        },
+        "name": {
+          "maxLength": 256,
+          "minLength": 1,
+          "title": "Name",
+          "type": "string"
+        },
+        "owner_ref": {
+          "anyOf": [
+            {
+              "maxLength": 256,
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Owner Ref"
+        },
+        "record_type": {
+          "const": "entity",
+          "default": "entity",
+          "title": "Record Type",
+          "type": "string"
+        },
+        "schema_version": {
+          "const": "1.0.0",
+          "default": "1.0.0",
+          "title": "Schema Version",
+          "type": "string"
+        },
+        "tenant_id": {
+          "maxLength": 128,
+          "minLength": 1,
+          "title": "Tenant Id",
+          "type": "string"
+        }
+      },
+      "required": [
+        "tenant_id",
+        "entity_id",
+        "entity_type",
+        "name"
+      ],
+      "title": "EntityRecord",
+      "type": "object"
+    },
+    "EntityType": {
+      "enum": [
+        "application",
+        "agent",
+        "model",
+        "tool",
+        "data_store",
+        "identity",
+        "resource",
+        "destination"
+      ],
+      "title": "EntityType",
+      "type": "string"
+    },
+    "EventRecord": {
+      "additionalProperties": false,
+      "properties": {
+        "actor_entity_id": {
+          "maxLength": 256,
+          "minLength": 1,
+          "title": "Actor Entity Id",
+          "type": "string"
+        },
+        "attributes": {
+          "additionalProperties": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "integer"
+              },
+              {
+                "type": "number"
+              },
+              {
+                "type": "boolean"
+              }
+            ]
+          },
+          "title": "Attributes",
+          "type": "object"
+        },
+        "created_at": {
+          "format": "date-time",
+          "title": "Created At",
+          "type": "string"
+        },
+        "event_id": {
+          "maxLength": 128,
+          "minLength": 5,
+          "title": "Event Id",
+          "type": "string"
+        },
+        "event_kind": {
+          "maxLength": 128,
+          "minLength": 1,
+          "title": "Event Kind",
+          "type": "string"
+        },
+        "evidence_ids": {
+          "items": {
+            "maxLength": 256,
+            "minLength": 1,
+            "type": "string"
+          },
+          "maxItems": 256,
+          "title": "Evidence Ids",
+          "type": "array"
+        },
+        "labels": {
+          "items": {
+            "type": "string"
+          },
+          "maxItems": 64,
+          "title": "Labels",
+          "type": "array",
+          "uniqueItems": true
+        },
+        "observed_at": {
+          "format": "date-time",
+          "title": "Observed At",
+          "type": "string"
+        },
+        "occurred_at": {
+          "format": "date-time",
+          "title": "Occurred At",
+          "type": "string"
+        },
+        "operation": {
+          "anyOf": [
+            {
+              "maxLength": 128,
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Operation"
+        },
+        "outcome": {
+          "anyOf": [
+            {
+              "maxLength": 64,
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Outcome"
+        },
+        "record_type": {
+          "const": "event",
+          "default": "event",
+          "title": "Record Type",
+          "type": "string"
+        },
+        "schema_version": {
+          "const": "1.0.0",
+          "default": "1.0.0",
+          "title": "Schema Version",
+          "type": "string"
+        },
+        "session_id": {
+          "anyOf": [
+            {
+              "maxLength": 128,
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Session Id"
+        },
+        "source_ref": {
+          "maxLength": 512,
+          "minLength": 1,
+          "title": "Source Ref",
+          "type": "string"
+        },
+        "source_trust": {
+          "maxLength": 64,
+          "minLength": 1,
+          "title": "Source Trust",
+          "type": "string"
+        },
+        "target_entity_ids": {
+          "items": {
+            "maxLength": 256,
+            "minLength": 1,
+            "type": "string"
+          },
+          "maxItems": 256,
+          "title": "Target Entity Ids",
+          "type": "array"
+        },
+        "tenant_id": {
+          "maxLength": 128,
+          "minLength": 1,
+          "title": "Tenant Id",
+          "type": "string"
+        },
+        "trace_id": {
+          "maxLength": 128,
+          "minLength": 1,
+          "title": "Trace Id",
+          "type": "string"
+        }
+      },
+      "required": [
+        "tenant_id",
+        "event_id",
+        "occurred_at",
+        "event_kind",
+        "trace_id",
+        "actor_entity_id",
+        "source_ref",
+        "source_trust"
+      ],
+      "title": "EventRecord",
+      "type": "object"
+    },
+    "EvidenceRecord": {
+      "additionalProperties": false,
+      "properties": {
+        "claim": {
+          "maxLength": 2048,
+          "minLength": 1,
+          "title": "Claim",
+          "type": "string"
+        },
+        "collected_at": {
+          "format": "date-time",
+          "title": "Collected At",
+          "type": "string"
+        },
+        "content_sha256": {
+          "pattern": "^[0-9a-f]{64}$",
+          "title": "Content Sha256",
+          "type": "string"
+        },
+        "created_at": {
+          "format": "date-time",
+          "title": "Created At",
+          "type": "string"
+        },
+        "data_classes": {
+          "items": {
+            "type": "string"
+          },
+          "maxItems": 64,
+          "title": "Data Classes",
+          "type": "array",
+          "uniqueItems": true
+        },
+        "evidence_id": {
+          "maxLength": 128,
+          "minLength": 5,
+          "title": "Evidence Id",
+          "type": "string"
+        },
+        "evidence_type": {
+          "$ref": "#/$defs/EvidenceType"
+        },
+        "integrity_status": {
+          "$ref": "#/$defs/IntegrityStatus"
+        },
+        "labels": {
+          "items": {
+            "type": "string"
+          },
+          "maxItems": 64,
+          "title": "Labels",
+          "type": "array",
+          "uniqueItems": true
+        },
+        "provenance_refs": {
+          "items": {
+            "maxLength": 256,
+            "minLength": 1,
+            "type": "string"
+          },
+          "maxItems": 256,
+          "title": "Provenance Refs",
+          "type": "array"
+        },
+        "record_type": {
+          "const": "evidence",
+          "default": "evidence",
+          "title": "Record Type",
+          "type": "string"
+        },
+        "schema_version": {
+          "const": "1.0.0",
+          "default": "1.0.0",
+          "title": "Schema Version",
+          "type": "string"
+        },
+        "source": {
+          "maxLength": 128,
+          "minLength": 1,
+          "title": "Source",
+          "type": "string"
+        },
+        "subject_refs": {
+          "items": {
+            "maxLength": 256,
+            "minLength": 1,
+            "type": "string"
+          },
+          "maxItems": 256,
+          "minItems": 1,
+          "title": "Subject Refs",
+          "type": "array"
+        },
+        "tenant_id": {
+          "maxLength": 128,
+          "minLength": 1,
+          "title": "Tenant Id",
+          "type": "string"
+        }
+      },
+      "required": [
+        "tenant_id",
+        "evidence_id",
+        "evidence_type",
+        "subject_refs",
+        "source",
+        "claim",
+        "content_sha256",
+        "integrity_status"
+      ],
+      "title": "EvidenceRecord",
+      "type": "object"
+    },
+    "EvidenceType": {
+      "enum": [
+        "telemetry",
+        "detector",
+        "ledger",
+        "enrichment",
+        "model",
+        "analyst",
+        "response"
+      ],
+      "title": "EvidenceType",
+      "type": "string"
+    },
+    "FindingRecord": {
+      "additionalProperties": false,
+      "properties": {
+        "alert_ids": {
+          "items": {
+            "maxLength": 256,
+            "minLength": 1,
+            "type": "string"
+          },
+          "maxItems": 256,
+          "minItems": 1,
+          "title": "Alert Ids",
+          "type": "array"
+        },
+        "created_at": {
+          "format": "date-time",
+          "title": "Created At",
+          "type": "string"
+        },
+        "entity_ids": {
+          "items": {
+            "maxLength": 256,
+            "minLength": 1,
+            "type": "string"
+          },
+          "maxItems": 256,
+          "minItems": 1,
+          "title": "Entity Ids",
+          "type": "array"
+        },
+        "evidence_ids": {
+          "items": {
+            "maxLength": 256,
+            "minLength": 1,
+            "type": "string"
+          },
+          "maxItems": 256,
+          "minItems": 1,
+          "title": "Evidence Ids",
+          "type": "array"
+        },
+        "finding_id": {
+          "maxLength": 128,
+          "minLength": 5,
+          "title": "Finding Id",
+          "type": "string"
+        },
+        "finding_type": {
+          "maxLength": 128,
+          "minLength": 1,
+          "title": "Finding Type",
+          "type": "string"
+        },
+        "labels": {
+          "items": {
+            "type": "string"
+          },
+          "maxItems": 64,
+          "title": "Labels",
+          "type": "array",
+          "uniqueItems": true
+        },
+        "policy_version": {
+          "maxLength": 64,
+          "minLength": 1,
+          "title": "Policy Version",
+          "type": "string"
+        },
+        "record_type": {
+          "const": "finding",
+          "default": "finding",
+          "title": "Record Type",
+          "type": "string"
+        },
+        "risk_score": {
+          "maximum": 100,
+          "minimum": 0,
+          "title": "Risk Score",
+          "type": "integer"
+        },
+        "schema_version": {
+          "const": "1.0.0",
+          "default": "1.0.0",
+          "title": "Schema Version",
+          "type": "string"
+        },
+        "severity": {
+          "$ref": "#/$defs/Severity"
+        },
+        "status": {
+          "$ref": "#/$defs/FindingStatus",
+          "default": "open"
+        },
+        "tenant_id": {
+          "maxLength": 128,
+          "minLength": 1,
+          "title": "Tenant Id",
+          "type": "string"
+        },
+        "updated_at": {
+          "format": "date-time",
+          "title": "Updated At",
+          "type": "string"
+        }
+      },
+      "required": [
+        "tenant_id",
+        "finding_id",
+        "finding_type",
+        "alert_ids",
+        "entity_ids",
+        "evidence_ids",
+        "severity",
+        "risk_score",
+        "policy_version"
+      ],
+      "title": "FindingRecord",
+      "type": "object"
+    },
+    "FindingStatus": {
+      "enum": [
+        "open",
+        "acknowledged",
+        "investigating",
+        "contained",
+        "closed"
+      ],
+      "title": "FindingStatus",
+      "type": "string"
+    },
+    "IncidentRecord": {
+      "additionalProperties": false,
+      "properties": {
+        "created_at": {
+          "format": "date-time",
+          "title": "Created At",
+          "type": "string"
+        },
+        "entity_ids": {
+          "items": {
+            "maxLength": 256,
+            "minLength": 1,
+            "type": "string"
+          },
+          "maxItems": 1024,
+          "minItems": 1,
+          "title": "Entity Ids",
+          "type": "array"
+        },
+        "finding_ids": {
+          "items": {
+            "maxLength": 256,
+            "minLength": 1,
+            "type": "string"
+          },
+          "maxItems": 1024,
+          "minItems": 1,
+          "title": "Finding Ids",
+          "type": "array"
+        },
+        "incident_id": {
+          "maxLength": 128,
+          "minLength": 5,
+          "title": "Incident Id",
+          "type": "string"
+        },
+        "labels": {
+          "items": {
+            "type": "string"
+          },
+          "maxItems": 64,
+          "title": "Labels",
+          "type": "array",
+          "uniqueItems": true
+        },
+        "opened_at": {
+          "format": "date-time",
+          "title": "Opened At",
+          "type": "string"
+        },
+        "owner_ref": {
+          "anyOf": [
+            {
+              "maxLength": 256,
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Owner Ref"
+        },
+        "record_type": {
+          "const": "incident",
+          "default": "incident",
+          "title": "Record Type",
+          "type": "string"
+        },
+        "risk_score": {
+          "maximum": 100,
+          "minimum": 0,
+          "title": "Risk Score",
+          "type": "integer"
+        },
+        "schema_version": {
+          "const": "1.0.0",
+          "default": "1.0.0",
+          "title": "Schema Version",
+          "type": "string"
+        },
+        "severity": {
+          "$ref": "#/$defs/Severity"
+        },
+        "status": {
+          "$ref": "#/$defs/IncidentStatus",
+          "default": "open"
+        },
+        "tenant_id": {
+          "maxLength": 128,
+          "minLength": 1,
+          "title": "Tenant Id",
+          "type": "string"
+        },
+        "title": {
+          "maxLength": 512,
+          "minLength": 1,
+          "title": "Title",
+          "type": "string"
+        },
+        "updated_at": {
+          "format": "date-time",
+          "title": "Updated At",
+          "type": "string"
+        }
+      },
+      "required": [
+        "tenant_id",
+        "incident_id",
+        "title",
+        "finding_ids",
+        "entity_ids",
+        "severity",
+        "risk_score"
+      ],
+      "title": "IncidentRecord",
+      "type": "object"
+    },
+    "IncidentStatus": {
+      "enum": [
+        "open",
+        "acknowledged",
+        "investigating",
+        "contained",
+        "resolved",
+        "closed"
+      ],
+      "title": "IncidentStatus",
+      "type": "string"
+    },
+    "IntegrityStatus": {
+      "enum": [
+        "verified",
+        "unverified",
+        "invalid"
+      ],
+      "title": "IntegrityStatus",
+      "type": "string"
+    },
+    "InvestigationRecord": {
+      "additionalProperties": false,
+      "properties": {
+        "assigned_to": {
+          "anyOf": [
+            {
+              "maxLength": 256,
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Assigned To"
+        },
+        "conclusion": {
+          "anyOf": [
+            {
+              "maxLength": 4096,
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Conclusion"
+        },
+        "created_at": {
+          "format": "date-time",
+          "title": "Created At",
+          "type": "string"
+        },
+        "evidence_ids": {
+          "items": {
+            "maxLength": 256,
+            "minLength": 1,
+            "type": "string"
+          },
+          "maxItems": 1024,
+          "title": "Evidence Ids",
+          "type": "array"
+        },
+        "hypothesis": {
+          "maxLength": 2048,
+          "minLength": 1,
+          "title": "Hypothesis",
+          "type": "string"
+        },
+        "incident_id": {
+          "maxLength": 128,
+          "minLength": 5,
+          "title": "Incident Id",
+          "type": "string"
+        },
+        "investigation_id": {
+          "maxLength": 128,
+          "minLength": 5,
+          "title": "Investigation Id",
+          "type": "string"
+        },
+        "labels": {
+          "items": {
+            "type": "string"
+          },
+          "maxItems": 64,
+          "title": "Labels",
+          "type": "array",
+          "uniqueItems": true
+        },
+        "record_type": {
+          "const": "investigation",
+          "default": "investigation",
+          "title": "Record Type",
+          "type": "string"
+        },
+        "schema_version": {
+          "const": "1.0.0",
+          "default": "1.0.0",
+          "title": "Schema Version",
+          "type": "string"
+        },
+        "status": {
+          "$ref": "#/$defs/InvestigationStatus"
+        },
+        "steps": {
+          "items": {
+            "$ref": "#/$defs/InvestigationStep"
+          },
+          "maxItems": 1024,
+          "title": "Steps",
+          "type": "array"
+        },
+        "tenant_id": {
+          "maxLength": 128,
+          "minLength": 1,
+          "title": "Tenant Id",
+          "type": "string"
+        },
+        "updated_at": {
+          "format": "date-time",
+          "title": "Updated At",
+          "type": "string"
+        }
+      },
+      "required": [
+        "tenant_id",
+        "investigation_id",
+        "incident_id",
+        "status",
+        "hypothesis"
+      ],
+      "title": "InvestigationRecord",
+      "type": "object"
+    },
+    "InvestigationStatus": {
+      "enum": [
+        "planned",
+        "running",
+        "blocked",
+        "completed",
+        "cancelled"
+      ],
+      "title": "InvestigationStatus",
+      "type": "string"
+    },
+    "InvestigationStep": {
+      "additionalProperties": false,
+      "properties": {
+        "description": {
+          "maxLength": 1024,
+          "minLength": 1,
+          "title": "Description",
+          "type": "string"
+        },
+        "evidence_ids": {
+          "items": {
+            "maxLength": 256,
+            "minLength": 1,
+            "type": "string"
+          },
+          "maxItems": 256,
+          "title": "Evidence Ids",
+          "type": "array"
+        },
+        "performed_at": {
+          "anyOf": [
+            {
+              "format": "date-time",
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Performed At"
+        },
+        "performed_by": {
+          "anyOf": [
+            {
+              "maxLength": 256,
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Performed By"
+        },
+        "status": {
+          "maxLength": 64,
+          "minLength": 1,
+          "title": "Status",
+          "type": "string"
+        },
+        "step_id": {
+          "maxLength": 128,
+          "minLength": 3,
+          "title": "Step Id",
+          "type": "string"
+        }
+      },
+      "required": [
+        "step_id",
+        "description",
+        "status"
+      ],
+      "title": "InvestigationStep",
+      "type": "object"
+    },
+    "JudgeType": {
+      "enum": [
+        "deterministic",
+        "ai_assisted",
+        "human",
+        "combined"
+      ],
+      "title": "JudgeType",
+      "type": "string"
+    },
+    "JudgmentRecord": {
+      "additionalProperties": false,
+      "properties": {
+        "abstained": {
+          "default": false,
+          "title": "Abstained",
+          "type": "boolean"
+        },
+        "action": {
+          "$ref": "#/$defs/DecisionAction"
+        },
+        "confidence": {
+          "maximum": 1.0,
+          "minimum": 0.0,
+          "title": "Confidence",
+          "type": "number"
+        },
+        "created_at": {
+          "format": "date-time",
+          "title": "Created At",
+          "type": "string"
+        },
+        "deterministic_action": {
+          "$ref": "#/$defs/DecisionAction"
+        },
+        "evidence_ids": {
+          "items": {
+            "maxLength": 256,
+            "minLength": 1,
+            "type": "string"
+          },
+          "maxItems": 1024,
+          "minItems": 1,
+          "title": "Evidence Ids",
+          "type": "array"
+        },
+        "judge_type": {
+          "$ref": "#/$defs/JudgeType"
+        },
+        "judged_at": {
+          "format": "date-time",
+          "title": "Judged At",
+          "type": "string"
+        },
+        "judgment_id": {
+          "maxLength": 128,
+          "minLength": 5,
+          "title": "Judgment Id",
+          "type": "string"
+        },
+        "labels": {
+          "items": {
+            "type": "string"
+          },
+          "maxItems": 64,
+          "title": "Labels",
+          "type": "array",
+          "uniqueItems": true
+        },
+        "policy_version": {
+          "maxLength": 64,
+          "minLength": 1,
+          "title": "Policy Version",
+          "type": "string"
+        },
+        "reason_codes": {
+          "items": {
+            "maxLength": 128,
+            "minLength": 1,
+            "type": "string"
+          },
+          "maxItems": 128,
+          "minItems": 1,
+          "title": "Reason Codes",
+          "type": "array"
+        },
+        "record_type": {
+          "const": "judgment",
+          "default": "judgment",
+          "title": "Record Type",
+          "type": "string"
+        },
+        "schema_version": {
+          "const": "1.0.0",
+          "default": "1.0.0",
+          "title": "Schema Version",
+          "type": "string"
+        },
+        "subject_id": {
+          "maxLength": 128,
+          "minLength": 5,
+          "title": "Subject Id",
+          "type": "string"
+        },
+        "subject_type": {
+          "enum": [
+            "alert",
+            "finding",
+            "incident"
+          ],
+          "title": "Subject Type",
+          "type": "string"
+        },
+        "tenant_id": {
+          "maxLength": 128,
+          "minLength": 1,
+          "title": "Tenant Id",
+          "type": "string"
+        },
+        "uncertainty": {
+          "anyOf": [
+            {
+              "maxLength": 2048,
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Uncertainty"
+        }
+      },
+      "required": [
+        "tenant_id",
+        "judgment_id",
+        "subject_type",
+        "subject_id",
+        "judge_type",
+        "action",
+        "deterministic_action",
+        "confidence",
+        "reason_codes",
+        "evidence_ids",
+        "policy_version"
+      ],
+      "title": "JudgmentRecord",
+      "type": "object"
+    },
+    "Severity": {
+      "enum": [
+        "info",
+        "low",
+        "medium",
+        "high",
+        "critical"
+      ],
+      "title": "Severity",
+      "type": "string"
+    }
+  },
+  "additionalProperties": false,
+  "properties": {
+    "emitted_at": {
+      "format": "date-time",
+      "title": "Emitted At",
+      "type": "string"
+    },
+    "envelope_version": {
+      "const": "1.0.0",
+      "default": "1.0.0",
+      "title": "Envelope Version",
+      "type": "string"
+    },
+    "migrations_applied": {
+      "items": {
+        "type": "string"
+      },
+      "maxItems": 32,
+      "title": "Migrations Applied",
+      "type": "array"
+    },
+    "record": {
+      "discriminator": {
+        "mapping": {
+          "action": "#/$defs/ActionRecord",
+          "alert": "#/$defs/AlertRecord",
+          "entity": "#/$defs/EntityRecord",
+          "event": "#/$defs/EventRecord",
+          "evidence": "#/$defs/EvidenceRecord",
+          "finding": "#/$defs/FindingRecord",
+          "incident": "#/$defs/IncidentRecord",
+          "investigation": "#/$defs/InvestigationRecord",
+          "judgment": "#/$defs/JudgmentRecord"
+        },
+        "propertyName": "record_type"
+      },
+      "oneOf": [
+        {
+          "$ref": "#/$defs/EventRecord"
+        },
+        {
+          "$ref": "#/$defs/EvidenceRecord"
+        },
+        {
+          "$ref": "#/$defs/EntityRecord"
+        },
+        {
+          "$ref": "#/$defs/AlertRecord"
+        },
+        {
+          "$ref": "#/$defs/FindingRecord"
+        },
+        {
+          "$ref": "#/$defs/IncidentRecord"
+        },
+        {
+          "$ref": "#/$defs/InvestigationRecord"
+        },
+        {
+          "$ref": "#/$defs/JudgmentRecord"
+        },
+        {
+          "$ref": "#/$defs/ActionRecord"
+        }
+      ],
+      "title": "Record"
+    },
+    "record_sha256": {
+      "pattern": "^[0-9a-f]{64}$",
+      "title": "Record Sha256",
+      "type": "string"
+    },
+    "source_schema_version": {
+      "maxLength": 32,
+      "minLength": 1,
+      "title": "Source Schema Version",
+      "type": "string"
+    }
+  },
+  "required": [
+    "record",
+    "record_sha256",
+    "source_schema_version"
+  ],
+  "title": "CanonicalRecordEnvelope",
+  "type": "object"
+}

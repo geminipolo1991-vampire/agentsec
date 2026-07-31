@@ -1,0 +1,319 @@
+{
+  "$defs": {
+    "DecisionAction": {
+      "enum": [
+        "allow",
+        "allow_with_obligations",
+        "require_approval",
+        "deny"
+      ],
+      "title": "DecisionAction",
+      "type": "string"
+    },
+    "EvaluationFeedbackProposal": {
+      "additionalProperties": false,
+      "properties": {
+        "applied_to_model": {
+          "const": false,
+          "default": false,
+          "title": "Applied To Model",
+          "type": "boolean"
+        },
+        "applied_to_runtime_policy": {
+          "const": false,
+          "default": false,
+          "title": "Applied To Runtime Policy",
+          "type": "boolean"
+        },
+        "dataset_version": {
+          "title": "Dataset Version",
+          "type": "string"
+        },
+        "promoted_at": {
+          "anyOf": [
+            {
+              "format": "date-time",
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Promoted At"
+        },
+        "promoted_by": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Promoted By"
+        },
+        "promoted_dataset_version": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Promoted Dataset Version"
+        },
+        "promotion_reason_sha256": {
+          "anyOf": [
+            {
+              "pattern": "^[0-9a-f]{64}$",
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Promotion Reason Sha256"
+        },
+        "proposal_id": {
+          "pattern": "^evfb_[0-9a-f]{32}$",
+          "title": "Proposal Id",
+          "type": "string"
+        },
+        "proposed_ground_truth": {
+          "$ref": "#/$defs/EvaluationGroundTruth"
+        },
+        "rationale_sha256": {
+          "pattern": "^[0-9a-f]{64}$",
+          "title": "Rationale Sha256",
+          "type": "string"
+        },
+        "record_sha256": {
+          "pattern": "^[0-9a-f]{64}$",
+          "title": "Record Sha256",
+          "type": "string"
+        },
+        "request_id": {
+          "title": "Request Id",
+          "type": "string"
+        },
+        "review_reason_sha256": {
+          "anyOf": [
+            {
+              "pattern": "^[0-9a-f]{64}$",
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Review Reason Sha256"
+        },
+        "reviewed_at": {
+          "anyOf": [
+            {
+              "format": "date-time",
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Reviewed At"
+        },
+        "reviewed_by": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Reviewed By"
+        },
+        "schema_version": {
+          "default": "1.0.0",
+          "title": "Schema Version",
+          "type": "string"
+        },
+        "source_applied_to_model": {
+          "const": false,
+          "default": false,
+          "title": "Source Applied To Model",
+          "type": "boolean"
+        },
+        "source_feedback_id": {
+          "title": "Source Feedback Id",
+          "type": "string"
+        },
+        "source_feedback_sha256": {
+          "pattern": "^[0-9a-f]{64}$",
+          "title": "Source Feedback Sha256",
+          "type": "string"
+        },
+        "source_rating": {
+          "title": "Source Rating",
+          "type": "string"
+        },
+        "source_run_id": {
+          "title": "Source Run Id",
+          "type": "string"
+        },
+        "state": {
+          "$ref": "#/$defs/EvaluationFeedbackState"
+        },
+        "submitted_at": {
+          "format": "date-time",
+          "title": "Submitted At",
+          "type": "string"
+        },
+        "submitted_by": {
+          "title": "Submitted By",
+          "type": "string"
+        },
+        "target_case_id": {
+          "title": "Target Case Id",
+          "type": "string"
+        },
+        "tenant_id": {
+          "title": "Tenant Id",
+          "type": "string"
+        }
+      },
+      "required": [
+        "proposal_id",
+        "tenant_id",
+        "request_id",
+        "dataset_version",
+        "target_case_id",
+        "source_feedback_id",
+        "source_run_id",
+        "source_feedback_sha256",
+        "source_rating",
+        "proposed_ground_truth",
+        "rationale_sha256",
+        "state",
+        "submitted_by",
+        "submitted_at",
+        "record_sha256"
+      ],
+      "title": "EvaluationFeedbackProposal",
+      "type": "object"
+    },
+    "EvaluationFeedbackState": {
+      "enum": [
+        "candidate",
+        "approved",
+        "rejected",
+        "promoted"
+      ],
+      "title": "EvaluationFeedbackState",
+      "type": "string"
+    },
+    "EvaluationGroundTruth": {
+      "additionalProperties": false,
+      "properties": {
+        "allowed_evidence_refs": {
+          "items": {
+            "type": "string"
+          },
+          "maxItems": 256,
+          "title": "Allowed Evidence Refs",
+          "type": "array"
+        },
+        "attack": {
+          "title": "Attack",
+          "type": "boolean"
+        },
+        "expected_action": {
+          "$ref": "#/$defs/DecisionAction"
+        },
+        "expected_alert_types": {
+          "items": {
+            "type": "string"
+          },
+          "maxItems": 32,
+          "title": "Expected Alert Types",
+          "type": "array"
+        },
+        "expected_severity": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/Severity"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        },
+        "forbidden_effect": {
+          "title": "Forbidden Effect",
+          "type": "boolean"
+        }
+      },
+      "required": [
+        "attack",
+        "expected_alert_types",
+        "expected_action",
+        "forbidden_effect",
+        "allowed_evidence_refs"
+      ],
+      "title": "EvaluationGroundTruth",
+      "type": "object"
+    },
+    "Severity": {
+      "enum": [
+        "info",
+        "low",
+        "medium",
+        "high",
+        "critical"
+      ],
+      "title": "Severity",
+      "type": "string"
+    }
+  },
+  "additionalProperties": false,
+  "properties": {
+    "count": {
+      "maximum": 200,
+      "minimum": 0,
+      "title": "Count",
+      "type": "integer"
+    },
+    "proposals": {
+      "items": {
+        "$ref": "#/$defs/EvaluationFeedbackProposal"
+      },
+      "maxItems": 200,
+      "title": "Proposals",
+      "type": "array"
+    },
+    "schema_version": {
+      "default": "1.0.0",
+      "title": "Schema Version",
+      "type": "string"
+    },
+    "total": {
+      "minimum": 0,
+      "title": "Total",
+      "type": "integer"
+    }
+  },
+  "required": [
+    "proposals",
+    "count",
+    "total"
+  ],
+  "title": "EvaluationFeedbackPage",
+  "type": "object"
+}

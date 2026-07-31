@@ -1,0 +1,32 @@
+{
+  "additionalProperties": false,
+  "properties": {
+    "indexed_fields": {
+      "minimum": 0,
+      "title": "Indexed Fields",
+      "type": "integer"
+    },
+    "indexed_records": {
+      "minimum": 0,
+      "title": "Indexed Records",
+      "type": "integer"
+    },
+    "synchronized_at": {
+      "format": "date-time",
+      "title": "Synchronized At",
+      "type": "string"
+    },
+    "tenant_id": {
+      "title": "Tenant Id",
+      "type": "string"
+    }
+  },
+  "required": [
+    "tenant_id",
+    "indexed_records",
+    "indexed_fields",
+    "synchronized_at"
+  ],
+  "title": "SearchIndexStats",
+  "type": "object"
+}

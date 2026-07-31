@@ -1,0 +1,37 @@
+{
+  "$defs": {
+    "CaseReviewDecision": {
+      "enum": [
+        "approve",
+        "request_changes",
+        "escalate"
+      ],
+      "title": "CaseReviewDecision",
+      "type": "string"
+    }
+  },
+  "additionalProperties": false,
+  "properties": {
+    "comment": {
+      "maxLength": 1024,
+      "minLength": 3,
+      "title": "Comment",
+      "type": "string"
+    },
+    "decision": {
+      "$ref": "#/$defs/CaseReviewDecision"
+    },
+    "expected_version": {
+      "minimum": 1,
+      "title": "Expected Version",
+      "type": "integer"
+    }
+  },
+  "required": [
+    "expected_version",
+    "decision",
+    "comment"
+  ],
+  "title": "CaseReviewRequest",
+  "type": "object"
+}

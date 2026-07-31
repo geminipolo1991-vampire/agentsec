@@ -1,0 +1,39 @@
+{
+  "additionalProperties": false,
+  "properties": {
+    "application_ids": {
+      "items": {
+        "type": "string"
+      },
+      "maxItems": 256,
+      "title": "Application Ids",
+      "type": "array",
+      "uniqueItems": true
+    },
+    "credential_id": {
+      "maxLength": 128,
+      "minLength": 3,
+      "title": "Credential Id",
+      "type": "string"
+    },
+    "source_id": {
+      "maxLength": 256,
+      "minLength": 1,
+      "title": "Source Id",
+      "type": "string"
+    },
+    "tenant_id": {
+      "maxLength": 128,
+      "minLength": 1,
+      "title": "Tenant Id",
+      "type": "string"
+    }
+  },
+  "required": [
+    "credential_id",
+    "tenant_id",
+    "source_id"
+  ],
+  "title": "WorkloadPrincipal",
+  "type": "object"
+}

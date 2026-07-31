@@ -1,0 +1,61 @@
+{
+  "additionalProperties": false,
+  "properties": {
+    "evidence_id": {
+      "pattern": "^[a-z][a-z0-9_-]{1,31}_sha256:[0-9a-f]{24}$",
+      "title": "Evidence Id",
+      "type": "string"
+    },
+    "facts": {
+      "additionalProperties": {
+        "anyOf": [
+          {
+            "type": "string"
+          },
+          {
+            "type": "boolean"
+          },
+          {
+            "type": "integer"
+          },
+          {
+            "type": "number"
+          },
+          {
+            "items": {
+              "type": "string"
+            },
+            "type": "array"
+          }
+        ]
+      },
+      "maxProperties": 32,
+      "title": "Facts",
+      "type": "object"
+    },
+    "kind": {
+      "pattern": "^[a-z][a-z0-9_]{1,63}$",
+      "title": "Kind",
+      "type": "string"
+    },
+    "observed_at": {
+      "format": "date-time",
+      "title": "Observed At",
+      "type": "string"
+    },
+    "source": {
+      "maxLength": 128,
+      "minLength": 1,
+      "title": "Source",
+      "type": "string"
+    }
+  },
+  "required": [
+    "evidence_id",
+    "kind",
+    "source",
+    "observed_at"
+  ],
+  "title": "AnalystEvidenceItem",
+  "type": "object"
+}

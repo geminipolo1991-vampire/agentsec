@@ -1,0 +1,84 @@
+{
+  "additionalProperties": false,
+  "properties": {
+    "actual_alert_event_ids": {
+      "items": {
+        "type": "string"
+      },
+      "title": "Actual Alert Event Ids",
+      "type": "array"
+    },
+    "completed_at": {
+      "format": "date-time",
+      "title": "Completed At",
+      "type": "string"
+    },
+    "definition_sha256": {
+      "pattern": "^[0-9a-f]{64}$",
+      "title": "Definition Sha256",
+      "type": "string"
+    },
+    "duration_ms": {
+      "minimum": 0,
+      "title": "Duration Ms",
+      "type": "integer"
+    },
+    "errors": {
+      "items": {
+        "type": "string"
+      },
+      "title": "Errors",
+      "type": "array"
+    },
+    "event_count": {
+      "maximum": 1000,
+      "minimum": 1,
+      "title": "Event Count",
+      "type": "integer"
+    },
+    "expected_alert_event_ids": {
+      "items": {
+        "type": "string"
+      },
+      "title": "Expected Alert Event Ids",
+      "type": "array"
+    },
+    "false_negative_event_ids": {
+      "items": {
+        "type": "string"
+      },
+      "title": "False Negative Event Ids",
+      "type": "array"
+    },
+    "false_positive_event_ids": {
+      "items": {
+        "type": "string"
+      },
+      "title": "False Positive Event Ids",
+      "type": "array"
+    },
+    "passed": {
+      "title": "Passed",
+      "type": "boolean"
+    },
+    "suite_name": {
+      "title": "Suite Name",
+      "type": "string"
+    }
+  },
+  "required": [
+    "suite_name",
+    "definition_sha256",
+    "event_count",
+    "expected_alert_event_ids",
+    "actual_alert_event_ids",
+    "false_positive_event_ids",
+    "false_negative_event_ids",
+    "errors",
+    "passed",
+    "duration_ms",
+    "completed_at"
+  ],
+  "title": "RuleValidationResult",
+  "type": "object"
+}

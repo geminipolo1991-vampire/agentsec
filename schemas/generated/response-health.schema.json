@@ -1,0 +1,120 @@
+{
+  "additionalProperties": false,
+  "properties": {
+    "active_playbooks": {
+      "minimum": 0,
+      "title": "Active Playbooks",
+      "type": "integer"
+    },
+    "average_execution_ms": {
+      "minimum": 0,
+      "title": "Average Execution Ms",
+      "type": "integer"
+    },
+    "awaiting_approval": {
+      "minimum": 0,
+      "title": "Awaiting Approval",
+      "type": "integer"
+    },
+    "configured_connectors": {
+      "minimum": 0,
+      "title": "Configured Connectors",
+      "type": "integer"
+    },
+    "dry_runs": {
+      "minimum": 0,
+      "title": "Dry Runs",
+      "type": "integer"
+    },
+    "failed": {
+      "minimum": 0,
+      "title": "Failed",
+      "type": "integer"
+    },
+    "kill_switch_active": {
+      "title": "Kill Switch Active",
+      "type": "boolean"
+    },
+    "kill_switch_version": {
+      "minimum": 1,
+      "title": "Kill Switch Version",
+      "type": "integer"
+    },
+    "observed_at": {
+      "format": "date-time",
+      "title": "Observed At",
+      "type": "string"
+    },
+    "policy_sha256": {
+      "pattern": "^[0-9a-f]{64}$",
+      "title": "Policy Sha256",
+      "type": "string"
+    },
+    "policy_version": {
+      "title": "Policy Version",
+      "type": "string"
+    },
+    "ready_connectors": {
+      "minimum": 0,
+      "title": "Ready Connectors",
+      "type": "integer"
+    },
+    "rollback_pending": {
+      "minimum": 0,
+      "title": "Rollback Pending",
+      "type": "integer"
+    },
+    "rolled_back": {
+      "minimum": 0,
+      "title": "Rolled Back",
+      "type": "integer"
+    },
+    "running": {
+      "minimum": 0,
+      "title": "Running",
+      "type": "integer"
+    },
+    "succeeded": {
+      "minimum": 0,
+      "title": "Succeeded",
+      "type": "integer"
+    },
+    "tenant_id": {
+      "title": "Tenant Id",
+      "type": "string"
+    },
+    "total_executions": {
+      "minimum": 0,
+      "title": "Total Executions",
+      "type": "integer"
+    },
+    "verification_failures": {
+      "minimum": 0,
+      "title": "Verification Failures",
+      "type": "integer"
+    }
+  },
+  "required": [
+    "tenant_id",
+    "total_executions",
+    "dry_runs",
+    "awaiting_approval",
+    "running",
+    "succeeded",
+    "failed",
+    "rollback_pending",
+    "rolled_back",
+    "verification_failures",
+    "active_playbooks",
+    "configured_connectors",
+    "ready_connectors",
+    "kill_switch_active",
+    "kill_switch_version",
+    "average_execution_ms",
+    "policy_version",
+    "policy_sha256",
+    "observed_at"
+  ],
+  "title": "ResponseHealth",
+  "type": "object"
+}

@@ -18,12 +18,15 @@ test("server-renders the AgentSec control room", async () => {
   assert.match(html, /Authorization control room/);
   assert.match(html, /Detection/);
   assert.match(html, /Ingestion/);
+  assert.match(html, /Enrichment/);
   assert.match(html, /Triage/);
   assert.match(html, /Judgment/);
   assert.match(html, /Escalation/);
   assert.match(html, /Response/);
+  assert.match(html, /Escalations/);
+  assert.match(html, /Validation Lab/);
   assert.match(html, /Forge live event/);
-  assert.match(html, /Waiting for a sanitized EC2 decision/);
+  assert.match(html, /Waiting for a sanitized decision/);
   assert.doesNotMatch(html, /codex-preview/);
   assert.doesNotMatch(html, /react-loading-skeleton/);
 });

@@ -1,0 +1,39 @@
+{
+  "additionalProperties": false,
+  "properties": {
+    "depth": {
+      "minimum": 0,
+      "title": "Depth",
+      "type": "integer"
+    },
+    "node_id": {
+      "title": "Node Id",
+      "type": "string"
+    },
+    "risk_score": {
+      "maximum": 100,
+      "minimum": 0,
+      "title": "Risk Score",
+      "type": "integer"
+    },
+    "via_edge_id": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Via Edge Id"
+    }
+  },
+  "required": [
+    "node_id",
+    "depth",
+    "risk_score"
+  ],
+  "title": "ReachableNode",
+  "type": "object"
+}

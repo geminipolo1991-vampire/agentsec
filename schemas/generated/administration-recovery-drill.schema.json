@@ -1,0 +1,95 @@
+{
+  "additionalProperties": false,
+  "properties": {
+    "backup_created_at": {
+      "format": "date-time",
+      "title": "Backup Created At",
+      "type": "string"
+    },
+    "backup_manifest_sha256": {
+      "pattern": "^[0-9a-f]{64}$",
+      "title": "Backup Manifest Sha256",
+      "type": "string"
+    },
+    "drill_completed_at": {
+      "format": "date-time",
+      "title": "Drill Completed At",
+      "type": "string"
+    },
+    "drill_id": {
+      "pattern": "^recovery-drill_[0-9a-f]{32}$",
+      "title": "Drill Id",
+      "type": "string"
+    },
+    "integrity_verified": {
+      "title": "Integrity Verified",
+      "type": "boolean"
+    },
+    "observed_rpo_minutes": {
+      "minimum": 0,
+      "title": "Observed Rpo Minutes",
+      "type": "number"
+    },
+    "observed_rto_minutes": {
+      "minimum": 0,
+      "title": "Observed Rto Minutes",
+      "type": "number"
+    },
+    "passed": {
+      "title": "Passed",
+      "type": "boolean"
+    },
+    "performed_by": {
+      "title": "Performed By",
+      "type": "string"
+    },
+    "record_sha256": {
+      "pattern": "^[0-9a-f]{64}$",
+      "title": "Record Sha256",
+      "type": "string"
+    },
+    "restored_checkpoint_sha256": {
+      "pattern": "^[0-9a-f]{64}$",
+      "title": "Restored Checkpoint Sha256",
+      "type": "string"
+    },
+    "source_checkpoint_sha256": {
+      "pattern": "^[0-9a-f]{64}$",
+      "title": "Source Checkpoint Sha256",
+      "type": "string"
+    },
+    "target_rpo_minutes": {
+      "exclusiveMinimum": 0,
+      "title": "Target Rpo Minutes",
+      "type": "number"
+    },
+    "target_rto_minutes": {
+      "exclusiveMinimum": 0,
+      "title": "Target Rto Minutes",
+      "type": "number"
+    },
+    "tenant_id": {
+      "title": "Tenant Id",
+      "type": "string"
+    }
+  },
+  "required": [
+    "drill_id",
+    "tenant_id",
+    "backup_manifest_sha256",
+    "source_checkpoint_sha256",
+    "restored_checkpoint_sha256",
+    "backup_created_at",
+    "drill_completed_at",
+    "observed_rpo_minutes",
+    "observed_rto_minutes",
+    "target_rpo_minutes",
+    "target_rto_minutes",
+    "integrity_verified",
+    "passed",
+    "performed_by",
+    "record_sha256"
+  ],
+  "title": "RecoveryDrillRecord",
+  "type": "object"
+}

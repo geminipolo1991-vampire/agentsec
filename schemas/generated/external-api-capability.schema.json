@@ -1,0 +1,41 @@
+{
+  "additionalProperties": false,
+  "properties": {
+    "contract_version": {
+      "pattern": "^\\d+\\.\\d+\\.\\d+$",
+      "title": "Contract Version",
+      "type": "string"
+    },
+    "methods": {
+      "items": {
+        "type": "string"
+      },
+      "maxItems": 8,
+      "minItems": 1,
+      "title": "Methods",
+      "type": "array"
+    },
+    "paths": {
+      "items": {
+        "type": "string"
+      },
+      "maxItems": 16,
+      "minItems": 1,
+      "title": "Paths",
+      "type": "array"
+    },
+    "resource": {
+      "pattern": "^[a-z][a-z_]+$",
+      "title": "Resource",
+      "type": "string"
+    }
+  },
+  "required": [
+    "resource",
+    "methods",
+    "paths",
+    "contract_version"
+  ],
+  "title": "ExternalApiCapability",
+  "type": "object"
+}

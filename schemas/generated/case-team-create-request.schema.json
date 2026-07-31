@@ -1,0 +1,39 @@
+{
+  "additionalProperties": false,
+  "properties": {
+    "description": {
+      "maxLength": 512,
+      "minLength": 3,
+      "title": "Description",
+      "type": "string"
+    },
+    "member_ids": {
+      "items": {
+        "type": "string"
+      },
+      "maxItems": 100,
+      "minItems": 1,
+      "title": "Member Ids",
+      "type": "array"
+    },
+    "name": {
+      "maxLength": 128,
+      "minLength": 3,
+      "title": "Name",
+      "type": "string"
+    },
+    "team_id": {
+      "pattern": "^team://[A-Za-z0-9_.@/-]+$",
+      "title": "Team Id",
+      "type": "string"
+    }
+  },
+  "required": [
+    "team_id",
+    "name",
+    "description",
+    "member_ids"
+  ],
+  "title": "CaseTeamCreateRequest",
+  "type": "object"
+}

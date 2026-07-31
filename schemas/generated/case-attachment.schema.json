@@ -1,0 +1,115 @@
+{
+  "$defs": {
+    "AttachmentScanStatus": {
+      "enum": [
+        "pending",
+        "clean",
+        "quarantined"
+      ],
+      "title": "AttachmentScanStatus",
+      "type": "string"
+    }
+  },
+  "additionalProperties": false,
+  "properties": {
+    "attachment_id": {
+      "pattern": "^cat_[0-9a-f]{32}$",
+      "title": "Attachment Id",
+      "type": "string"
+    },
+    "attachment_sha256": {
+      "pattern": "^[0-9a-f]{64}$",
+      "title": "Attachment Sha256",
+      "type": "string"
+    },
+    "case_id": {
+      "pattern": "^case_[0-9a-f]{32}$",
+      "title": "Case Id",
+      "type": "string"
+    },
+    "content_sha256": {
+      "pattern": "^[0-9a-f]{64}$",
+      "title": "Content Sha256",
+      "type": "string"
+    },
+    "created_at": {
+      "format": "date-time",
+      "title": "Created At",
+      "type": "string"
+    },
+    "display_name": {
+      "maxLength": 256,
+      "minLength": 1,
+      "title": "Display Name",
+      "type": "string"
+    },
+    "evidence_ref": {
+      "pattern": "^[a-z][a-z0-9_-]{1,31}_sha256:[0-9a-f]{24}$",
+      "title": "Evidence Ref",
+      "type": "string"
+    },
+    "media_type": {
+      "pattern": "^(application/pdf|application/json|text/plain|image/png|image/jpeg)$",
+      "title": "Media Type",
+      "type": "string"
+    },
+    "scan_status": {
+      "$ref": "#/$defs/AttachmentScanStatus",
+      "default": "pending"
+    },
+    "scanned_at": {
+      "anyOf": [
+        {
+          "format": "date-time",
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Scanned At"
+    },
+    "scanner_ref": {
+      "anyOf": [
+        {
+          "pattern": "^scanner_sha256:[0-9a-f]{24}$",
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Scanner Ref"
+    },
+    "size_bytes": {
+      "maximum": 10485760,
+      "minimum": 1,
+      "title": "Size Bytes",
+      "type": "integer"
+    },
+    "tenant_id": {
+      "title": "Tenant Id",
+      "type": "string"
+    },
+    "uploaded_by": {
+      "title": "Uploaded By",
+      "type": "string"
+    }
+  },
+  "required": [
+    "case_id",
+    "tenant_id",
+    "display_name",
+    "media_type",
+    "size_bytes",
+    "content_sha256",
+    "evidence_ref",
+    "uploaded_by",
+    "created_at",
+    "attachment_sha256"
+  ],
+  "title": "CaseAttachment",
+  "type": "object"
+}

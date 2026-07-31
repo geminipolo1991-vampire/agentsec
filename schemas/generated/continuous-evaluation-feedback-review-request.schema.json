@@ -1,0 +1,24 @@
+{
+  "additionalProperties": false,
+  "properties": {
+    "decision": {
+      "enum": [
+        "approve",
+        "reject"
+      ],
+      "title": "Decision",
+      "type": "string"
+    },
+    "reason_sha256": {
+      "pattern": "^[0-9a-f]{64}$",
+      "title": "Reason Sha256",
+      "type": "string"
+    }
+  },
+  "required": [
+    "decision",
+    "reason_sha256"
+  ],
+  "title": "EvaluationFeedbackReviewRequest",
+  "type": "object"
+}

@@ -14,6 +14,12 @@ sys.path.insert(0, str(ROOT / "src"))
 
 from agentsec.adapters import CallbackFrameworkAdapter, CustomAgentAdapter  # noqa: E402
 from agentsec.contracts import PipelineStage  # noqa: E402
+from agentsec.continuous_evaluation import (  # noqa: E402
+    CandidateKind,
+    ContinuousEvaluationReport,
+    EvaluationGateState,
+    load_evaluation_policy,
+)
 from agentsec.evaluation import AblationComponent, EvaluationMode, EvaluationRunner  # noqa: E402
 from agentsec.pipeline import SecurityPipeline  # noqa: E402
 from agentsec.privacy import SocFindingExport  # noqa: E402
@@ -61,6 +67,14 @@ def main() -> int:
     }
     ablation_by_component = {item.component: item for item in ablations.results}
     report_manifest = ROOT / "reports" / "evaluation" / "manifest.json"
+    continuous = ContinuousEvaluationReport.model_validate_json(
+        (ROOT / "reports" / "evaluation" / "continuous.json").read_text(
+            encoding="utf-8"
+        )
+    )
+    continuous_policy = load_evaluation_policy(
+        ROOT / "configs" / "continuous-evaluation-policy.json"
+    )
     discovered_tests = unittest.defaultTestLoader.discover(str(ROOT / "tests"))
 
     criteria = [
@@ -138,6 +152,33 @@ def main() -> int:
             set(deterministic.split_metrics) == {"development", "holdout"}
             and report_manifest.exists(),
             ["reports/evaluation/manifest.json"],
+        ),
+        criterion(
+            "continuous_blind_per_use_case_gate",
+            continuous.gate.state == EvaluationGateState.PASS
+            and continuous.candidate.kind == CandidateKind.RECORDED_MODEL
+            and continuous.candidate.provider == "codex"
+            and continuous.dataset.blind_execution
+            and continuous.dataset.case_count >= 42
+            and continuous.dataset.splits.get("holdout", 0) >= 24
+            and continuous.dataset.use_case_count >= 6
+            and continuous.gate.policy_sha256 == continuous_policy.policy_sha256
+            and continuous.gate.drift is not None
+            and continuous.gate.drift.passed,
+            [
+                "reports/evaluation/continuous.json",
+                "configs/continuous-evaluation-policy.json",
+                "tests/test_continuous_evaluation.py",
+            ],
+        ),
+        criterion(
+            "governed_evaluation_feedback",
+            (ROOT / "src" / "agentsec" / "continuous_evaluation.py").exists()
+            and (ROOT / "tests" / "test_continuous_evaluation.py").exists(),
+            [
+                "src/agentsec/continuous_evaluation.py",
+                "tests/test_continuous_evaluation.py",
+            ],
         ),
         criterion(
             "clean_install_demo_gate",

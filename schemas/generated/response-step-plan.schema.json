@@ -1,0 +1,193 @@
+{
+  "$defs": {
+    "ResponseOperation": {
+      "enum": [
+        "session.quarantine",
+        "session.restore",
+        "agent.pause",
+        "agent.resume",
+        "identity.suspend",
+        "identity.restore",
+        "network.block_destination",
+        "network.unblock_destination",
+        "ticket.annotate"
+      ],
+      "title": "ResponseOperation",
+      "type": "string"
+    },
+    "StepStatus": {
+      "enum": [
+        "dry_run_ready",
+        "dry_run_not_ready",
+        "pending",
+        "running",
+        "succeeded",
+        "failed",
+        "rolled_back",
+        "rollback_failed"
+      ],
+      "title": "StepStatus",
+      "type": "string"
+    }
+  },
+  "additionalProperties": false,
+  "properties": {
+    "attempt_count": {
+      "default": 0,
+      "maximum": 1000,
+      "minimum": 0,
+      "title": "Attempt Count",
+      "type": "integer"
+    },
+    "completed_at": {
+      "anyOf": [
+        {
+          "format": "date-time",
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Completed At"
+    },
+    "connector_id": {
+      "pattern": "^connector://[A-Za-z0-9_.@/-]+$",
+      "title": "Connector Id",
+      "type": "string"
+    },
+    "connector_ready": {
+      "title": "Connector Ready",
+      "type": "boolean"
+    },
+    "expected_state": {
+      "pattern": "^[a-z][a-z0-9_]{1,63}$",
+      "title": "Expected State",
+      "type": "string"
+    },
+    "last_error_code": {
+      "anyOf": [
+        {
+          "pattern": "^[a-z][a-z0-9_]{2,63}$",
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Last Error Code"
+    },
+    "name": {
+      "maxLength": 128,
+      "minLength": 3,
+      "title": "Name",
+      "type": "string"
+    },
+    "operation": {
+      "$ref": "#/$defs/ResponseOperation"
+    },
+    "provider_reference_sha256": {
+      "anyOf": [
+        {
+          "pattern": "^[0-9a-f]{64}$",
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Provider Reference Sha256"
+    },
+    "rollback_expected_state": {
+      "anyOf": [
+        {
+          "pattern": "^[a-z][a-z0-9_]{1,63}$",
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Rollback Expected State"
+    },
+    "rollback_operation": {
+      "anyOf": [
+        {
+          "$ref": "#/$defs/ResponseOperation"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null
+    },
+    "started_at": {
+      "anyOf": [
+        {
+          "format": "date-time",
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Started At"
+    },
+    "status": {
+      "$ref": "#/$defs/StepStatus"
+    },
+    "step_id": {
+      "pattern": "^step://[A-Za-z0-9_.@/-]+$",
+      "title": "Step Id",
+      "type": "string"
+    },
+    "step_sha256": {
+      "pattern": "^[0-9a-f]{64}$",
+      "title": "Step Sha256",
+      "type": "string"
+    },
+    "target_ref": {
+      "pattern": "^(?:agent|session|resource|destination)_sha256:[0-9a-f]{24}$|^case_[0-9a-f]{32}$",
+      "title": "Target Ref",
+      "type": "string"
+    },
+    "timeout_seconds": {
+      "maximum": 30.0,
+      "minimum": 0.1,
+      "title": "Timeout Seconds",
+      "type": "number"
+    },
+    "verification_evidence_sha256": {
+      "anyOf": [
+        {
+          "pattern": "^[0-9a-f]{64}$",
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Verification Evidence Sha256"
+    }
+  },
+  "required": [
+    "step_id",
+    "name",
+    "operation",
+    "connector_id",
+    "target_ref",
+    "expected_state",
+    "timeout_seconds",
+    "connector_ready",
+    "status",
+    "step_sha256"
+  ],
+  "title": "ResponseStepPlan",
+  "type": "object"
+}

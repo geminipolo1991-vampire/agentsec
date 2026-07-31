@@ -1,0 +1,94 @@
+{
+  "$defs": {
+    "DriftState": {
+      "enum": [
+        "insufficient_data",
+        "stable",
+        "warning",
+        "critical"
+      ],
+      "title": "DriftState",
+      "type": "string"
+    }
+  },
+  "additionalProperties": false,
+  "properties": {
+    "anomaly_count": {
+      "minimum": 0,
+      "title": "Anomaly Count",
+      "type": "integer"
+    },
+    "anomaly_rate": {
+      "maximum": 1.0,
+      "minimum": 0.0,
+      "title": "Anomaly Rate",
+      "type": "number"
+    },
+    "average_score": {
+      "maximum": 100.0,
+      "minimum": 0.0,
+      "title": "Average Score",
+      "type": "number"
+    },
+    "calculated_at": {
+      "format": "date-time",
+      "title": "Calculated At",
+      "type": "string"
+    },
+    "config_version": {
+      "title": "Config Version",
+      "type": "string"
+    },
+    "drift_score": {
+      "maximum": 100,
+      "minimum": 0,
+      "title": "Drift Score",
+      "type": "integer"
+    },
+    "entity_ref": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Entity Ref"
+    },
+    "reasons": {
+      "items": {
+        "type": "string"
+      },
+      "title": "Reasons",
+      "type": "array"
+    },
+    "state": {
+      "$ref": "#/$defs/DriftState"
+    },
+    "tenant_id": {
+      "title": "Tenant Id",
+      "type": "string"
+    },
+    "window_size": {
+      "minimum": 0,
+      "title": "Window Size",
+      "type": "integer"
+    }
+  },
+  "required": [
+    "tenant_id",
+    "window_size",
+    "anomaly_count",
+    "anomaly_rate",
+    "average_score",
+    "drift_score",
+    "state",
+    "reasons",
+    "config_version",
+    "calculated_at"
+  ],
+  "title": "BehaviorDriftSummary",
+  "type": "object"
+}

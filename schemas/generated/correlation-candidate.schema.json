@@ -1,0 +1,29 @@
+{
+  "additionalProperties": false,
+  "properties": {
+    "incident_id": {
+      "title": "Incident Id",
+      "type": "string"
+    },
+    "reasons": {
+      "items": {
+        "type": "string"
+      },
+      "title": "Reasons",
+      "type": "array"
+    },
+    "score": {
+      "maximum": 100,
+      "minimum": 0,
+      "title": "Score",
+      "type": "integer"
+    }
+  },
+  "required": [
+    "incident_id",
+    "score",
+    "reasons"
+  ],
+  "title": "CorrelationCandidate",
+  "type": "object"
+}

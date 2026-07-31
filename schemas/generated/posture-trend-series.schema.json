@@ -1,0 +1,75 @@
+{
+  "$defs": {
+    "PostureTrendPoint": {
+      "additionalProperties": false,
+      "properties": {
+        "accepted_exceptions": {
+          "minimum": 0,
+          "title": "Accepted Exceptions",
+          "type": "integer"
+        },
+        "completed_at": {
+          "format": "date-time",
+          "title": "Completed At",
+          "type": "string"
+        },
+        "failing": {
+          "minimum": 0,
+          "title": "Failing",
+          "type": "integer"
+        },
+        "open_findings": {
+          "minimum": 0,
+          "title": "Open Findings",
+          "type": "integer"
+        },
+        "passing": {
+          "minimum": 0,
+          "title": "Passing",
+          "type": "integer"
+        },
+        "posture_score": {
+          "maximum": 100,
+          "minimum": 0,
+          "title": "Posture Score",
+          "type": "integer"
+        },
+        "scan_id": {
+          "title": "Scan Id",
+          "type": "string"
+        }
+      },
+      "required": [
+        "scan_id",
+        "completed_at",
+        "posture_score",
+        "failing",
+        "passing",
+        "open_findings",
+        "accepted_exceptions"
+      ],
+      "title": "PostureTrendPoint",
+      "type": "object"
+    }
+  },
+  "additionalProperties": false,
+  "properties": {
+    "points": {
+      "items": {
+        "$ref": "#/$defs/PostureTrendPoint"
+      },
+      "title": "Points",
+      "type": "array"
+    },
+    "tenant_id": {
+      "title": "Tenant Id",
+      "type": "string"
+    }
+  },
+  "required": [
+    "tenant_id",
+    "points"
+  ],
+  "title": "PostureTrendSeries",
+  "type": "object"
+}

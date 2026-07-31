@@ -1,0 +1,715 @@
+{
+  "$defs": {
+    "AcknowledgmentState": {
+      "enum": [
+        "pending",
+        "acknowledged",
+        "breached"
+      ],
+      "title": "AcknowledgmentState",
+      "type": "string"
+    },
+    "AttemptOutcome": {
+      "enum": [
+        "delivered",
+        "ack_pending",
+        "retry_scheduled",
+        "dead_letter"
+      ],
+      "title": "AttemptOutcome",
+      "type": "string"
+    },
+    "DeliveryState": {
+      "enum": [
+        "pending",
+        "partial",
+        "delivered",
+        "dead_letter"
+      ],
+      "title": "DeliveryState",
+      "type": "string"
+    },
+    "DeliveryStatus": {
+      "enum": [
+        "pending",
+        "in_flight",
+        "retry_scheduled",
+        "ack_pending",
+        "delivered",
+        "acknowledged",
+        "dead_letter"
+      ],
+      "title": "DeliveryStatus",
+      "type": "string"
+    },
+    "EscalationLevel": {
+      "enum": [
+        "none",
+        "review_queue",
+        "soc_urgent",
+        "incident_page"
+      ],
+      "title": "EscalationLevel",
+      "type": "string"
+    },
+    "NotificationAttempt": {
+      "additionalProperties": false,
+      "properties": {
+        "attempt_id": {
+          "pattern": "^nat_[0-9a-f]{32}$",
+          "title": "Attempt Id",
+          "type": "string"
+        },
+        "attempt_number": {
+          "maximum": 1000,
+          "minimum": 1,
+          "title": "Attempt Number",
+          "type": "integer"
+        },
+        "attempt_sha256": {
+          "pattern": "^[0-9a-f]{64}$",
+          "title": "Attempt Sha256",
+          "type": "string"
+        },
+        "attempted_at": {
+          "format": "date-time",
+          "title": "Attempted At",
+          "type": "string"
+        },
+        "delivery_id": {
+          "pattern": "^ndv_[0-9a-f]{32}$",
+          "title": "Delivery Id",
+          "type": "string"
+        },
+        "error_code": {
+          "anyOf": [
+            {
+              "pattern": "^[a-z][a-z0-9_]{2,63}$",
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Error Code"
+        },
+        "latency_ms": {
+          "maximum": 120000,
+          "minimum": 0,
+          "title": "Latency Ms",
+          "type": "integer"
+        },
+        "notification_id": {
+          "pattern": "^ntf_[0-9a-f]{32}$",
+          "title": "Notification Id",
+          "type": "string"
+        },
+        "outcome": {
+          "$ref": "#/$defs/AttemptOutcome"
+        },
+        "provider_receipt_sha256": {
+          "anyOf": [
+            {
+              "pattern": "^[0-9a-f]{64}$",
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Provider Receipt Sha256"
+        },
+        "redrive_count": {
+          "maximum": 5,
+          "minimum": 0,
+          "title": "Redrive Count",
+          "type": "integer"
+        },
+        "tenant_id": {
+          "maxLength": 128,
+          "minLength": 1,
+          "title": "Tenant Id",
+          "type": "string"
+        }
+      },
+      "required": [
+        "delivery_id",
+        "notification_id",
+        "tenant_id",
+        "attempt_number",
+        "redrive_count",
+        "outcome",
+        "latency_ms",
+        "attempted_at",
+        "attempt_sha256"
+      ],
+      "title": "NotificationAttempt",
+      "type": "object"
+    },
+    "NotificationAuditEntry": {
+      "additionalProperties": false,
+      "properties": {
+        "action": {
+          "pattern": "^[a-z][a-z0-9_]{2,63}$",
+          "title": "Action",
+          "type": "string"
+        },
+        "actor_id": {
+          "pattern": "^(analyst|system|workload)://[A-Za-z0-9_.@/-]+$",
+          "title": "Actor Id",
+          "type": "string"
+        },
+        "audit_id": {
+          "pattern": "^nau_[0-9a-f]{32}$",
+          "title": "Audit Id",
+          "type": "string"
+        },
+        "audit_sha256": {
+          "pattern": "^[0-9a-f]{64}$",
+          "title": "Audit Sha256",
+          "type": "string"
+        },
+        "delivery_state_after": {
+          "$ref": "#/$defs/DeliveryState"
+        },
+        "delivery_state_before": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/DeliveryState"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        },
+        "detail_sha256": {
+          "pattern": "^[0-9a-f]{64}$",
+          "title": "Detail Sha256",
+          "type": "string"
+        },
+        "notification_id": {
+          "pattern": "^ntf_[0-9a-f]{32}$",
+          "title": "Notification Id",
+          "type": "string"
+        },
+        "occurred_at": {
+          "format": "date-time",
+          "title": "Occurred At",
+          "type": "string"
+        },
+        "previous_sha256": {
+          "pattern": "^[0-9a-f]{64}$",
+          "title": "Previous Sha256",
+          "type": "string"
+        },
+        "sequence": {
+          "maximum": 2000,
+          "minimum": 1,
+          "title": "Sequence",
+          "type": "integer"
+        },
+        "tenant_id": {
+          "maxLength": 128,
+          "minLength": 1,
+          "title": "Tenant Id",
+          "type": "string"
+        }
+      },
+      "required": [
+        "notification_id",
+        "tenant_id",
+        "sequence",
+        "actor_id",
+        "action",
+        "delivery_state_after",
+        "detail_sha256",
+        "occurred_at",
+        "previous_sha256",
+        "audit_sha256"
+      ],
+      "title": "NotificationAuditEntry",
+      "type": "object"
+    },
+    "NotificationChannel": {
+      "enum": [
+        "on_call",
+        "ticket",
+        "email",
+        "messaging"
+      ],
+      "title": "NotificationChannel",
+      "type": "string"
+    },
+    "NotificationDelivery": {
+      "additionalProperties": false,
+      "properties": {
+        "accepted_at": {
+          "anyOf": [
+            {
+              "format": "date-time",
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Accepted At"
+        },
+        "acknowledged_at": {
+          "anyOf": [
+            {
+              "format": "date-time",
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Acknowledged At"
+        },
+        "attempts": {
+          "default": 0,
+          "maximum": 1000,
+          "minimum": 0,
+          "title": "Attempts",
+          "type": "integer"
+        },
+        "body": {
+          "maxLength": 1024,
+          "minLength": 3,
+          "title": "Body",
+          "type": "string"
+        },
+        "channel": {
+          "$ref": "#/$defs/NotificationChannel"
+        },
+        "created_at": {
+          "format": "date-time",
+          "title": "Created At",
+          "type": "string"
+        },
+        "delivery_id": {
+          "pattern": "^ndv_[0-9a-f]{32}$",
+          "title": "Delivery Id",
+          "type": "string"
+        },
+        "delivery_sha256": {
+          "pattern": "^[0-9a-f]{64}$",
+          "title": "Delivery Sha256",
+          "type": "string"
+        },
+        "destination_id": {
+          "pattern": "^destination://[A-Za-z0-9_.@/-]+$",
+          "title": "Destination Id",
+          "type": "string"
+        },
+        "idempotency_key": {
+          "pattern": "^notify_[0-9a-f]{64}$",
+          "title": "Idempotency Key",
+          "type": "string"
+        },
+        "last_error_code": {
+          "anyOf": [
+            {
+              "pattern": "^[a-z][a-z0-9_]{2,63}$",
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Last Error Code"
+        },
+        "max_attempts": {
+          "maximum": 20,
+          "minimum": 1,
+          "title": "Max Attempts",
+          "type": "integer"
+        },
+        "message_sha256": {
+          "pattern": "^[0-9a-f]{64}$",
+          "title": "Message Sha256",
+          "type": "string"
+        },
+        "next_attempt_at": {
+          "format": "date-time",
+          "title": "Next Attempt At",
+          "type": "string"
+        },
+        "notification_id": {
+          "pattern": "^ntf_[0-9a-f]{32}$",
+          "title": "Notification Id",
+          "type": "string"
+        },
+        "provider_ack_required": {
+          "title": "Provider Ack Required",
+          "type": "boolean"
+        },
+        "provider_receipt_sha256": {
+          "anyOf": [
+            {
+              "pattern": "^[0-9a-f]{64}$",
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Provider Receipt Sha256"
+        },
+        "provider_reference_sha256": {
+          "anyOf": [
+            {
+              "pattern": "^[0-9a-f]{64}$",
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Provider Reference Sha256"
+        },
+        "recipient": {
+          "pattern": "^analyst://[A-Za-z0-9_.@/-]+$",
+          "title": "Recipient",
+          "type": "string"
+        },
+        "redrive_count": {
+          "default": 0,
+          "maximum": 5,
+          "minimum": 0,
+          "title": "Redrive Count",
+          "type": "integer"
+        },
+        "retry_base_seconds": {
+          "maximum": 3600,
+          "minimum": 1,
+          "title": "Retry Base Seconds",
+          "type": "integer"
+        },
+        "status": {
+          "$ref": "#/$defs/DeliveryStatus",
+          "default": "pending"
+        },
+        "subject": {
+          "maxLength": 256,
+          "minLength": 3,
+          "title": "Subject",
+          "type": "string"
+        },
+        "template_id": {
+          "pattern": "^template://[A-Za-z0-9_.@/-]+$",
+          "title": "Template Id",
+          "type": "string"
+        },
+        "template_version": {
+          "minimum": 1,
+          "title": "Template Version",
+          "type": "integer"
+        },
+        "tenant_id": {
+          "maxLength": 128,
+          "minLength": 1,
+          "title": "Tenant Id",
+          "type": "string"
+        },
+        "updated_at": {
+          "format": "date-time",
+          "title": "Updated At",
+          "type": "string"
+        }
+      },
+      "required": [
+        "notification_id",
+        "tenant_id",
+        "destination_id",
+        "channel",
+        "template_id",
+        "template_version",
+        "recipient",
+        "subject",
+        "body",
+        "idempotency_key",
+        "message_sha256",
+        "provider_ack_required",
+        "max_attempts",
+        "retry_base_seconds",
+        "next_attempt_at",
+        "created_at",
+        "updated_at",
+        "delivery_sha256"
+      ],
+      "title": "NotificationDelivery",
+      "type": "object"
+    },
+    "NotificationRecord": {
+      "additionalProperties": false,
+      "properties": {
+        "acknowledged_at": {
+          "anyOf": [
+            {
+              "format": "date-time",
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Acknowledged At"
+        },
+        "acknowledged_by": {
+          "anyOf": [
+            {
+              "pattern": "^(analyst|system)://[A-Za-z0-9_.@/-]+$",
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Acknowledged By"
+        },
+        "acknowledgment_due_at": {
+          "format": "date-time",
+          "title": "Acknowledgment Due At",
+          "type": "string"
+        },
+        "acknowledgment_note": {
+          "anyOf": [
+            {
+              "maxLength": 512,
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Acknowledgment Note"
+        },
+        "acknowledgment_state": {
+          "$ref": "#/$defs/AcknowledgmentState",
+          "default": "pending"
+        },
+        "alert_id": {
+          "pattern": "^alr_[A-Za-z0-9]+$",
+          "title": "Alert Id",
+          "type": "string"
+        },
+        "alert_type": {
+          "pattern": "^[a-z][a-z0-9_]{2,63}$",
+          "title": "Alert Type",
+          "type": "string"
+        },
+        "audit_count": {
+          "default": 0,
+          "maximum": 2000,
+          "minimum": 0,
+          "title": "Audit Count",
+          "type": "integer"
+        },
+        "audit_head_sha256": {
+          "default": "0000000000000000000000000000000000000000000000000000000000000000",
+          "pattern": "^[0-9a-f]{64}$",
+          "title": "Audit Head Sha256",
+          "type": "string"
+        },
+        "case_id": {
+          "anyOf": [
+            {
+              "pattern": "^case_[0-9a-f]{32}$",
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Case Id"
+        },
+        "correlation_incident_id": {
+          "anyOf": [
+            {
+              "pattern": "^inc_[A-Za-z0-9]+$",
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Correlation Incident Id"
+        },
+        "created_at": {
+          "format": "date-time",
+          "title": "Created At",
+          "type": "string"
+        },
+        "decision": {
+          "pattern": "^(deny|require_approval|allow_with_obligations|allow)$",
+          "title": "Decision",
+          "type": "string"
+        },
+        "delivery_state": {
+          "$ref": "#/$defs/DeliveryState",
+          "default": "pending"
+        },
+        "escalation_level": {
+          "$ref": "#/$defs/EscalationLevel"
+        },
+        "finding_id": {
+          "pattern": "^fnd_[A-Za-z0-9]+$",
+          "title": "Finding Id",
+          "type": "string"
+        },
+        "notification_id": {
+          "pattern": "^ntf_[0-9a-f]{32}$",
+          "title": "Notification Id",
+          "type": "string"
+        },
+        "on_call_actor": {
+          "pattern": "^analyst://[A-Za-z0-9_.@/-]+$",
+          "title": "On Call Actor",
+          "type": "string"
+        },
+        "policy_sha256": {
+          "pattern": "^[0-9a-f]{64}$",
+          "title": "Policy Sha256",
+          "type": "string"
+        },
+        "policy_version": {
+          "maxLength": 128,
+          "minLength": 3,
+          "title": "Policy Version",
+          "type": "string"
+        },
+        "priority": {
+          "pattern": "^P[0-3]$",
+          "title": "Priority",
+          "type": "string"
+        },
+        "queue": {
+          "maxLength": 128,
+          "minLength": 1,
+          "title": "Queue",
+          "type": "string"
+        },
+        "record_sha256": {
+          "pattern": "^[0-9a-f]{64}$",
+          "title": "Record Sha256",
+          "type": "string"
+        },
+        "route_id": {
+          "pattern": "^route://[A-Za-z0-9_.@/-]+$",
+          "title": "Route Id",
+          "type": "string"
+        },
+        "schedule_id": {
+          "pattern": "^schedule://[A-Za-z0-9_.@/-]+$",
+          "title": "Schedule Id",
+          "type": "string"
+        },
+        "schedule_version": {
+          "minimum": 1,
+          "title": "Schedule Version",
+          "type": "integer"
+        },
+        "schema_version": {
+          "default": "1.0.0",
+          "title": "Schema Version",
+          "type": "string"
+        },
+        "severity": {
+          "pattern": "^(info|low|medium|high|critical)$",
+          "title": "Severity",
+          "type": "string"
+        },
+        "tenant_id": {
+          "maxLength": 128,
+          "minLength": 1,
+          "title": "Tenant Id",
+          "type": "string"
+        },
+        "updated_at": {
+          "format": "date-time",
+          "title": "Updated At",
+          "type": "string"
+        },
+        "version": {
+          "default": 1,
+          "minimum": 1,
+          "title": "Version",
+          "type": "integer"
+        }
+      },
+      "required": [
+        "tenant_id",
+        "finding_id",
+        "alert_id",
+        "alert_type",
+        "severity",
+        "priority",
+        "decision",
+        "escalation_level",
+        "queue",
+        "route_id",
+        "policy_version",
+        "policy_sha256",
+        "on_call_actor",
+        "schedule_id",
+        "schedule_version",
+        "acknowledgment_due_at",
+        "created_at",
+        "updated_at",
+        "record_sha256"
+      ],
+      "title": "NotificationRecord",
+      "type": "object"
+    }
+  },
+  "additionalProperties": false,
+  "properties": {
+    "attempts": {
+      "items": {
+        "$ref": "#/$defs/NotificationAttempt"
+      },
+      "maxItems": 1000,
+      "title": "Attempts",
+      "type": "array"
+    },
+    "audit": {
+      "items": {
+        "$ref": "#/$defs/NotificationAuditEntry"
+      },
+      "maxItems": 2000,
+      "title": "Audit",
+      "type": "array"
+    },
+    "deliveries": {
+      "items": {
+        "$ref": "#/$defs/NotificationDelivery"
+      },
+      "maxItems": 32,
+      "title": "Deliveries",
+      "type": "array"
+    },
+    "notification": {
+      "$ref": "#/$defs/NotificationRecord"
+    }
+  },
+  "required": [
+    "notification"
+  ],
+  "title": "NotificationDetail",
+  "type": "object"
+}

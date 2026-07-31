@@ -1,0 +1,116 @@
+{
+  "$defs": {
+    "DecisionAction": {
+      "enum": [
+        "allow",
+        "allow_with_obligations",
+        "require_approval",
+        "deny"
+      ],
+      "title": "DecisionAction",
+      "type": "string"
+    },
+    "Severity": {
+      "enum": [
+        "info",
+        "low",
+        "medium",
+        "high",
+        "critical"
+      ],
+      "title": "Severity",
+      "type": "string"
+    }
+  },
+  "additionalProperties": false,
+  "properties": {
+    "abstained": {
+      "title": "Abstained",
+      "type": "boolean"
+    },
+    "abstention_reason": {
+      "anyOf": [
+        {
+          "maxLength": 512,
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Abstention Reason"
+    },
+    "cited_evidence_refs": {
+      "items": {
+        "type": "string"
+      },
+      "maxItems": 256,
+      "title": "Cited Evidence Refs",
+      "type": "array"
+    },
+    "confidence": {
+      "maximum": 1.0,
+      "minimum": 0.0,
+      "title": "Confidence",
+      "type": "number"
+    },
+    "effect_allowed": {
+      "title": "Effect Allowed",
+      "type": "boolean"
+    },
+    "enforced_action": {
+      "$ref": "#/$defs/DecisionAction"
+    },
+    "latency_ms": {
+      "maximum": 300000,
+      "minimum": 0,
+      "title": "Latency Ms",
+      "type": "integer"
+    },
+    "model_completed": {
+      "title": "Model Completed",
+      "type": "boolean"
+    },
+    "model_invoked": {
+      "title": "Model Invoked",
+      "type": "boolean"
+    },
+    "predicted_alert_types": {
+      "items": {
+        "type": "string"
+      },
+      "maxItems": 64,
+      "title": "Predicted Alert Types",
+      "type": "array"
+    },
+    "predicted_severity": {
+      "anyOf": [
+        {
+          "$ref": "#/$defs/Severity"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null
+    },
+    "proposed_action": {
+      "$ref": "#/$defs/DecisionAction"
+    }
+  },
+  "required": [
+    "predicted_alert_types",
+    "proposed_action",
+    "enforced_action",
+    "effect_allowed",
+    "confidence",
+    "cited_evidence_refs",
+    "model_invoked",
+    "model_completed",
+    "abstained",
+    "latency_ms"
+  ],
+  "title": "EvaluationPrediction",
+  "type": "object"
+}

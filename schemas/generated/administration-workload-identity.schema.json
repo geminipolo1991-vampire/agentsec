@@ -1,0 +1,110 @@
+{
+  "additionalProperties": false,
+  "properties": {
+    "credential_fingerprint": {
+      "pattern": "^[0-9a-f]{64}$",
+      "title": "Credential Fingerprint",
+      "type": "string"
+    },
+    "credential_reference": {
+      "pattern": "^credentialref://[A-Za-z0-9_.@/-]+$",
+      "title": "Credential Reference",
+      "type": "string"
+    },
+    "display_name": {
+      "maxLength": 128,
+      "minLength": 2,
+      "title": "Display Name",
+      "type": "string"
+    },
+    "expires_at": {
+      "format": "date-time",
+      "title": "Expires At",
+      "type": "string"
+    },
+    "issued_at": {
+      "format": "date-time",
+      "title": "Issued At",
+      "type": "string"
+    },
+    "record_sha256": {
+      "pattern": "^[0-9a-f]{64}$",
+      "title": "Record Sha256",
+      "type": "string"
+    },
+    "revoked_at": {
+      "anyOf": [
+        {
+          "format": "date-time",
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Revoked At"
+    },
+    "rotated_at": {
+      "anyOf": [
+        {
+          "format": "date-time",
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Rotated At"
+    },
+    "schema_version": {
+      "default": "1.0.0",
+      "title": "Schema Version",
+      "type": "string"
+    },
+    "scopes": {
+      "items": {
+        "type": "string"
+      },
+      "maxItems": 64,
+      "minItems": 1,
+      "title": "Scopes",
+      "type": "array",
+      "uniqueItems": true
+    },
+    "tenant_id": {
+      "title": "Tenant Id",
+      "type": "string"
+    },
+    "updated_by": {
+      "title": "Updated By",
+      "type": "string"
+    },
+    "version": {
+      "minimum": 1,
+      "title": "Version",
+      "type": "integer"
+    },
+    "workload_id": {
+      "pattern": "^workload://[A-Za-z0-9_.@/-]+$",
+      "title": "Workload Id",
+      "type": "string"
+    }
+  },
+  "required": [
+    "tenant_id",
+    "workload_id",
+    "display_name",
+    "credential_reference",
+    "credential_fingerprint",
+    "scopes",
+    "issued_at",
+    "expires_at",
+    "version",
+    "updated_by",
+    "record_sha256"
+  ],
+  "title": "WorkloadIdentityRecord",
+  "type": "object"
+}

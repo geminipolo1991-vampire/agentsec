@@ -1,0 +1,173 @@
+{
+  "$defs": {
+    "AlertStatus": {
+      "enum": [
+        "open",
+        "suppressed",
+        "promoted",
+        "closed"
+      ],
+      "title": "AlertStatus",
+      "type": "string"
+    },
+    "DecisionAction": {
+      "enum": [
+        "allow",
+        "allow_with_obligations",
+        "require_approval",
+        "deny"
+      ],
+      "title": "DecisionAction",
+      "type": "string"
+    },
+    "Severity": {
+      "enum": [
+        "info",
+        "low",
+        "medium",
+        "high",
+        "critical"
+      ],
+      "title": "Severity",
+      "type": "string"
+    }
+  },
+  "additionalProperties": false,
+  "properties": {
+    "alert_id": {
+      "maxLength": 128,
+      "minLength": 5,
+      "title": "Alert Id",
+      "type": "string"
+    },
+    "alert_type": {
+      "maxLength": 128,
+      "minLength": 1,
+      "title": "Alert Type",
+      "type": "string"
+    },
+    "confidence": {
+      "maximum": 1.0,
+      "minimum": 0.0,
+      "title": "Confidence",
+      "type": "number"
+    },
+    "created_at": {
+      "format": "date-time",
+      "title": "Created At",
+      "type": "string"
+    },
+    "detected_at": {
+      "format": "date-time",
+      "title": "Detected At",
+      "type": "string"
+    },
+    "detector_id": {
+      "maxLength": 128,
+      "minLength": 1,
+      "title": "Detector Id",
+      "type": "string"
+    },
+    "event_id": {
+      "maxLength": 128,
+      "minLength": 5,
+      "title": "Event Id",
+      "type": "string"
+    },
+    "evidence_ids": {
+      "items": {
+        "maxLength": 256,
+        "minLength": 1,
+        "type": "string"
+      },
+      "maxItems": 256,
+      "minItems": 1,
+      "title": "Evidence Ids",
+      "type": "array"
+    },
+    "framework_mappings": {
+      "items": {
+        "maxLength": 256,
+        "minLength": 1,
+        "type": "string"
+      },
+      "maxItems": 128,
+      "title": "Framework Mappings",
+      "type": "array"
+    },
+    "labels": {
+      "items": {
+        "type": "string"
+      },
+      "maxItems": 64,
+      "title": "Labels",
+      "type": "array",
+      "uniqueItems": true
+    },
+    "reason_codes": {
+      "items": {
+        "maxLength": 128,
+        "minLength": 1,
+        "type": "string"
+      },
+      "maxItems": 128,
+      "title": "Reason Codes",
+      "type": "array"
+    },
+    "recommended_action": {
+      "$ref": "#/$defs/DecisionAction"
+    },
+    "record_type": {
+      "const": "alert",
+      "default": "alert",
+      "title": "Record Type",
+      "type": "string"
+    },
+    "rule_version": {
+      "maxLength": 64,
+      "minLength": 1,
+      "title": "Rule Version",
+      "type": "string"
+    },
+    "schema_version": {
+      "const": "1.0.0",
+      "default": "1.0.0",
+      "title": "Schema Version",
+      "type": "string"
+    },
+    "severity": {
+      "$ref": "#/$defs/Severity"
+    },
+    "status": {
+      "$ref": "#/$defs/AlertStatus",
+      "default": "open"
+    },
+    "tenant_id": {
+      "maxLength": 128,
+      "minLength": 1,
+      "title": "Tenant Id",
+      "type": "string"
+    },
+    "title": {
+      "maxLength": 512,
+      "minLength": 1,
+      "title": "Title",
+      "type": "string"
+    }
+  },
+  "required": [
+    "tenant_id",
+    "alert_id",
+    "event_id",
+    "detector_id",
+    "rule_version",
+    "alert_type",
+    "title",
+    "severity",
+    "confidence",
+    "evidence_ids",
+    "recommended_action"
+  ],
+  "title": "AlertRecord",
+  "type": "object"
+}

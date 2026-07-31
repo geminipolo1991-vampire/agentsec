@@ -1,0 +1,41 @@
+{
+  "additionalProperties": false,
+  "properties": {
+    "action": {
+      "pattern": "^(submit|approve|reject|activate|retire)$",
+      "title": "Action",
+      "type": "string"
+    },
+    "comment": {
+      "maxLength": 512,
+      "minLength": 3,
+      "title": "Comment",
+      "type": "string"
+    },
+    "expected_revision": {
+      "minimum": 1,
+      "title": "Expected Revision",
+      "type": "integer"
+    },
+    "playbook_id": {
+      "pattern": "^playbook://[A-Za-z0-9_.@/-]+$",
+      "title": "Playbook Id",
+      "type": "string"
+    },
+    "version": {
+      "maximum": 1000000,
+      "minimum": 1,
+      "title": "Version",
+      "type": "integer"
+    }
+  },
+  "required": [
+    "playbook_id",
+    "version",
+    "action",
+    "expected_revision",
+    "comment"
+  ],
+  "title": "ResponsePlaybookActionRequest",
+  "type": "object"
+}

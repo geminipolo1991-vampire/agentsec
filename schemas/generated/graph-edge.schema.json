@@ -1,0 +1,109 @@
+{
+  "$defs": {
+    "SecurityEdgeType": {
+      "enum": [
+        "contains",
+        "uses_model",
+        "uses_tool",
+        "accesses",
+        "influences",
+        "calls",
+        "sends_to",
+        "authorized_by",
+        "produces"
+      ],
+      "title": "SecurityEdgeType",
+      "type": "string"
+    }
+  },
+  "additionalProperties": false,
+  "properties": {
+    "edge_id": {
+      "title": "Edge Id",
+      "type": "string"
+    },
+    "edge_type": {
+      "$ref": "#/$defs/SecurityEdgeType"
+    },
+    "evidence_refs": {
+      "items": {
+        "type": "string"
+      },
+      "title": "Evidence Refs",
+      "type": "array"
+    },
+    "record_sha256": {
+      "pattern": "^[0-9a-f]{64}$",
+      "title": "Record Sha256",
+      "type": "string"
+    },
+    "risk_factors": {
+      "items": {
+        "type": "string"
+      },
+      "title": "Risk Factors",
+      "type": "array"
+    },
+    "source_node_id": {
+      "title": "Source Node Id",
+      "type": "string"
+    },
+    "source_ref": {
+      "title": "Source Ref",
+      "type": "string"
+    },
+    "target_node_id": {
+      "title": "Target Node Id",
+      "type": "string"
+    },
+    "tenant_id": {
+      "title": "Tenant Id",
+      "type": "string"
+    },
+    "valid_from": {
+      "format": "date-time",
+      "title": "Valid From",
+      "type": "string"
+    },
+    "valid_to": {
+      "anyOf": [
+        {
+          "format": "date-time",
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Valid To"
+    },
+    "version": {
+      "minimum": 1,
+      "title": "Version",
+      "type": "integer"
+    },
+    "weight": {
+      "maximum": 100.0,
+      "minimum": 0.1,
+      "title": "Weight",
+      "type": "number"
+    }
+  },
+  "required": [
+    "tenant_id",
+    "edge_id",
+    "version",
+    "source_node_id",
+    "target_node_id",
+    "edge_type",
+    "weight",
+    "risk_factors",
+    "evidence_refs",
+    "source_ref",
+    "valid_from",
+    "record_sha256"
+  ],
+  "title": "SecurityGraphEdge",
+  "type": "object"
+}

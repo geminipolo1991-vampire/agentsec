@@ -1,0 +1,160 @@
+{
+  "$defs": {
+    "EnrichmentConnectorSpec": {
+      "additionalProperties": false,
+      "properties": {
+        "allowed_fact_keys": {
+          "items": {
+            "type": "string"
+          },
+          "maxItems": 64,
+          "minItems": 1,
+          "title": "Allowed Fact Keys",
+          "type": "array",
+          "uniqueItems": true
+        },
+        "cache_ttl_seconds": {
+          "default": 300,
+          "maximum": 86400,
+          "minimum": 0,
+          "title": "Cache Ttl Seconds",
+          "type": "integer"
+        },
+        "description": {
+          "maxLength": 512,
+          "minLength": 3,
+          "title": "Description",
+          "type": "string"
+        },
+        "mandatory": {
+          "default": false,
+          "title": "Mandatory",
+          "type": "boolean"
+        },
+        "max_stale_seconds": {
+          "default": 3600,
+          "maximum": 604800,
+          "minimum": 0,
+          "title": "Max Stale Seconds",
+          "type": "integer"
+        },
+        "name": {
+          "pattern": "^[a-z][a-z0-9_.-]{2,63}$",
+          "title": "Name",
+          "type": "string"
+        },
+        "required_fields": {
+          "items": {
+            "type": "string"
+          },
+          "maxItems": 15,
+          "title": "Required Fields",
+          "type": "array",
+          "uniqueItems": true
+        },
+        "timeout_ms": {
+          "default": 1000,
+          "maximum": 10000,
+          "minimum": 10,
+          "title": "Timeout Ms",
+          "type": "integer"
+        },
+        "version": {
+          "maxLength": 64,
+          "minLength": 1,
+          "title": "Version",
+          "type": "string"
+        }
+      },
+      "required": [
+        "name",
+        "version",
+        "description",
+        "allowed_fact_keys"
+      ],
+      "title": "EnrichmentConnectorSpec",
+      "type": "object"
+    },
+    "HttpEnrichmentConnectorConfig": {
+      "additionalProperties": false,
+      "properties": {
+        "bearer_token_env": {
+          "anyOf": [
+            {
+              "pattern": "^[A-Z][A-Z0-9_]{2,127}$",
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Bearer Token Env"
+        },
+        "connector": {
+          "$ref": "#/$defs/EnrichmentConnectorSpec"
+        },
+        "endpoint": {
+          "maxLength": 2048,
+          "minLength": 9,
+          "title": "Endpoint",
+          "type": "string"
+        }
+      },
+      "required": [
+        "connector",
+        "endpoint"
+      ],
+      "title": "HttpEnrichmentConnectorConfig",
+      "type": "object"
+    }
+  },
+  "additionalProperties": false,
+  "properties": {
+    "allowed_input_fields": {
+      "items": {
+        "type": "string"
+      },
+      "maxItems": 15,
+      "title": "Allowed Input Fields",
+      "type": "array",
+      "uniqueItems": true
+    },
+    "circuit_cooldown_seconds": {
+      "default": 60,
+      "maximum": 3600,
+      "minimum": 1,
+      "title": "Circuit Cooldown Seconds",
+      "type": "integer"
+    },
+    "circuit_failure_threshold": {
+      "default": 3,
+      "maximum": 20,
+      "minimum": 1,
+      "title": "Circuit Failure Threshold",
+      "type": "integer"
+    },
+    "connectors": {
+      "items": {
+        "$ref": "#/$defs/HttpEnrichmentConnectorConfig"
+      },
+      "maxItems": 32,
+      "title": "Connectors",
+      "type": "array"
+    },
+    "max_workers": {
+      "default": 8,
+      "maximum": 32,
+      "minimum": 1,
+      "title": "Max Workers",
+      "type": "integer"
+    },
+    "schema_version": {
+      "default": "1.0.0",
+      "title": "Schema Version",
+      "type": "string"
+    }
+  },
+  "title": "EnrichmentRuntimeConfig",
+  "type": "object"
+}

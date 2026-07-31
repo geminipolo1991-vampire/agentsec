@@ -1,0 +1,104 @@
+{
+  "$defs": {
+    "ExecutionStatus": {
+      "enum": [
+        "dry_run_succeeded",
+        "awaiting_approval",
+        "approved",
+        "running",
+        "succeeded",
+        "failed",
+        "rollback_awaiting_approval",
+        "rollback_approved",
+        "rolling_back",
+        "rolled_back",
+        "rollback_failed"
+      ],
+      "title": "ExecutionStatus",
+      "type": "string"
+    }
+  },
+  "additionalProperties": false,
+  "properties": {
+    "action": {
+      "pattern": "^[a-z][a-z0-9_]{2,63}$",
+      "title": "Action",
+      "type": "string"
+    },
+    "actor_id": {
+      "pattern": "^(analyst|system)://[A-Za-z0-9_.@/-]+$",
+      "title": "Actor Id",
+      "type": "string"
+    },
+    "audit_id": {
+      "pattern": "^rau_[0-9a-f]{32}$",
+      "title": "Audit Id",
+      "type": "string"
+    },
+    "audit_sha256": {
+      "pattern": "^[0-9a-f]{64}$",
+      "title": "Audit Sha256",
+      "type": "string"
+    },
+    "detail_sha256": {
+      "pattern": "^[0-9a-f]{64}$",
+      "title": "Detail Sha256",
+      "type": "string"
+    },
+    "execution_id": {
+      "pattern": "^rex_[0-9a-f]{32}$",
+      "title": "Execution Id",
+      "type": "string"
+    },
+    "occurred_at": {
+      "format": "date-time",
+      "title": "Occurred At",
+      "type": "string"
+    },
+    "previous_sha256": {
+      "pattern": "^[0-9a-f]{64}$",
+      "title": "Previous Sha256",
+      "type": "string"
+    },
+    "sequence": {
+      "maximum": 2000,
+      "minimum": 1,
+      "title": "Sequence",
+      "type": "integer"
+    },
+    "status_after": {
+      "$ref": "#/$defs/ExecutionStatus"
+    },
+    "status_before": {
+      "anyOf": [
+        {
+          "$ref": "#/$defs/ExecutionStatus"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null
+    },
+    "tenant_id": {
+      "maxLength": 128,
+      "minLength": 1,
+      "title": "Tenant Id",
+      "type": "string"
+    }
+  },
+  "required": [
+    "execution_id",
+    "tenant_id",
+    "sequence",
+    "actor_id",
+    "action",
+    "status_after",
+    "detail_sha256",
+    "occurred_at",
+    "previous_sha256",
+    "audit_sha256"
+  ],
+  "title": "ResponseAuditEntry",
+  "type": "object"
+}

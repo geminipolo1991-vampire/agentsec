@@ -1,0 +1,132 @@
+{
+  "$defs": {
+    "RecordedRoleTemplate": {
+      "additionalProperties": false,
+      "properties": {
+        "alternative_rationale": {
+          "default": "Keep the deterministic action while a human reviews the cited evidence.",
+          "maxLength": 512,
+          "minLength": 3,
+          "title": "Alternative Rationale",
+          "type": "string"
+        },
+        "alternative_title": {
+          "default": "Preserve deterministic control",
+          "maxLength": 128,
+          "minLength": 3,
+          "title": "Alternative Title",
+          "type": "string"
+        },
+        "confidence": {
+          "maximum": 1.0,
+          "minimum": 0.0,
+          "title": "Confidence",
+          "type": "number"
+        },
+        "escalation_advice": {
+          "anyOf": [
+            {
+              "maxLength": 256,
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Escalation Advice"
+        },
+        "hypothesis": {
+          "anyOf": [
+            {
+              "maxLength": 1024,
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Hypothesis"
+        },
+        "reason_codes": {
+          "items": {
+            "type": "string"
+          },
+          "maxItems": 8,
+          "minItems": 1,
+          "title": "Reason Codes",
+          "type": "array"
+        },
+        "response_advice": {
+          "items": {
+            "type": "string"
+          },
+          "maxItems": 8,
+          "title": "Response Advice",
+          "type": "array"
+        },
+        "summary": {
+          "maxLength": 1024,
+          "minLength": 10,
+          "title": "Summary",
+          "type": "string"
+        },
+        "uncertainties": {
+          "items": {
+            "type": "string"
+          },
+          "maxItems": 8,
+          "title": "Uncertainties",
+          "type": "array"
+        }
+      },
+      "required": [
+        "summary",
+        "confidence",
+        "reason_codes"
+      ],
+      "title": "RecordedRoleTemplate",
+      "type": "object"
+    }
+  },
+  "additionalProperties": false,
+  "properties": {
+    "model_id": {
+      "maxLength": 128,
+      "minLength": 1,
+      "title": "Model Id",
+      "type": "string"
+    },
+    "provider": {
+      "default": "codex",
+      "title": "Provider",
+      "type": "string"
+    },
+    "recording_id": {
+      "maxLength": 128,
+      "minLength": 3,
+      "title": "Recording Id",
+      "type": "string"
+    },
+    "roles": {
+      "additionalProperties": {
+        "$ref": "#/$defs/RecordedRoleTemplate"
+      },
+      "title": "Roles",
+      "type": "object"
+    },
+    "schema_version": {
+      "default": "1.0.0",
+      "title": "Schema Version",
+      "type": "string"
+    }
+  },
+  "required": [
+    "model_id",
+    "recording_id",
+    "roles"
+  ],
+  "title": "RecordedAnalystConfiguration",
+  "type": "object"
+}

@@ -1,0 +1,137 @@
+{
+  "$defs": {
+    "EvidenceType": {
+      "enum": [
+        "telemetry",
+        "detector",
+        "ledger",
+        "enrichment",
+        "model",
+        "analyst",
+        "response"
+      ],
+      "title": "EvidenceType",
+      "type": "string"
+    },
+    "IntegrityStatus": {
+      "enum": [
+        "verified",
+        "unverified",
+        "invalid"
+      ],
+      "title": "IntegrityStatus",
+      "type": "string"
+    }
+  },
+  "additionalProperties": false,
+  "properties": {
+    "claim": {
+      "maxLength": 2048,
+      "minLength": 1,
+      "title": "Claim",
+      "type": "string"
+    },
+    "collected_at": {
+      "format": "date-time",
+      "title": "Collected At",
+      "type": "string"
+    },
+    "content_sha256": {
+      "pattern": "^[0-9a-f]{64}$",
+      "title": "Content Sha256",
+      "type": "string"
+    },
+    "created_at": {
+      "format": "date-time",
+      "title": "Created At",
+      "type": "string"
+    },
+    "data_classes": {
+      "items": {
+        "type": "string"
+      },
+      "maxItems": 64,
+      "title": "Data Classes",
+      "type": "array",
+      "uniqueItems": true
+    },
+    "evidence_id": {
+      "maxLength": 128,
+      "minLength": 5,
+      "title": "Evidence Id",
+      "type": "string"
+    },
+    "evidence_type": {
+      "$ref": "#/$defs/EvidenceType"
+    },
+    "integrity_status": {
+      "$ref": "#/$defs/IntegrityStatus"
+    },
+    "labels": {
+      "items": {
+        "type": "string"
+      },
+      "maxItems": 64,
+      "title": "Labels",
+      "type": "array",
+      "uniqueItems": true
+    },
+    "provenance_refs": {
+      "items": {
+        "maxLength": 256,
+        "minLength": 1,
+        "type": "string"
+      },
+      "maxItems": 256,
+      "title": "Provenance Refs",
+      "type": "array"
+    },
+    "record_type": {
+      "const": "evidence",
+      "default": "evidence",
+      "title": "Record Type",
+      "type": "string"
+    },
+    "schema_version": {
+      "const": "1.0.0",
+      "default": "1.0.0",
+      "title": "Schema Version",
+      "type": "string"
+    },
+    "source": {
+      "maxLength": 128,
+      "minLength": 1,
+      "title": "Source",
+      "type": "string"
+    },
+    "subject_refs": {
+      "items": {
+        "maxLength": 256,
+        "minLength": 1,
+        "type": "string"
+      },
+      "maxItems": 256,
+      "minItems": 1,
+      "title": "Subject Refs",
+      "type": "array"
+    },
+    "tenant_id": {
+      "maxLength": 128,
+      "minLength": 1,
+      "title": "Tenant Id",
+      "type": "string"
+    }
+  },
+  "required": [
+    "tenant_id",
+    "evidence_id",
+    "evidence_type",
+    "subject_refs",
+    "source",
+    "claim",
+    "content_sha256",
+    "integrity_status"
+  ],
+  "title": "EvidenceRecord",
+  "type": "object"
+}

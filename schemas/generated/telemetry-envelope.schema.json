@@ -1,0 +1,468 @@
+{
+  "$defs": {
+    "CollectionMode": {
+      "enum": [
+        "metadata_only",
+        "redacted",
+        "encrypted_raw"
+      ],
+      "title": "CollectionMode",
+      "type": "string"
+    },
+    "ContentEvidence": {
+      "additionalProperties": false,
+      "properties": {
+        "byte_length": {
+          "minimum": 0,
+          "title": "Byte Length",
+          "type": "integer"
+        },
+        "ciphertext": {
+          "anyOf": [
+            {
+              "maxLength": 2000000,
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Ciphertext"
+        },
+        "collection_mode": {
+          "$ref": "#/$defs/CollectionMode"
+        },
+        "data_classes": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Data Classes",
+          "type": "array",
+          "uniqueItems": true
+        },
+        "field_name": {
+          "maxLength": 128,
+          "minLength": 1,
+          "title": "Field Name",
+          "type": "string"
+        },
+        "key_reference": {
+          "anyOf": [
+            {
+              "maxLength": 512,
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Key Reference"
+        },
+        "omitted_reason": {
+          "anyOf": [
+            {
+              "maxLength": 128,
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Omitted Reason"
+        },
+        "protection_algorithm": {
+          "anyOf": [
+            {
+              "maxLength": 64,
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Protection Algorithm"
+        },
+        "redacted_preview": {
+          "anyOf": [
+            {
+              "maxLength": 8192,
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Redacted Preview"
+        },
+        "redaction_count": {
+          "default": 0,
+          "minimum": 0,
+          "title": "Redaction Count",
+          "type": "integer"
+        },
+        "sha256": {
+          "pattern": "^[0-9a-f]{64}$",
+          "title": "Sha256",
+          "type": "string"
+        }
+      },
+      "required": [
+        "field_name",
+        "collection_mode",
+        "sha256",
+        "byte_length"
+      ],
+      "title": "ContentEvidence",
+      "type": "object"
+    },
+    "TelemetryContext": {
+      "additionalProperties": false,
+      "properties": {
+        "agent_id": {
+          "maxLength": 128,
+          "minLength": 1,
+          "title": "Agent Id",
+          "type": "string"
+        },
+        "application_id": {
+          "maxLength": 128,
+          "minLength": 1,
+          "title": "Application Id",
+          "type": "string"
+        },
+        "collector_id": {
+          "maxLength": 128,
+          "minLength": 1,
+          "title": "Collector Id",
+          "type": "string"
+        },
+        "environment": {
+          "default": "unknown",
+          "maxLength": 64,
+          "minLength": 1,
+          "title": "Environment",
+          "type": "string"
+        },
+        "model_id": {
+          "anyOf": [
+            {
+              "maxLength": 256,
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Model Id"
+        },
+        "provider": {
+          "anyOf": [
+            {
+              "maxLength": 64,
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Provider"
+        },
+        "session_id": {
+          "maxLength": 128,
+          "minLength": 1,
+          "title": "Session Id",
+          "type": "string"
+        },
+        "source_id": {
+          "maxLength": 256,
+          "minLength": 1,
+          "title": "Source Id",
+          "type": "string"
+        },
+        "source_type": {
+          "maxLength": 64,
+          "minLength": 1,
+          "title": "Source Type",
+          "type": "string"
+        },
+        "tenant_id": {
+          "maxLength": 128,
+          "minLength": 1,
+          "title": "Tenant Id",
+          "type": "string"
+        },
+        "trace_id": {
+          "maxLength": 128,
+          "minLength": 1,
+          "title": "Trace Id",
+          "type": "string"
+        }
+      },
+      "required": [
+        "tenant_id",
+        "application_id",
+        "agent_id",
+        "session_id",
+        "trace_id",
+        "source_id",
+        "source_type",
+        "collector_id"
+      ],
+      "title": "TelemetryContext",
+      "type": "object"
+    },
+    "TelemetryEventKind": {
+      "enum": [
+        "model_request",
+        "model_response",
+        "model_call",
+        "tool_call_request",
+        "tool_call_result",
+        "agent_message",
+        "rag_retrieval",
+        "memory_read",
+        "memory_write",
+        "guardrail_decision",
+        "error",
+        "heartbeat"
+      ],
+      "title": "TelemetryEventKind",
+      "type": "string"
+    }
+  },
+  "additionalProperties": false,
+  "description": "Safe normalized result of collection; suitable for downstream ingestion.",
+  "properties": {
+    "attributes": {
+      "additionalProperties": {
+        "anyOf": [
+          {
+            "type": "string"
+          },
+          {
+            "type": "integer"
+          },
+          {
+            "type": "number"
+          },
+          {
+            "type": "boolean"
+          }
+        ]
+      },
+      "title": "Attributes",
+      "type": "object"
+    },
+    "collection_mode": {
+      "$ref": "#/$defs/CollectionMode"
+    },
+    "content_evidence": {
+      "items": {
+        "$ref": "#/$defs/ContentEvidence"
+      },
+      "title": "Content Evidence",
+      "type": "array"
+    },
+    "context": {
+      "$ref": "#/$defs/TelemetryContext"
+    },
+    "data_classes": {
+      "items": {
+        "type": "string"
+      },
+      "title": "Data Classes",
+      "type": "array",
+      "uniqueItems": true
+    },
+    "destination": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Destination"
+    },
+    "duration_ms": {
+      "anyOf": [
+        {
+          "type": "integer"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Duration Ms"
+    },
+    "error_code": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Error Code"
+    },
+    "event_id": {
+      "title": "Event Id",
+      "type": "string"
+    },
+    "indicators": {
+      "items": {
+        "type": "string"
+      },
+      "title": "Indicators",
+      "type": "array",
+      "uniqueItems": true
+    },
+    "input_tokens": {
+      "anyOf": [
+        {
+          "type": "integer"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Input Tokens"
+    },
+    "kind": {
+      "$ref": "#/$defs/TelemetryEventKind"
+    },
+    "observed_at": {
+      "format": "date-time",
+      "title": "Observed At",
+      "type": "string"
+    },
+    "occurred_at": {
+      "format": "date-time",
+      "title": "Occurred At",
+      "type": "string"
+    },
+    "operation": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Operation"
+    },
+    "output_tokens": {
+      "anyOf": [
+        {
+          "type": "integer"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Output Tokens"
+    },
+    "parent_span_id": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Parent Span Id"
+    },
+    "resource": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Resource"
+    },
+    "schema_version": {
+      "default": "1.0.0",
+      "title": "Schema Version",
+      "type": "string"
+    },
+    "sequence": {
+      "anyOf": [
+        {
+          "type": "integer"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Sequence"
+    },
+    "span_id": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Span Id"
+    },
+    "success": {
+      "anyOf": [
+        {
+          "type": "boolean"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Success"
+    },
+    "tool_name": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Tool Name"
+    }
+  },
+  "required": [
+    "event_id",
+    "occurred_at",
+    "context",
+    "kind",
+    "collection_mode"
+  ],
+  "title": "TelemetryEnvelope",
+  "type": "object"
+}

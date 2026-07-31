@@ -1,0 +1,59 @@
+{
+  "additionalProperties": false,
+  "properties": {
+    "action": {
+      "title": "Action",
+      "type": "string"
+    },
+    "actor_id": {
+      "title": "Actor Id",
+      "type": "string"
+    },
+    "detail_sha256": {
+      "pattern": "^[0-9a-f]{64}$",
+      "title": "Detail Sha256",
+      "type": "string"
+    },
+    "entry_sha256": {
+      "pattern": "^[0-9a-f]{64}$",
+      "title": "Entry Sha256",
+      "type": "string"
+    },
+    "object_id": {
+      "title": "Object Id",
+      "type": "string"
+    },
+    "occurred_at": {
+      "format": "date-time",
+      "title": "Occurred At",
+      "type": "string"
+    },
+    "previous_sha256": {
+      "pattern": "^[0-9a-f]{64}$",
+      "title": "Previous Sha256",
+      "type": "string"
+    },
+    "sequence": {
+      "minimum": 1,
+      "title": "Sequence",
+      "type": "integer"
+    },
+    "tenant_id": {
+      "title": "Tenant Id",
+      "type": "string"
+    }
+  },
+  "required": [
+    "sequence",
+    "tenant_id",
+    "actor_id",
+    "action",
+    "object_id",
+    "detail_sha256",
+    "occurred_at",
+    "previous_sha256",
+    "entry_sha256"
+  ],
+  "title": "AdministrationAuditEntry",
+  "type": "object"
+}
