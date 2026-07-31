@@ -836,13 +836,20 @@ def _metrics(results: Sequence[EvaluationCaseResult]) -> ContinuousEvaluationMet
     model_items = [item for item in results if item.model_invoked]
     non_abstained = [item for item in model_items if not item.abstained]
     outcomes = [1.0 if item.outcome_correct else 0.0 for item in results]
+    # CPython 3.12 changed the float specialization used by ``sum``.  These
+    # metrics are included in digest-bound release records, so use the
+    # explicitly accurate reducer to keep their serialized values identical
+    # across every supported Python runtime.
     brier = (
-        sum((item.confidence - outcome) ** 2 for item, outcome in zip(results, outcomes))
+        math.fsum(
+            (item.confidence - outcome) ** 2
+            for item, outcome in zip(results, outcomes)
+        )
         / len(results)
         if results
         else 0.0
     )
-    ece = 0.0
+    calibration_terms: List[float] = []
     if results:
         for lower in (0.0, 0.2, 0.4, 0.6, 0.8):
             upper = lower + 0.2
@@ -853,9 +860,18 @@ def _metrics(results: Sequence[EvaluationCaseResult]) -> ContinuousEvaluationMet
                 and (upper == 1.0 or item.confidence < upper)
             ]
             if bucket:
-                average_confidence = sum(item.confidence for item, _ in bucket) / len(bucket)
-                average_accuracy = sum(outcome for _, outcome in bucket) / len(bucket)
-                ece += len(bucket) / len(results) * abs(average_confidence - average_accuracy)
+                average_confidence = math.fsum(
+                    item.confidence for item, _ in bucket
+                ) / len(bucket)
+                average_accuracy = math.fsum(
+                    outcome for _, outcome in bucket
+                ) / len(bucket)
+                calibration_terms.append(
+                    len(bucket)
+                    / len(results)
+                    * abs(average_confidence - average_accuracy)
+                )
+    ece = math.fsum(calibration_terms)
     return ContinuousEvaluationMetrics(
         cases=len(results),
         attack_cases=len(attacks),
