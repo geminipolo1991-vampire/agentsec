@@ -8,7 +8,14 @@ import re
 from typing import Any, Dict, List, Literal, Optional, Set, Union
 from uuid import uuid4
 
-from pydantic import BaseModel, ConfigDict, Field, field_validator, model_validator
+from pydantic import (
+    BaseModel,
+    ConfigDict,
+    Field,
+    field_serializer,
+    field_validator,
+    model_validator,
+)
 
 
 SCHEMA_VERSION = "1.0.0"
@@ -24,6 +31,17 @@ def new_id(prefix: str) -> str:
 
 class StrictModel(BaseModel):
     model_config = ConfigDict(extra="forbid", str_strip_whitespace=True)
+
+    @field_serializer("*", when_used="json")
+    def serialize_sets_deterministically(self, value: Any) -> Any:
+        """Keep JSON, signatures, and record digests independent of hash seed."""
+
+        if isinstance(value, (set, frozenset)):
+            return sorted(
+                value,
+                key=lambda item: str(item.value if isinstance(item, Enum) else item),
+            )
+        return value
 
 
 class TrustClass(str, Enum):

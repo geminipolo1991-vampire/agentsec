@@ -70,6 +70,22 @@ class SimulationLabTests(unittest.TestCase):
         self.assertTrue(any(item.startswith("OWASP-LLM") for item in mappings))
         self.assertTrue(any(item.startswith("MITRE-ATLAS-") for item in mappings))
 
+        # Set-backed contract fields must serialize canonically because the
+        # scenario JSON is digest-bound and Python randomizes set iteration.
+        for scenario in catalog.scenarios.scenarios:
+            for step in scenario.steps:
+                serialized = step.model_dump(mode="json")
+                event = serialized["event"]
+                ground_truth = serialized["ground_truth"]
+                for field in ("data_classes", "authority_operations", "indicators"):
+                    self.assertEqual(event[field], sorted(event[field]))
+                for field in (
+                    "expected_alert_types",
+                    "required_completed_operations",
+                    "forbidden_completed_operations",
+                ):
+                    self.assertEqual(ground_truth[field], sorted(ground_truth[field]))
+
     def test_every_builtin_comparison_passes_and_uses_only_mock_effects(self) -> None:
         scenarios = self.service.list_scenarios(self.principal).scenarios
         with patch("socket.create_connection", side_effect=AssertionError("network called")):
