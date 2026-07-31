@@ -8,6 +8,7 @@ from email.message import Message
 from io import BytesIO
 from pathlib import Path
 from types import SimpleNamespace
+from unittest.mock import patch
 
 
 MODULE_PATH = Path(__file__).parents[1] / "tools" / "live_ui_bridge.py"
@@ -1266,7 +1267,36 @@ class LiveUiBridgeTests(unittest.TestCase):
 
         platform_client = PlatformClient()
         live = bridge_module.LiveBridge(platform_client)
-        snapshot = live.platform_snapshot()
+        # The release audit is a generated, intentionally ignored runtime
+        # artifact.  Use an explicit fixture so this test behaves the same in
+        # a clean checkout and in a developer tree containing a prior audit.
+        release_fixture = {
+            "schema_version": "1.0.0",
+            "scope": "research-poc",
+            "dataset_version": "synthetic-corpus-2026-07-22.1",
+            "discovered_tests": 391,
+            "criteria": [
+                {"id": "complete_security_lifecycle", "passed": True},
+                {"id": "continuous_evaluation_gate", "passed": True},
+            ],
+            "all_passed": True,
+            "production_ready": False,
+            "production_deferred": ["external security and privacy review"],
+        }
+        release_sha256 = "7" * 64
+        load_fixed_platform_report = bridge_module._load_fixed_platform_report
+
+        def load_platform_report(name):
+            if name == "release":
+                return release_fixture, release_sha256
+            return load_fixed_platform_report(name)
+
+        with patch.object(
+            bridge_module,
+            "_load_fixed_platform_report",
+            side_effect=load_platform_report,
+        ):
+            snapshot = live.platform_snapshot()
         self.assertTrue(snapshot["bff"]["upstream_authenticated"])
         self.assertFalse(snapshot["bff"]["browser_service_auth_exposed"])
         self.assertFalse(snapshot["bff"]["human_identity_verified"])
@@ -1277,6 +1307,7 @@ class LiveUiBridgeTests(unittest.TestCase):
         self.assertNotIn("never-return", json.dumps(snapshot))
         self.assertTrue(snapshot["reports"]["release"]["all_passed"])
         self.assertFalse(snapshot["reports"]["release"]["production_ready"])
+        self.assertEqual(snapshot["reports"]["release"]["sha256"], release_sha256)
         self.assertEqual(len(snapshot["reports"]["evaluation"]["artifacts"]), 11)
         self.assertEqual(len(snapshot["reports"]["evaluation"]["modes"]), 8)
         mode_rates = {
