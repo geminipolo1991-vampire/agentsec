@@ -1,0 +1,29 @@
+[Unit]
+Description=AgentSec token-owning live UI bridge
+After=agentsec-backend.service
+Requires=agentsec-backend.service
+
+[Service]
+Type=simple
+User=agentsec
+Group=agentsec
+WorkingDirectory=/opt/agentsec/current
+EnvironmentFile=/etc/agentsec/runtime.env
+ExecStart=/opt/agentsec/current/.venv/bin/python tools/live_ui_bridge.py --local-service-url http://127.0.0.1:8080 --port 8765
+Restart=on-failure
+RestartSec=3
+TimeoutStopSec=20
+UMask=0027
+NoNewPrivileges=true
+PrivateTmp=true
+ProtectSystem=strict
+ProtectHome=true
+ProtectKernelTunables=true
+ProtectKernelModules=true
+ProtectControlGroups=true
+RestrictSUIDSGID=true
+LockPersonality=true
+RestrictAddressFamilies=AF_UNIX AF_INET AF_INET6
+
+[Install]
+WantedBy=multi-user.target

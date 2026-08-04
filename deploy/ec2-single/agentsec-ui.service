@@ -1,0 +1,32 @@
+[Unit]
+Description=AgentSec production control-room UI
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+Type=simple
+User=agentsec
+Group=agentsec
+WorkingDirectory=/opt/agentsec/current/ui
+Environment=NODE_ENV=production
+Environment=HOME=/var/lib/agentsec-ui
+Environment=PATH=/usr/local/bin:/usr/bin:/bin
+ExecStart=/usr/local/bin/agentsec-npm run start -- -H 127.0.0.1 -p 3000
+Restart=on-failure
+RestartSec=3
+TimeoutStopSec=20
+UMask=0027
+NoNewPrivileges=true
+PrivateTmp=true
+ProtectSystem=strict
+ProtectHome=true
+ProtectKernelTunables=true
+ProtectKernelModules=true
+ProtectControlGroups=true
+RestrictSUIDSGID=true
+LockPersonality=true
+RestrictAddressFamilies=AF_UNIX AF_INET AF_INET6
+ReadWritePaths=/var/lib/agentsec-ui /opt/agentsec/current/ui/.wrangler
+
+[Install]
+WantedBy=multi-user.target

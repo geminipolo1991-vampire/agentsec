@@ -712,7 +712,15 @@ type ModelGatewayPayload = {
   qualifications: ModelGatewayQualification[]; calls: ModelGatewayCall[]; checked_at: string;
 };
 
-const LIVE_API = "http://127.0.0.1:8765";
+// Local development talks directly to the loopback bridge. A remotely served
+// control room uses the same browser origin so the bearer-owning bridge remains
+// private behind the deployment reverse proxy.
+const LIVE_API =
+  typeof window !== "undefined" &&
+  window.location.hostname !== "localhost" &&
+  window.location.hostname !== "127.0.0.1"
+    ? ""
+    : "http://127.0.0.1:8765";
 
 type PlatformLoadState = "loading" | "ready" | "offline";
 

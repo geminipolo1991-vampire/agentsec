@@ -1,0 +1,30 @@
+[Unit]
+Description=AgentSec authorization and SOC service
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+Type=simple
+User=agentsec
+Group=agentsec
+WorkingDirectory=/opt/agentsec/current
+EnvironmentFile=/etc/agentsec/runtime.env
+ExecStart=/opt/agentsec/current/.venv/bin/agentsec serve --host 127.0.0.1 --port 8080
+Restart=on-failure
+RestartSec=3
+TimeoutStopSec=20
+UMask=0027
+NoNewPrivileges=true
+PrivateTmp=true
+ProtectSystem=strict
+ProtectHome=true
+ProtectKernelTunables=true
+ProtectKernelModules=true
+ProtectControlGroups=true
+RestrictSUIDSGID=true
+LockPersonality=true
+RestrictAddressFamilies=AF_UNIX AF_INET AF_INET6
+ReadWritePaths=/var/lib/agentsec
+
+[Install]
+WantedBy=multi-user.target
